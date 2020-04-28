@@ -64,6 +64,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
 					//return err
+					log.Print(err)
 				}
 				//return nil
 			}
