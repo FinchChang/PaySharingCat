@@ -27,6 +27,7 @@ var bot *linebot.Client
 func main() {
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
+	//key := os.Getenv("GoogleKey")
 	log.Println("Bot:", bot, " err:", err)
 	http.HandleFunc("/callback", callbackHandler)
 	port := os.Getenv("PORT")
@@ -57,7 +58,16 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10))).Do(); err != nil {
 					log.Print(err)
 				}
+			case *linebot.LocationMessage:
+				if _, err := bot.ReplyMessage(
+					event.ReplyToken,
+					linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+				).Do(); err != nil {
+					//return err
+				}
+				//return nil
 			}
+
 		}
 	}
 }
