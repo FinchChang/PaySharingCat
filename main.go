@@ -79,7 +79,7 @@ func getRestaurant(Latitude, Longitude float64) {
 	googleURL := "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=1500&type=restaurant"
 	googleURL += "&location=" + strconv.FormatFloat(Latitude, 'g', 1, 64) + "," + strconv.FormatFloat(Longitude, 'g', 1, 64)
 	googleURL += "&key=" + os.Getenv("GoogleKey")
-
+	fmt.Println("googleURL=", googleURL)
 	res, err := http.Get(googleURL)
 	if err != nil {
 		log.Fatal(err)
