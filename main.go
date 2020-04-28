@@ -14,12 +14,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/line/line-bot-sdk-go/linebot"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
-
-	"github.com/line/line-bot-sdk-go/linebot"
 )
 
 var bot *linebot.Client
@@ -59,9 +59,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					log.Print(err)
 				}
 			case *linebot.LocationMessage:
+				getRestaurant(message.Latitude, message.Longitude)
 				if _, err := bot.ReplyMessage(
 					event.ReplyToken,
-					linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
 					//return err
 					log.Print(err)
@@ -71,4 +73,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		}
 	}
+}
+
+func getRestaurant(Latitude, Longitude float64) {
+	googleURL := "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=1500&type=restaurant"
+	googleURL += "&location=" + strconv.FormatFloat(Latitude, 'g', 1, 64) + "," + strconv.FormatFloat(Longitude, 'g', 1, 64)
+	googleURL += "&key=" + os.Getenv("GoogleKey")
+
+	res, err := http.Get(googleURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+	sitemap, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%s", sitemap)
 }
