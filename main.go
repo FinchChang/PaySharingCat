@@ -13,6 +13,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"io/ioutil"
@@ -80,7 +81,13 @@ func getRestaurant(Latitude, Longitude float64) {
 	googleURL += "&location=" + fmt.Sprintf("%f", Latitude) + "," + fmt.Sprintf("%f", Longitude)
 	googleURL += "&key=" + os.Getenv("GoogleKey")
 	fmt.Println("googleURL=", googleURL)
-	res, err := http.Get(googleURL)
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := &http.Client{Transport: tr}
+
+	res, err := client.Get(googleURL)
 	if err != nil {
 		log.Fatal(err)
 	}
