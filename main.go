@@ -77,7 +77,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 func getRestaurant(Latitude, Longitude float64) {
 	googleURL := "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=1500&type=restaurant"
-	googleURL += "&location=" + strconv.FormatFloat(Latitude, 'g', 1, 64) + "," + strconv.FormatFloat(Longitude, 'g', 1, 64)
+	googleURL += "&location=" + fmt.Sprintf("%f", Latitude) + "," + fmt.Sprintf("%f", Longitude)
 	googleURL += "&key=" + os.Getenv("GoogleKey")
 	fmt.Println("googleURL=", googleURL)
 	res, err := http.Get(googleURL)
@@ -85,6 +85,7 @@ func getRestaurant(Latitude, Longitude float64) {
 		log.Fatal(err)
 	}
 	defer res.Body.Close()
+
 	sitemap, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal(err)
