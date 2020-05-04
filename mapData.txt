@@ -1,0 +1,1046 @@
+{
+	"html_attributions": [],
+	"next_page_token": "CqQCHwEAAH5IE5FDWxe87UnGZwQClsJQRntmtMK_rsgW5w8AWaT90q_5ASx4PoRsdZNRU7xx3lp-8Zy7NqwwRUCkL3HQd7HDKqXMu6IXYMX3a9Fhjx9Be0Q-sOP6emq3twhlazTU3pYo3Mg3_tpWQO7Kx0BqtJMd0jb5PMr-hmCxevLxagtscw4h6yz4068j9AXPEcYK2ek4h-wEJDXJQlck5OMyA71El_ispAQUZKu83FbZJXl7trioqujZyBswQFi8DSmFWzzzz8JR0nVqH2LTcEUk-hb9wZiwxxmTZp6y16OjtrbC1md7Vwd2twKbegUyFQrPkyPR12AYsh4k3pIncfPtwKSNB01AJ8EYI5wEHtGVtFoCDp9JQRb7TPYkqtlIXJ9GdBIQekkOU7YT_6Pizn53SE4YaBoUzJuM8zTUqP5C0qZB__jEb033a1g",
+	"results": [
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.961639,
+					"lng": 121.226577
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9629762802915,
+						"lng": 121.2279073302915
+					},
+					"southwest": {
+						"lat": 24.9602783197085,
+						"lng": 121.2252093697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "059fe723f7c1c7984643eb4a23dd912ce6bf0b5c",
+			"name": "Yuanshao",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 3024,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/110488068015271633600\">温淑君</a>"
+					],
+					"photo_reference": "CmRaAAAAmD-N78Ud66EFQrD_s_8iKlvTezhj-7YIXzsrfCTQ6ZxX8TBNFyyOJLDElpAHvWCamyMjOh-PnRfzfKSmykQGX66bgnGi6uT21ZRBMFW_45mxHR-giaQ5i0CUVl1frkHbEhCbtUfphSEvNHmoilskYS0EGhSQSzelrbBmOfrTo_8QgE86MnfgYA",
+					"width": 4032
+				}
+			],
+			"place_id": "ChIJDaPANjciaDQRQc3LojUgGe8",
+			"plus_code": {
+				"compound_code": "X66G+MJ Taiwan, Zhongli District, 新街里",
+				"global_code": "7QP3X66G+MJ"
+			},
+			"price_level": 2,
+			"rating": 4.2,
+			"reference": "ChIJDaPANjciaDQRQc3LojUgGe8",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 938,
+			"vicinity": "2F, No. 245號, Yuanhua Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9608113,
+					"lng": 121.2259249
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9621300802915,
+						"lng": 121.2273143302915
+					},
+					"southwest": {
+						"lat": 24.9594321197085,
+						"lng": 121.2246163697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "65faec8cd4ccfdea93a83b266d7ee37359b74f04",
+			"name": "湄南小鎮泰國菜",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 1365,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/109724900483908027869\">劉志宏</a>"
+					],
+					"photo_reference": "CmRaAAAAnpsfw1ou4kGXAa_o3Gb2_1Feo8DDc1yqjxwqJZDNMaUamxx30WaCZVklGbgg-CRPqoxpE4Buel6urz1cZRBqVj9Xs3NQ5ZvKtOm9KHDHbscIaVxhMxwRJnwgWMOtKb4BEhBtrUQ--92fAp-fAINzaiVBGhSoJGSfK429ihY8arSaotEs4L58xQ",
+					"width": 2048
+				}
+			],
+			"place_id": "ChIJLXSLGDciaDQRTGz66CqkGi4",
+			"plus_code": {
+				"compound_code": "X66G+89 Taiwan, Zhongli District, 新街里",
+				"global_code": "7QP3X66G+89"
+			},
+			"price_level": 2,
+			"rating": 4.2,
+			"reference": "ChIJLXSLGDciaDQRTGz66CqkGi4",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 674,
+			"vicinity": "No. 306號, Yanping Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9604997,
+					"lng": 121.2276215
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9618532302915,
+						"lng": 121.2289711302915
+					},
+					"southwest": {
+						"lat": 24.9591552697085,
+						"lng": 121.2262731697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "1ecaa02322470e52568a5c8e766ee899ac1369bc",
+			"name": "吼牛排",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 4032,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/108703365821705336354\">明益陳</a>"
+					],
+					"photo_reference": "CmRaAAAAGMzK2Bmr4znHlfyYgSCZniYnEEkYkHO6RfPtmcZcfD0xqxdhbS23umIzi2k_w6QiGbWIMOCDg83IH6zDAbCiU7fd4aIM4f6D_CJHwIbqoGAjWI_3oOMjS3F5EvEu0XYsEhCF_tuxPvyUnvLVN1CXTl10GhQgnq_tkacdLr1UDA2fosb4mNGF6g",
+					"width": 3024
+				}
+			],
+			"place_id": "ChIJyyCxXTciaDQRph3pCEQsUfI",
+			"plus_code": {
+				"compound_code": "X66H+52 Taiwan, Zhongli District, 中央里",
+				"global_code": "7QP3X66H+52"
+			},
+			"price_level": 2,
+			"rating": 4.2,
+			"reference": "ChIJyyCxXTciaDQRph3pCEQsUfI",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 2145,
+			"vicinity": "No. 3, Lane 197, Yuanhua Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9650199,
+					"lng": 121.2173386
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9664426802915,
+						"lng": 121.2186664802915
+					},
+					"southwest": {
+						"lat": 24.9637447197085,
+						"lng": 121.2159685197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "12204b27b94754e9e2f458f5b0c9ee238b50307b",
+			"name": "明皇樓中餐廳 Tang's Chinese Restaurant",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 1306,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/107468127793278319765\">明皇樓中餐廳 Tang&#39;s Chinese Restaurant</a>"
+					],
+					"photo_reference": "CmRaAAAAlIWWzBYbB_7pMvFOGyjVbV-wlGVcCPN1mP_UtlbJLLH2KqcdYv3FFNBh90bSeao2cC6mJM8H2uDqIoiIPmDJxMF_vS4YILt4Tc5vI8eOS3VeAd8zIG5RHqXjBcKAc0xyEhCatU0f4jgUSXKkB7ixum5zGhRA8p1vUeoNpbdxL0iVhnznvRVRXA",
+					"width": 2048
+				}
+			],
+			"place_id": "ChIJYziyTTMiaDQRHtIFVMHBe2o",
+			"plus_code": {
+				"compound_code": "X688+2W Taiwan, Zhongli District, 光明里",
+				"global_code": "7QP3X688+2W"
+			},
+			"price_level": 2,
+			"rating": 4.1,
+			"reference": "ChIJYziyTTMiaDQRHtIFVMHBe2o",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 565,
+			"vicinity": "No. 398號, Minquan Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.96324509999999,
+					"lng": 121.2229831
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9645907802915,
+						"lng": 121.2243749302915
+					},
+					"southwest": {
+						"lat": 24.96189281970849,
+						"lng": 121.2216769697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "0f2a146f3d425e9d5ddfebd04be3c0b60fb62a73",
+			"name": "梁記麻辣火鍋專賣店",
+			"opening_hours": {
+				"open_now": true
+			},
+			"photos": [
+				{
+					"height": 3648,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/106399807476587353621\">SY KAO</a>"
+					],
+					"photo_reference": "CmRaAAAAJ9LCcDEgyPR-a1hNX5H2F4IHNbC-iRILaeMcKKgySd5bUtcSF63ywyFqyd1M7lnWaaZYGGx4pBG4t_rJeflMtKEilCgsT-FbiGJzPlC7KBxUbyoIVXjt2eJe77Z_0IxbEhBLEAKdhhdQFy-mxokvRUWAGhSsACfrQezLhPIXRwTE1QpyFTmUjg",
+					"width": 5472
+				}
+			],
+			"place_id": "ChIJAfiB_TMiaDQRXCsOKRDcxvA",
+			"plus_code": {
+				"compound_code": "X67F+75 Taiwan, Zhongli District, 興平里",
+				"global_code": "7QP3X67F+75"
+			},
+			"price_level": 2,
+			"rating": 4.4,
+			"reference": "ChIJAfiB_TMiaDQRXCsOKRDcxvA",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 821,
+			"vicinity": "No. 259, Xinsheng Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9648773,
+					"lng": 121.2263797
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9662672302915,
+						"lng": 121.2277338802915
+					},
+					"southwest": {
+						"lat": 24.96356926970849,
+						"lng": 121.2250359197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+			"id": "38fe2889673c2377096986bfb588401e7f07f6c3",
+			"name": "TINA廚房",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 4608,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/102528748834431631723\">劉淑貞</a>"
+					],
+					"photo_reference": "CmRaAAAAfmhfCvm651QF_uUzNLrKoh4eCG5Dr62GAOLNPvM3TKHnGPrLunVhEiQewmhtBzeMNZ0iMQp8fAZrIhAzegOTYmbXGkqQuO56yUCRFDaHtmJD7qZlZjvfBfan8vlBfFbAEhAUoGH7IKDEFhpk7I8B703fGhQfPMEPJYCW863CX-gTEtyCUu7--g",
+					"width": 3456
+				}
+			],
+			"place_id": "ChIJEdLgXjAiaDQRVCWP0M3MM4A",
+			"plus_code": {
+				"compound_code": "X67G+XH Taiwan, Zhongli District, 新街里",
+				"global_code": "7QP3X67G+XH"
+			},
+			"price_level": 2,
+			"rating": 3.8,
+			"reference": "ChIJEdLgXjAiaDQRVCWP0M3MM4A",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 169,
+			"vicinity": "No. 6號, Lane 158, Cihuisan Street, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9626746,
+					"lng": 121.2238649
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9638236802915,
+						"lng": 121.2251758302915
+					},
+					"southwest": {
+						"lat": 24.9611257197085,
+						"lng": 121.2224778697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "6bf123fe57559acc0967caebf9c86fc27d0ccbe1",
+			"name": "Hong Kong-style restaurant SanGeYuan",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 3894,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/117580943881260901436\">Philip Fan</a>"
+					],
+					"photo_reference": "CmRaAAAAN8g60v7Ri1nMM1ww3uAGGNxLpvofob2e_SIYxgoSaS8DgTBxhvSwEt6vCVdOAUMdG0TTINulCap2vYbjcTmDkEKVrbPl-wrWwAaIWVes-_74kkxKI2K9LCEDJNRDl5E9EhBFfD89Y6oSsJgQc-fGoVWkGhTh-lKh2N1i_MGxiyxwtlTE9lUvSA",
+					"width": 5408
+				}
+			],
+			"place_id": "ChIJs-miTDEiaDQRBKOXXQaIwLg",
+			"plus_code": {
+				"compound_code": "X67F+3G Taiwan, Zhongli District, 金華里",
+				"global_code": "7QP3X67F+3G"
+			},
+			"price_level": 2,
+			"rating": 4.1,
+			"reference": "ChIJs-miTDEiaDQRBKOXXQaIwLg",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 556,
+			"vicinity": "8F, No. 357, Yuanhua Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9628066,
+					"lng": 121.2249466
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9642218302915,
+						"lng": 121.2263049802915
+					},
+					"southwest": {
+						"lat": 24.9615238697085,
+						"lng": 121.2236070197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "15f127bfd141a511d4a26be4faa1d9ef19473303",
+			"name": "THE PLUTO",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 640,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/118427849147534127684\">THE PLUTO</a>"
+					],
+					"photo_reference": "CmRaAAAA7ggOGqpIu2JasEVC62DuQ9uqMG0elKFrWZYwFYSpVSguQPXpdirGjtax7mz23AQt4zGIB45RM0VGOR4JxkzFq6bGfbDdPJNkXhHUbMNOIxq71atASFHw_uBMc9ocKBgyEhCpyEo3kaNK7xrNmgbPafRMGhRrRNjK0cUd-0QsTg--mK_QbL-zow",
+					"width": 960
+				}
+			],
+			"place_id": "ChIJFzWZNzEiaDQRAaaQsbDWNy4",
+			"plus_code": {
+				"compound_code": "X67F+4X Taiwan, Zhongli District, 金華里",
+				"global_code": "7QP3X67F+4X"
+			},
+			"price_level": 2,
+			"rating": 4.2,
+			"reference": "ChIJFzWZNzEiaDQRAaaQsbDWNy4",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 499,
+			"vicinity": "No. 42號, Jiuhe 2nd Street, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9627778,
+					"lng": 121.2236111
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9638960302915,
+						"lng": 121.2249161802915
+					},
+					"southwest": {
+						"lat": 24.96119806970849,
+						"lng": 121.2222182197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "85ac313b7f5b34b0804826fb9a437a5fd988940d",
+			"name": "Thai Town Cuisine - Zhongli Sogo Store",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 4032,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/102717932845104470804\">Chris Liu</a>"
+					],
+					"photo_reference": "CmRaAAAAZzY-3uN1SGKcHOn_VHxlusouKjVAIXiUsikdHehogE2hqJXCyuBV6-44T6K5sy2on0dOVsEMHtEonKRVn_WouWCcBAo1qUKT6S1n0iq3x1xPyTmGO8-1qyO0siryB3k9EhBQn38bQqxm3fWypwTlSdvIGhQ4zyB4qLLxgYuIwpLDKrFuOyaDdg",
+					"width": 3024
+				}
+			],
+			"place_id": "ChIJ57SfszYiaDQREHPLQWiesI8",
+			"plus_code": {
+				"compound_code": "X67F+4C Taiwan, Zhongli District, 金華里",
+				"global_code": "7QP3X67F+4C"
+			},
+			"price_level": 2,
+			"rating": 4.1,
+			"reference": "ChIJ57SfszYiaDQREHPLQWiesI8",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 559,
+			"vicinity": "8樓, No. 357, Yuanhua Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9625,
+					"lng": 121.2325
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9640645302915,
+						"lng": 121.2337621802915
+					},
+					"southwest": {
+						"lat": 24.9613665697085,
+						"lng": 121.2310642197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "b94545e34dfb62aec3cc9da1c3cb9f0ded544145",
+			"name": "Pinnada",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 1365,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/108478493872476414084\">品田牧場日式豬排咖哩中壢家樂福中原店</a>"
+					],
+					"photo_reference": "CmRaAAAAcIgbZv9coKmOl_qZnb2EKbIIz6LQnWPCprjUTJHrY-xknxEHSdKhU98Kp6WlW01wvusb3rnDUalEPZ4VAtX3_iQ8f6c4fBnrHWCM6FCtoj8rJMtlqWtNWC64XmeutOyyEhCVoD645_Z0-pi8KMuwVTNSGhR2fSSM84icD8sd-ihYj_gkN_stXw",
+					"width": 2048
+				}
+			],
+			"place_id": "ChIJw4dZfjsiaDQRPtC2gLR01lQ",
+			"plus_code": {
+				"compound_code": "X67J+2X Taiwan, Zhongli District, 仁義里",
+				"global_code": "7QP3X67J+2X"
+			},
+			"price_level": 2,
+			"rating": 4.3,
+			"reference": "ChIJw4dZfjsiaDQRPtC2gLR01lQ",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 870,
+			"vicinity": "中原家樂福2F, No. 501號, Section 2, Zhonghua Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.961557,
+					"lng": 121.223498
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9629723302915,
+						"lng": 121.2248496802915
+					},
+					"southwest": {
+						"lat": 24.96027436970849,
+						"lng": 121.2221517197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "239c7d49ee0192db2f5bb3b7f4ad4d802575cbda",
+			"name": "定食8-中壢店",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 1621,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/100020585971657751464\">定食8-中壢店</a>"
+					],
+					"photo_reference": "CmRaAAAAd4JiiMWcQ4OyoJUmjZ1TdxaVYPXeZdt15AZbBeJ8DKqRu74_OM0gTvN7TmI6M2x88Cjn0WyeGWRUV0v5b9MFA0mnQ2vABZBU3-Q09Yjc-kqJac6U9J67No6ul-HH8ws_EhDlu1liMkx_M8T3PXYcbMwgGhQn41UXrcOYbinVU_JY3ogjXb6CUw",
+					"width": 2880
+				}
+			],
+			"place_id": "ChIJq35nvDYiaDQRtONiKsOp1As",
+			"plus_code": {
+				"compound_code": "X66F+J9 Taiwan, Zhongli District, 興南里",
+				"global_code": "7QP3X66F+J9"
+			},
+			"price_level": 2,
+			"rating": 3.8,
+			"reference": "ChIJq35nvDYiaDQRtONiKsOp1As",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 381,
+			"vicinity": "No. 12號, Jiuhe 1st Street, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.963392,
+					"lng": 121.2226195
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9647216302915,
+						"lng": 121.2241989802915
+					},
+					"southwest": {
+						"lat": 24.9620236697085,
+						"lng": 121.2215010197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "d57c2066fa9b61dc00b1e9a16ef0c26a37ec364b",
+			"name": "喜樂屋",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 3024,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/111464241579058346615\">松本晃佳</a>"
+					],
+					"photo_reference": "CmRaAAAAv4m1aYj7zhMZ-TK4r7IWhb5P8UdgK5oJimlZZ42AH38ZhieU0GaSoATygyCBe8BZWfzHXQMqPrfXecslLzSgl8qKd6Os9ida4DD4SUJrFdyfWtasfjQqWzefr2vUxUulEhBh8Bwf-lgx79C-da5Bu_gvGhTlxAqp8yclobBEL8VHZncLikKCzQ",
+					"width": 4032
+				}
+			],
+			"place_id": "ChIJPYoYUTEiaDQRWWStIjn1LwI",
+			"plus_code": {
+				"compound_code": "X67F+92 Taiwan, Zhongli District, 興平里",
+				"global_code": "7QP3X67F+92"
+			},
+			"rating": 4.1,
+			"reference": "ChIJPYoYUTEiaDQRWWStIjn1LwI",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 124,
+			"vicinity": "No. 263號, Xinsheng Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.966665,
+					"lng": 121.217869
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9677174302915,
+						"lng": 121.2192945302915
+					},
+					"southwest": {
+						"lat": 24.9650194697085,
+						"lng": 121.2165965697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+			"id": "00577f8553933295d06fd389125dd0a64cb4b898",
+			"name": "儷宴會館-環北館",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 2391,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/101224721361189487355\">儷宴會館-環北館</a>"
+					],
+					"photo_reference": "CmRaAAAAnXXk1GfYnqoHoBrl3mBxIRLcZWfYAutUfU-Nr9UUmAchX1ZsSDlX5D21iRIYOn_kv2ybGTz8Kfl3HE1ukbz3aHCN9HzeUfypC_ohk6zxdqdU_-pAsDVuffFRIdKw2m6GEhAAtieqNlGLouIOkDIUDRK8GhQvduRQ26PyODIO04BpnlG9px9wnQ",
+					"width": 4256
+				}
+			],
+			"place_id": "ChIJr4252DIiaDQRhDg14YQZZLw",
+			"plus_code": {
+				"compound_code": "X689+M4 Taiwan, Zhongli District, 永光里",
+				"global_code": "7QP3X689+M4"
+			},
+			"rating": 3.8,
+			"reference": "ChIJr4252DIiaDQRhDg14YQZZLw",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 1824,
+			"vicinity": "No. 65, Huanbei Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.964726,
+					"lng": 121.225065
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.96607413029151,
+						"lng": 121.2264506302915
+					},
+					"southwest": {
+						"lat": 24.9633761697085,
+						"lng": 121.2237526697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
+			"id": "2c81163cac6891344335937621e50e32ecbe07c8",
+			"name": "哈瓦那咖啡悅讀館",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 4032,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/115095327405581018381\">哈瓦那咖啡悅讀館</a>"
+					],
+					"photo_reference": "CmRZAAAAFo40U38Dj2wvhiDnAAfr8XmIX9zyrVbnGWzQ7EDWtZae3dcQCyOZCiZ6MxC7pm8UTvnPyb4TN4EAe7Mnd6ac_i6IaQ4zc57s3NCl-jFb-EBsbASUtTPtP3A1D2vk5ecHEhDHmVuNqlkz7Eim1eWPLnxcGhRik9EjhyzOjbwWD45elxavuUQ2UQ",
+					"width": 3024
+				}
+			],
+			"place_id": "ChIJTcqsHjEiaDQR_3bQHie-MvU",
+			"plus_code": {
+				"compound_code": "X67G+V2 Taiwan, Zhongli District, 金華里",
+				"global_code": "7QP3X67G+V2"
+			},
+			"rating": 4,
+			"reference": "ChIJTcqsHjEiaDQR_3bQHie-MvU",
+			"scope": "GOOGLE",
+			"types": [
+				"cafe",
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"store",
+				"establishment"
+			],
+			"user_ratings_total": 224,
+			"vicinity": "No. 6號, Lane 157, Cihuisan Street, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9609853,
+					"lng": 121.22358
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9623936802915,
+						"lng": 121.2249257302915
+					},
+					"southwest": {
+						"lat": 24.9596957197085,
+						"lng": 121.2222277697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "5195c7e7afe96ca75a1d0ab30a718393d0f72a1e",
+			"name": "丸山燒肉",
+			"opening_hours": {
+				"open_now": true
+			},
+			"photos": [
+				{
+					"height": 406,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/101612384546848670268\">丸山燒肉</a>"
+					],
+					"photo_reference": "CmRaAAAAc0246B85AjA_R35_hkCIALlR7fapyxGctOuiD_c2ADFg4NM18NfMHo4gEnADa6deHHEiMvVsJkPr4L7TKgzpAGpXp99iZuCvL-gUzWwQEvsXNPLmM0IVyI-FLzGah9axEhCgbQ8FSbm9xy_uguTcEvd0GhROyuBBumuQ3jpLg5WATXvwmgtwFg",
+					"width": 720
+				}
+			],
+			"place_id": "ChIJ6yixljYiaDQR7OZ5jrmmnjI",
+			"plus_code": {
+				"compound_code": "X66F+9C Taiwan, Zhongli District, 興南里",
+				"global_code": "7QP3X66F+9C"
+			},
+			"rating": 4.1,
+			"reference": "ChIJ6yixljYiaDQR7OZ5jrmmnjI",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 159,
+			"vicinity": "No. 16號, Cihui 3rd Street, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.961305,
+					"lng": 121.224983
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9626540802915,
+						"lng": 121.2262773302915
+					},
+					"southwest": {
+						"lat": 24.9599561197085,
+						"lng": 121.2235793697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "0b46200d7505b456d29cf5e411a745fd83d02f5f",
+			"name": "健康主義精緻火鍋",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 3648,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/110163668101456231664\">Local King樂客店家</a>"
+					],
+					"photo_reference": "CmRaAAAAkEzlPAp1F_FF1jm-WGEbQRIFee-P_qF9SAdrxfv6ozyfFSSkQsrDS2UclnFRl_TPIk1MD9aOi_S-uFLUi52M0ChZ-LSPcWqD7crrXppvCyQJmO5iXIpg1cPt0XHVpxrKEhDlfqfRDhF9Idh5O2tusUq_GhTrc0iUj9qVUhNzcmITOxrrGtbBbQ",
+					"width": 5472
+				}
+			],
+			"place_id": "ChIJJ-mA2jYiaDQR9Bcn2FFMLnM",
+			"plus_code": {
+				"compound_code": "X66F+GX Taiwan, Zhongli District, 興南里",
+				"global_code": "7QP3X66F+GX"
+			},
+			"price_level": 2,
+			"rating": 4.1,
+			"reference": "ChIJJ-mA2jYiaDQR9Bcn2FFMLnM",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 569,
+			"vicinity": "2F, No. 136號, Cihui 1st Street, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.9638666,
+					"lng": 121.2240076
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9651709302915,
+						"lng": 121.2253478302915
+					},
+					"southwest": {
+						"lat": 24.9624729697085,
+						"lng": 121.2226498697085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "b2c0e70a7f47108fe88d11e86b4037dd6dd77d05",
+			"name": "Wild Boar Pizzaria",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 480,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/110104893432793999604\">Wild Boar野豬石窯披薩</a>"
+					],
+					"photo_reference": "CmRaAAAArcT1JF1_3Q0GL-_Pbm6vnv3VNWCRs18oDp1Qb6ow9WfOSuUVvc-LrD-u1TYQ-By_Ur-jFehGpaFcHifTx96unfSRT2pIx8yuz0Beh-QF94IvN1IEzvgDIlzjnUUWQAbBEhAWv3ivP20RkBrdoSgqqCxuGhS1r-1mGVFGfcdTtIyBOU62D67QjQ",
+					"width": 720
+				}
+			],
+			"place_id": "ChIJQ_PGFDEiaDQRDHdgyQMRFYQ",
+			"plus_code": {
+				"compound_code": "X67F+GJ Taiwan, Zhongli District, 金華里",
+				"global_code": "7QP3X67F+GJ"
+			},
+			"price_level": 2,
+			"rating": 4.6,
+			"reference": "ChIJQ_PGFDEiaDQRDHdgyQMRFYQ",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 254,
+			"vicinity": "No. 29, Jiuhe 3rd Street, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.962671,
+					"lng": 121.222127
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.96388893029151,
+						"lng": 121.2234630802915
+					},
+					"southwest": {
+						"lat": 24.9611909697085,
+						"lng": 121.2207651197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "37ec034d9e46259826540727cdb09da9f1bd48ae",
+			"name": "名賀日式小吃店",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 3024,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/108074949629978009109\">nic leung</a>"
+					],
+					"photo_reference": "CmRaAAAAA6TuwKoHC8XXggR1Jm8_KhM_UgeqENdW3DeQI-YHAZcY8btRBtvCU3KckxbSBzsQfiCSG18wBM0WBkXShY6xDVivmf2i9LU_Jj5A40NPEP17YcMUyAeYu3J9ROG8FwFmEhAngGiQ88byAzxAGv5Ibr5eGhSpGiF87lr7NeEOx_XRporp-5XByA",
+					"width": 4032
+				}
+			],
+			"place_id": "ChIJBXC9BjQiaDQRnRT63nEDT5U",
+			"plus_code": {
+				"compound_code": "X67C+3V Taiwan, Zhongli District, 興國里",
+				"global_code": "7QP3X67C+3V"
+			},
+			"price_level": 2,
+			"rating": 3.9,
+			"reference": "ChIJBXC9BjQiaDQRnRT63nEDT5U",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 248,
+			"vicinity": "No. 26號, Section 2, Yuanhua Road, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.965192,
+					"lng": 121.223732
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9665247802915,
+						"lng": 121.2250780802915
+					},
+					"southwest": {
+						"lat": 24.9638268197085,
+						"lng": 121.2223801197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "9db6d12c9e369309e84bd71a16f3683cf765ce69",
+			"name": "LAZY BIRD雷利彼德美式餐廳",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 3840,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/100546624574454705806\">顧正琥</a>"
+					],
+					"photo_reference": "CmRaAAAAFv8IpOfpEJJAU9ClLKurc_HeEVLTiutXBEeOeSRn2Scf_csnqlT6mam_W28mSzon3GMMPaJkYWp0C3qjCT3I-X0mGhToysV4jGSp3QfSlYD3pCL0EpZKW0waBiO-taIREhADuZh_x_aldkHRnVSXIAAEGhSKb7G4JGCh-F7FzLDuSRipnFZ84A",
+					"width": 5120
+				}
+			],
+			"place_id": "ChIJF-lrdjEiaDQRT4UaIat5AWs",
+			"plus_code": {
+				"compound_code": "X68F+3F Taiwan, Zhongli District, 金華里",
+				"global_code": "7QP3X68F+3F"
+			},
+			"price_level": 2,
+			"rating": 4.3,
+			"reference": "ChIJF-lrdjEiaDQRT4UaIat5AWs",
+			"scope": "GOOGLE",
+			"types": [
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 830,
+			"vicinity": "No. 3號, Jiuhe 6th Street, Zhongli District"
+		},
+		{
+			"business_status": "OPERATIONAL",
+			"geometry": {
+				"location": {
+					"lat": 24.965002,
+					"lng": 121.217192
+				},
+				"viewport": {
+					"northeast": {
+						"lat": 24.9664170302915,
+						"lng": 121.2185220802915
+					},
+					"southwest": {
+						"lat": 24.9637190697085,
+						"lng": 121.2158241197085
+					}
+				}
+			},
+			"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+			"id": "c15b500b927a2e422e3939e985e321c2c0efa66f",
+			"name": "古華薈泰式料理暨酒吧 Great Kuva Thai Food & Lounge",
+			"opening_hours": {
+				"open_now": false
+			},
+			"photos": [
+				{
+					"height": 682,
+					"html_attributions": [
+						"<a href=\"https://maps.google.com/maps/contrib/113397682698216939082\">古華薈泰式料理暨酒吧 Great Kuva Thai Food &amp; Lounge</a>"
+					],
+					"photo_reference": "CmRaAAAAoaw2iAbHcFAxjzTgKIw10E28qlMvpjOEQKsD5wZdBG52H4ULyLlfuQVTKmzsYFTa8fH88wBUVHu9HR1XH_-_6jcV5LC7jJrJteoI99VjpX724lAwLWrrO951MKH1S_GVEhDkKGEuw5l6ryIjxI9ORfm4GhQ_A5yAzwXN1QFtuPqcWfWQz52Tew",
+					"width": 1024
+				}
+			],
+			"place_id": "ChIJYziyTTMiaDQRTHsGB4gsSzs",
+			"plus_code": {
+				"compound_code": "X688+2V Zhongli District, Taoyuan City, Taiwan",
+				"global_code": "7QP3X688+2V"
+			},
+			"price_level": 2,
+			"rating": 3.9,
+			"reference": "ChIJYziyTTMiaDQRTHsGB4gsSzs",
+			"scope": "GOOGLE",
+			"types": [
+				"bar",
+				"restaurant",
+				"food",
+				"point_of_interest",
+				"establishment"
+			],
+			"user_ratings_total": 231,
+			"vicinity": "民權路398號, Zhongli District"
+		}
+	],
+	"status": "OK"
+}

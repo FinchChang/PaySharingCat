@@ -14,6 +14,7 @@ package main
 
 import (
 	"crypto/tls"
+	//	"encoding/json"
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"io/ioutil"
@@ -26,6 +27,7 @@ import (
 var bot *linebot.Client
 
 func main() {
+	/********************************
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	//key := os.Getenv("GoogleKey")
@@ -34,6 +36,24 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
+	*/
+	mapData := getMapDate()
+	fmt.Println("--------------------------------")
+	fmt.Println(mapData)
+}
+
+func getMapDate() []byte {
+	file, err := os.Open("mapData.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	b, err := ioutil.ReadAll(file)
+
+	fmt.Println(b)
+	fmt.Println("--------------------------------")
+	return []byte(b)
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +97,19 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getRestaurant(Latitude, Longitude float64) {
+	//var jsonObj map[string]interface{}
+	//json.Unmarshal(getJSONFromLocation(Latitude, Longitude), &jsonObj)
+	//Todo:https://ithelp.ithome.com.tw/articles/10205062?sc=iThelpR
+
+}
+
+/*
+type Restaurant struct {
+	business_status String `json:"status"`
+	geometry        string `json:name`
+}
+*/
+func getJSONFromLocation(Latitude, Longitude float64) {
 	googleURL := "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=1500&type=restaurant"
 	googleURL += "&location=" + fmt.Sprintf("%f", Latitude) + "," + fmt.Sprintf("%f", Longitude)
 	googleURL += "&key=" + os.Getenv("GoogleKey")
@@ -98,4 +131,7 @@ func getRestaurant(Latitude, Longitude float64) {
 		log.Fatal(err)
 	}
 	fmt.Printf("%s", sitemap)
+
+	//var jsonObj map[string]interface{}
+	//results := jsonObj["results"].(map[string]interface{})
 }
