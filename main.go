@@ -43,12 +43,24 @@ func main() {
 	fmt.Println("--------------------------------")
 	fmt.Println(mapData)
 	*/
+	
 	results := gjson.Get(getMapDate(), "results")    
     	if results.IsArray() {
-		for i := 0 ; i < len(results.Array()) ; i++{
-			fmt.Println(results.Array()[i])
+		for i := 0 ; i < len(results.Array()) ; i++{	
+			nowJson := results.Array()[i].String() 		
+			business_status:= gjson.Get(nowJson ,"business_status")
+			if business_status.String() == "OPERATIONAL" {
+				name := gjson.Get(nowJson ,"name")
+				geometry := gjson.Get(nowJson ,"geometry")
+				fmt.Println("name=",name)
+				fmt.Println("geometry=",geometry)
+				fmt.Println("====================")
+
+			}
+
 		}
     	}
+	
 }
 
 func getMapDataTest() string {
