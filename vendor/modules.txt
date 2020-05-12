@@ -1,3 +1,10 @@
 # github.com/line/line-bot-sdk-go v7.3.0+incompatible
 ## explicit
 github.com/line/line-bot-sdk-go/linebot
+# github.com/tidwall/gjson v1.6.0
+## explicit
+github.com/tidwall/gjson
+# github.com/tidwall/match v1.0.1
+github.com/tidwall/match
+# github.com/tidwall/pretty v1.0.0
+github.com/tidwall/pretty
