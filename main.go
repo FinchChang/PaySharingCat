@@ -113,7 +113,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				resResult := getRestaurant(message.Latitude, message.Longitude)
 				if _, err := bot.ReplyMessage(
 					event.ReplyToken,
-					linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
+					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
+					linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
+
 					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
@@ -129,8 +131,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 type restaurant struct {
 	name      string
-	Latitude  string
-	Longitude string
+	Latitude  float64
+	Longitude float64
+	address   string
 }
 
 func getRestaurant(Latitude, Longitude float64) restaurant {
@@ -151,10 +154,16 @@ func getOneRestaurant(mapData string) restaurant {
 			name := gjson.Get(nowJson, "name")
 			Latitude := gjson.Get(nowJson, "geometry.location.lat")
 			Longitude := gjson.Get(nowJson, "geometry.location.lng")
+			address := gjson.Get(nowJson, "vicinity")
 			//geometry := gjson.Get(nowJson ,"geometry")
 			fmt.Println("name=", name)
 			fmt.Println("Latitude =", Latitude, ", Longitude =", Longitude)
-			return restaurant{name.String(), Latitude.String(), Longitude.String()}
+			Lat, err := strconv.ParseFloat(Latitude.String(), 8)
+			Lon, err := strconv.ParseFloat(Longitude.String(), 8)
+			if err == nil {
+				return restaurant{}
+			}
+			return restaurant{name.String(), Lat, Lon, address.String()}
 		} else {
 			return restaurant{}
 		}
