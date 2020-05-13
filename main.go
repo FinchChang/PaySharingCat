@@ -29,6 +29,7 @@ import (
 var bot *linebot.Client
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
@@ -78,8 +79,8 @@ func getMapDate() []byte {
 
 	b, err := ioutil.ReadAll(file)
 
-	fmt.Println(b)
-	fmt.Println("--------------------------------")
+	log.Println(b)
+	log.Println("--------------------------------")
 	return []byte(b)
 }
 
@@ -111,8 +112,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			case *linebot.LocationMessage:
 				resResult := getRestaurant(message.Latitude, message.Longitude)
-				fmt.Println("Restaurant result > ")
-				fmt.Println(resResult)
+				log.Println("Restaurant result > ")
+				log.Println(resResult)
 				if _, err := bot.ReplyMessage(
 					event.ReplyToken,
 					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
@@ -160,8 +161,8 @@ func getOneRestaurant(mapData string) restaurant {
 			Longitude := gjson.Get(nowJSON, "geometry.location.lng")
 			address := gjson.Get(nowJSON, "vicinity")
 			//geometry := gjson.Get(nowJson ,"geometry")
-			fmt.Println("name=", name)
-			fmt.Println("Latitude =", Latitude, ", Longitude =", Longitude)
+			log.Println("name=", name)
+			log.Println("Latitude =", Latitude, ", Longitude =", Longitude)
 			Lat, err := strconv.ParseFloat(Latitude.String(), 8)
 			Lon, err := strconv.ParseFloat(Longitude.String(), 8)
 			if err == nil {
@@ -211,7 +212,7 @@ func getJSONFromLocation(Latitude, Longitude float64) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%s", sitemap)
+	//fmt.Printf("%s", sitemap)
 	status := gjson.Get(string(sitemap), "status")
 	var mapResult string
 	if status.String() == "OK" {
