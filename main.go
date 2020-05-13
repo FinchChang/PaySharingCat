@@ -148,51 +148,53 @@ func getRestaurant(Latitude, Longitude float64) restaurant {
 }
 
 func getOneRestaurant(mapData string) restaurant {
+	oneRestaurant := restaurant{}
 	results := gjson.Get(mapData, "results")
 	if results.IsArray() {
-		nowJson := results.Array()[rand.Intn(len(results.Array()))].String()
-		business_status := gjson.Get(nowJson, "business_status")
-		if business_status.String() == "OPERATIONAL" {
-			name := gjson.Get(nowJson, "name")
-			Latitude := gjson.Get(nowJson, "geometry.location.lat")
-			Longitude := gjson.Get(nowJson, "geometry.location.lng")
-			address := gjson.Get(nowJson, "vicinity")
+		nowJSON := results.Array()[rand.Intn(len(results.Array()))].String()
+		fmt.Println(nowJSON)
+		businessStatus := gjson.Get(nowJSON, "business_status")
+		if businessStatus.String() == "OPERATIONAL" {
+			name := gjson.Get(nowJSON, "name")
+			Latitude := gjson.Get(nowJSON, "geometry.location.lat")
+			Longitude := gjson.Get(nowJSON, "geometry.location.lng")
+			address := gjson.Get(nowJSON, "vicinity")
 			//geometry := gjson.Get(nowJson ,"geometry")
 			fmt.Println("name=", name)
 			fmt.Println("Latitude =", Latitude, ", Longitude =", Longitude)
 			Lat, err := strconv.ParseFloat(Latitude.String(), 8)
 			Lon, err := strconv.ParseFloat(Longitude.String(), 8)
 			if err == nil {
-				return restaurant{}
+				return oneRestaurant
 			}
-			return restaurant{name.String(), Lat, Lon, address.String()}
-		} else {
-			return restaurant{}
+			oneRestaurant.name = name.String()
+			oneRestaurant.Latitude = Lat
+			oneRestaurant.Longitude = Lon
+			oneRestaurant.address = address.String()
 		}
-		/*
-		   for i := 0 ; i < len(results.Array()) ; i++{
-		       nowJson := results.Array()[i].String()
-		       business_status:= gjson.Get(nowJson ,"business_status")
-		       if business_status.String() == "OPERATIONAL" {
-		           name := gjson.Get(nowJson ,"name")
-		           geometry := gjson.Get(nowJson ,"geometry")
-		           fmt.Println("name=",name)
-		           fmt.Println("geometry=",geometry)
-		           fmt.Println("====================")
-
-		       }
-
-		   }
-		*/
 	}
-	return restaurant{}
+	/*
+	   for i := 0 ; i < len(results.Array()) ; i++{
+	       nowJson := results.Array()[i].String()
+	       business_status:= gjson.Get(nowJson ,"business_status")
+	       if business_status.String() == "OPERATIONAL" {
+	           name := gjson.Get(nowJson ,"name")
+	           geometry := gjson.Get(nowJson ,"geometry")
+	           fmt.Println("name=",name)
+	           fmt.Println("geometry=",geometry)
+	           fmt.Println("====================")
+
+	       }
+
+	   }
+	*/
+	return oneRestaurant
 }
 
 func getJSONFromLocation(Latitude, Longitude float64) string {
 	googleURL := "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=500&type=restaurant"
 	googleURL += "&location=" + fmt.Sprintf("%f", Latitude) + "," + fmt.Sprintf("%f", Longitude)
 	googleURL += "&key=" + os.Getenv("GoogleKey")
-	fmt.Println("googleURL=", googleURL)
 
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -211,9 +213,11 @@ func getJSONFromLocation(Latitude, Longitude float64) string {
 	}
 	fmt.Printf("%s", sitemap)
 	status := gjson.Get(string(sitemap), "status")
+	var mapResult string
 	if status.String() == "OK" {
-		return string(sitemap)
+		mapResult = string(sitemap)
 	} else {
-		return ""
+		mapResult = ""
 	}
+	return mapResult
 }
