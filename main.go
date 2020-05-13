@@ -111,7 +111,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					log.Print(err)
 				}
 			case *linebot.LocationMessage:
-				resResult := getRestaurant(message.Latitude, message.Longitude)
+				resResult := *getRestaurant(message.Latitude, message.Longitude)
 				log.Println("Restaurant result > ")
 				log.Println(resResult)
 				if _, err := bot.ReplyMessage(
