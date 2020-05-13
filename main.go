@@ -139,16 +139,16 @@ type restaurant struct {
 	address   string
 }
 
-func getRestaurant(Latitude, Longitude float64) restaurant {
+func getRestaurant(Latitude, Longitude float64) *restaurant {
 	//var jsonObj map[string]interface{}
 	//json.Unmarshal(getJSONFromLocation(Latitude, Longitude), &jsonObj)
 	//Todo:https://ithelp.ithome.com.tw/articles/10205062?sc=iThelpR
 	mapData := getJSONFromLocation(Latitude, Longitude)
-	return getOneRestaurant(mapData)
-
+	oneRestaurant := getOneRestaurant(mapData)
+	return oneRestaurant
 }
 
-func getOneRestaurant(mapData string) restaurant {
+func getOneRestaurant(mapData string) *restaurant {
 	oneRestaurant := restaurant{}
 	results := gjson.Get(mapData, "results")
 	if results.IsArray() {
@@ -166,7 +166,7 @@ func getOneRestaurant(mapData string) restaurant {
 			Lat, err := strconv.ParseFloat(Latitude.String(), 8)
 			Lon, err := strconv.ParseFloat(Longitude.String(), 8)
 			if err == nil {
-				return oneRestaurant
+				return &oneRestaurant
 			}
 			oneRestaurant.name = name.String()
 			oneRestaurant.Latitude = Lat
@@ -189,7 +189,7 @@ func getOneRestaurant(mapData string) restaurant {
 
 	   }
 	*/
-	return oneRestaurant
+	return &oneRestaurant
 }
 
 func getJSONFromLocation(Latitude, Longitude float64) string {
@@ -212,7 +212,7 @@ func getJSONFromLocation(Latitude, Longitude float64) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//fmt.Printf("%s", sitemap)
+	//gitfmt.Printf("%s", sitemap)
 	status := gjson.Get(string(sitemap), "status")
 	var mapResult string
 	if status.String() == "OK" {
