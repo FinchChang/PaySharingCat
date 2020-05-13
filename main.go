@@ -16,14 +16,15 @@ import (
 	"crypto/tls"
 	//  "encoding/json"
 	"fmt"
-	"github.com/line/line-bot-sdk-go/linebot"
-	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/line/line-bot-sdk-go/linebot"
+	"github.com/tidwall/gjson"
 )
 
 var bot *linebot.Client
@@ -39,30 +40,40 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
-
 	/*
-	   mapData := getMapDate()
-	   fmt.Println("--------------------------------")
-	   fmt.Println(mapData)
-	*/
-	/*
-	   results := gjson.Get(getMapDate(), "results")
-	   if results.IsArray() {
-	       for i := 0 ; i < len(results.Array()) ; i++{
-	           nowJson := results.Array()[i].String()
-	           business_status:= gjson.Get(nowJson ,"business_status")
-	           if business_status.String() == "OPERATIONAL" {
-	               name := gjson.Get(nowJson ,"name")
-	               geometry := gjson.Get(nowJson ,"geometry")
-	               fmt.Println("name=",name)
-	               fmt.Println("geometry=",geometry)
-	               fmt.Println("====================")
+			/*
+			   mapData := getMapDate()
+			   fmt.Println("--------------------------------")
+			   fmt.Println(mapData)
 
-	           }
+		/*
+			results := gjson.Get(getMapDate(), "results")
+			if results.IsArray() {
+				for i := 0; i < len(results.Array()); i++ {
+					nowJson := results.Array()[i].String()
+					business_status := gjson.Get(nowJson, "business_status")
+					if business_status.String() == "OPERATIONAL" {
+						name := gjson.Get(nowJson, "name")
+						geometry := gjson.Get(nowJson, "geometry")
+						fmt.Println("name=", name)
+						fmt.Println("geometry=", geometry)
+						fmt.Println("====================")
 
-	       }
-	   }
+					}
+
+				}
+			}
 	*/
+
+	//oneRestaurant := getRestaurantTest()
+	//log.Println(*oneRestaurant)
+}
+
+func getRestaurantTest() *restaurant {
+	mapData := getMapDate()
+	oneRestaurant := getOneRestaurant(string(mapData))
+	log.Println("intest", oneRestaurant)
+	return oneRestaurant
 }
 
 func getMapDataTest() string {
@@ -81,7 +92,7 @@ func getMapDate() []byte {
 
 	log.Println(b)
 	log.Println("--------------------------------")
-	return []byte(b)
+	return b
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -165,7 +176,7 @@ func getOneRestaurant(mapData string) *restaurant {
 			log.Println("Latitude =", Latitude, ", Longitude =", Longitude)
 			Lat, err := strconv.ParseFloat(Latitude.String(), 8)
 			Lon, err := strconv.ParseFloat(Longitude.String(), 8)
-			if err == nil {
+			if err != nil {
 				return &oneRestaurant
 			}
 			oneRestaurant.name = name.String()
