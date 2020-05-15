@@ -204,7 +204,7 @@ func getOneRestaurant(mapData string) *restaurant {
 }
 
 func getJSONFromLocation(Latitude, Longitude float64) string {
-	radius := 200
+	radius := "200"
 	googleURL := "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="
 	googleURL += radius + "&type=restaurant"
 	googleURL += "&location=" + fmt.Sprintf("%f", Latitude) + "," + fmt.Sprintf("%f", Longitude)
