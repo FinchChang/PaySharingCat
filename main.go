@@ -14,7 +14,9 @@ package main
 
 import (
 	"crypto/tls"
+
 	//  "encoding/json"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -23,6 +25,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tidwall/gjson"
 )
@@ -31,6 +34,8 @@ var bot *linebot.Client
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	connectDB()
 
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
@@ -67,6 +72,25 @@ func main() {
 
 	//oneRestaurant := getRestaurantTest()
 	//log.Println(*oneRestaurant)
+}
+
+func connectDB() {
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+
+	var name string
+	var weight int64
+	err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(name, weight)
 }
 
 func getRestaurantTest() *restaurant {
