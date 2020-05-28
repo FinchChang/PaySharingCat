@@ -24,7 +24,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
+	"strings"
 	"github.com/jackc/pgx/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tidwall/gjson"
@@ -119,7 +119,7 @@ func getMapDate() []byte {
 	return b
 }
 
-func GetReplyMsg(message event.Message) string{
+func GetReplyMsg(message Message) string{
 	msgTxt := strings.TrimSpace(message.Text)
 	i := strings.Index(msgTxt, "喵")
 	if i > -1 {
