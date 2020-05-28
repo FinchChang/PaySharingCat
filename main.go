@@ -119,6 +119,30 @@ func getMapDate() []byte {
 	return b
 }
 
+func GetReplyMsg(message event.Message) string{
+	msgTxt := strings.TrimSpace(message.Text)
+	if (i := strings.Index(msgTxt, "喵")) > -1 {
+		return getActionMsg(strings.TrimSpace(msgTxt[i+1:]))
+	} else {
+		return ""
+	}
+}
+
+func getActionMsg(msgTxt string) string{
+	if strings.Index(msgTxt, "help") > -1 || msgTxt == "" {
+		return getHelp()
+	}
+}
+
+func getHelp() string{
+	helpMsg :=,
+	`請輸入'喵 指令'
+	目前指令：
+		TagAll	標記所有人
+	`
+	return helpMsg
+}
+
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
 
@@ -139,11 +163,18 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-				if _, err = bot.ReplyMessage(
+
+				replyMsg := GetReplyMsg(message)
+				if replyMsg == ""{
+					log.Println("NO Action")
+				} else{
+					if _, err = bot.ReplyMessage(
 					event.ReplyToken,
-					linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10)),
-				).Do(); err != nil {
-					log.Print(err)
+					//linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10)),
+					linebot.NewTextMessage(replyMsg),
+					).Do(); err != nil {
+						log.Print(err)
+					}
 				}
 			case *linebot.LocationMessage:
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
