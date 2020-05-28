@@ -121,7 +121,8 @@ func getMapDate() []byte {
 
 func GetReplyMsg(message event.Message) string{
 	msgTxt := strings.TrimSpace(message.Text)
-	if (i := strings.Index(msgTxt, "喵")) > -1 {
+	i := strings.Index(msgTxt, "喵")
+	if i > -1 {
 		return getActionMsg(strings.TrimSpace(msgTxt[i+1:]))
 	} else {
 		return ""
@@ -135,11 +136,9 @@ func getActionMsg(msgTxt string) string{
 }
 
 func getHelp() string{
-	helpMsg :=,
-	`請輸入'喵 指令'
+	helpMsg :=`請輸入'喵 指令'
 	目前指令：
-		TagAll	標記所有人
-	`
+		TagAll	標記所有人`
 	return helpMsg
 }
 
