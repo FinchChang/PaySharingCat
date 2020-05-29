@@ -119,7 +119,7 @@ func getMapDate() []byte {
 	return b
 }
 
-func GetReplyMsg(message Event.Message) string{
+func GetReplyMsg(message linebot.Message) string{
 	msgTxt := strings.TrimSpace(message.Text)
 	i := strings.Index(msgTxt, "喵")
 	if i > -1 {
