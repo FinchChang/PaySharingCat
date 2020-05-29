@@ -157,7 +157,7 @@ func getUserProfile(token string) string{
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Authorization", "Bearer {" + token + "}")
 	res, _ := client.Do(req)
-	retrun res
+	return res
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
