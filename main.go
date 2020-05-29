@@ -123,7 +123,7 @@ func GetReplyMsgTest(message string) string{
 	log.Println("message = ",message)
 	msgTxt := strings.TrimSpace(message)
 	i := strings.Index(msgTxt, "喵")
-	return strings.TrimSpace(msgTxt[i+1:])
+	return strings.TrimSpace(msgTxt[i+3:])
 }
 
 func GetReplyMsg(message string) string{
@@ -131,7 +131,7 @@ func GetReplyMsg(message string) string{
 	msgTxt := strings.TrimSpace(message)
 	i := strings.Index(msgTxt, "喵")
 	if i > -1 {
-		return getActionMsg(strings.TrimSpace(msgTxt[i+1:]))
+		return getActionMsg(strings.TrimSpace(msgTxt[i+3:]))
 	} else {
 		return ""
 	}
