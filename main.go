@@ -35,7 +35,7 @@ var bot *linebot.Client
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	connectDB()
+	//connectDB()
 
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
