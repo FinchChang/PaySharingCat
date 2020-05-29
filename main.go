@@ -151,6 +151,15 @@ func getHelp() string{
 	return helpMsg
 }
 
+func getUserProfile(token string) string{
+	client := &http.Client{}
+	url := "https://api.line.me/v2/profile"
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("Authorization", "Bearer {" + token} + "}")
+	res, _ := client.Do(req)
+	retrun res
+}
+
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
 
@@ -168,10 +177,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				//quota, err := bot.GetMessageQuota().Do()
+
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-				replyMsg := GetReplyMsg(message.Text, event.Source.UserID) + "SendMsg=" + message.Text
+				replyMsg := GetReplyMsg(message.Text, event.Source.UserID) + "SendMsg="+message.Text + "userProfile" + getUserProfile(event.ReplyToken)
 				if replyMsg == ""{
 					log.Println("NO Action")
 				} else{
