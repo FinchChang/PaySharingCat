@@ -171,7 +171,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-				replyMsg := GetReplyMsg(message.Text, event.Source.UserID)
+				replyMsg := GetReplyMsg(message.Text, event.Source.UserID) + "SendMsg=" + message.Text
 				if replyMsg == ""{
 					log.Println("NO Action")
 				} else{
