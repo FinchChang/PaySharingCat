@@ -119,7 +119,8 @@ func getMapDate() []byte {
 	return b
 }
 
-func GetReplyMsg(message linebot.Event.Message) string{
+func GetReplyMsg(event linebot.Event) string{
+	message := event.Message.(type)
 	log.Println("message = ",message)
 	msgTxt := strings.TrimSpace(message.Text)
 	i := strings.Index(msgTxt, "喵")
@@ -165,7 +166,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					log.Println("Quota err:", err)
 				}
 
-				replyMsg := GetReplyMsg(message)
+				replyMsg := GetReplyMsg(event)
 				if replyMsg == ""{
 					log.Println("NO Action")
 				} else{
