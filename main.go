@@ -35,7 +35,7 @@ var bot *linebot.Client
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	//connectDB()
+	connectDB()
 
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
@@ -119,6 +119,13 @@ func getMapDate() []byte {
 	return b
 }
 
+func GetReplyMsgTest(message string) string{
+	log.Println("message = ",message)
+	msgTxt := strings.TrimSpace(message)
+	i := strings.Index(msgTxt, "喵")
+	return strings.TrimSpace(msgTxt[i+1:])
+}
+
 func GetReplyMsg(message string) string{
 	log.Println("message = ",message)
 	msgTxt := strings.TrimSpace(message)
@@ -160,12 +167,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				//quota, err := bot.GetMessageQuota().Do()
+				quota, err := bot.GetMessageQuota().Do()
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
 
-				replyMsg := GetReplyMsg(message.Text)
+				replyMsg := GetReplyMsg(message.Text) + GetReplyMsgTest(message.Text)
 				if replyMsg == ""{
 					log.Println("NO Action")
 				} else{
