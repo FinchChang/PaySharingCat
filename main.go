@@ -24,7 +24,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
+	"strings"
 	"github.com/jackc/pgx/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tidwall/gjson"
@@ -119,8 +119,9 @@ func getMapDate() []byte {
 	return b
 }
 
-func GetReplyMsg(message event.Message) string{
-	msgTxt := strings.TrimSpace(message.Text)
+func GetReplyMsg(message string) string{
+	log.Println("message = ",message)
+	msgTxt := strings.TrimSpace(message)
 	i := strings.Index(msgTxt, "喵")
 	if i > -1 {
 		return getActionMsg(strings.TrimSpace(msgTxt[i+1:]))
@@ -133,6 +134,7 @@ func getActionMsg(msgTxt string) string{
 	if strings.Index(msgTxt, "help") > -1 || msgTxt == "" {
 		return getHelp()
 	}
+	return ""
 }
 
 func getHelp() string{
@@ -158,12 +160,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				quota, err := bot.GetMessageQuota().Do()
+				//quota, err := bot.GetMessageQuota().Do()
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
 
-				replyMsg := GetReplyMsg(message)
+				replyMsg := GetReplyMsg(message.Text)
 				if replyMsg == ""{
 					log.Println("NO Action")
 				} else{
