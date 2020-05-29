@@ -155,7 +155,7 @@ func getUserProfile(token string) string{
 	client := &http.Client{}
 	url := "https://api.line.me/v2/profile"
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("Authorization", "Bearer {" + token} + "}")
+	req.Header.Set("Authorization", "Bearer {" + token + "}")
 	res, _ := client.Do(req)
 	retrun res
 }
