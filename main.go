@@ -35,7 +35,7 @@ var bot *linebot.Client
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	connectDB()
+	//connectDB()
 
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
@@ -119,12 +119,19 @@ func getMapDate() []byte {
 	return b
 }
 
-func GetReplyMsg(message string) string{
+func GetReplyMsgTest(message string) string{
 	log.Println("message = ",message)
 	msgTxt := strings.TrimSpace(message)
 	i := strings.Index(msgTxt, "喵")
+	return strings.TrimSpace(msgTxt[i+1:])
+}
+
+func GetReplyMsg(message string) string{
+	log.Println("message = ",message)
+	MegRune := []rune(strings.TrimSpace(message))
+	i := strings.Index(message , "喵")
 	if i > -1 {
-		return getActionMsg(strings.TrimSpace(msgTxt[i+1:]))
+		return getActionMsg(string(MegRune[i+1:]))
 	} else {
 		return ""
 	}
@@ -140,7 +147,7 @@ func getActionMsg(msgTxt string) string{
 func getHelp() string{
 	helpMsg :=`請輸入'喵 指令'
 	目前指令：
-		TagAll	標記所有人`
+		所有人	標記所有人`
 	return helpMsg
 }
 
@@ -165,7 +172,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					log.Println("Quota err:", err)
 				}
 
-				replyMsg := GetReplyMsg(message.Text)
+				replyMsg := GetReplyMsg(message.Text) + GetReplyMsgTest(message.Text)
 				if replyMsg == ""{
 					log.Println("NO Action")
 				} else{
