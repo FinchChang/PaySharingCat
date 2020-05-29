@@ -123,15 +123,15 @@ func GetReplyMsgTest(message string) string{
 	log.Println("message = ",message)
 	msgTxt := strings.TrimSpace(message)
 	i := strings.Index(msgTxt, "喵")
-	return strings.TrimSpace(msgTxt[i+3:])
+	return strings.TrimSpace(msgTxt[i+1:])
 }
 
 func GetReplyMsg(message string) string{
 	log.Println("message = ",message)
-	msgTxt := strings.TrimSpace(message)
-	i := strings.Index(msgTxt, "喵")
+	MegRune := []rune(strings.TrimSpace(message))
+	i := strings.Index(message , "喵")
 	if i > -1 {
-		return getActionMsg(strings.TrimSpace(msgTxt[i+3:]))
+		return getActionMsg(string(MegRune[i+1:]))
 	} else {
 		return ""
 	}
@@ -147,7 +147,7 @@ func getActionMsg(msgTxt string) string{
 func getHelp() string{
 	helpMsg :=`請輸入'喵 指令'
 	目前指令：
-		TagAll	標記所有人`
+		所有人	標記所有人`
 	return helpMsg
 }
 
