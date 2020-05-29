@@ -119,7 +119,7 @@ func getMapDate() []byte {
 	return b
 }
 
-func GetReplyMsg(message Message) string{
+func GetReplyMsg(message Event.Message) string{
 	msgTxt := strings.TrimSpace(message.Text)
 	i := strings.Index(msgTxt, "喵")
 	if i > -1 {
@@ -133,6 +133,7 @@ func getActionMsg(msgTxt string) string{
 	if strings.Index(msgTxt, "help") > -1 || msgTxt == "" {
 		return getHelp()
 	}
+	return ""
 }
 
 func getHelp() string{
