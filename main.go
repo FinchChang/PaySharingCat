@@ -125,7 +125,7 @@ func GetReplyMsg(message,userID string) string{
 	MegRune := []rune(strings.TrimSpace(message))
 	i := strings.Index(message , "喵")
 	if i > -1 {
-		return getActionMsg(string(MegRune[i+1:]))
+		return getActionMsg(string(MegRune[i+1:]),userID)
 	} else {
 		return ""
 	}
