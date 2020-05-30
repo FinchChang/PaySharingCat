@@ -25,6 +25,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
 	"github.com/jackc/pgx/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tidwall/gjson"
@@ -119,43 +120,44 @@ func getMapDate() []byte {
 	return b
 }
 
-
-func GetReplyMsg(message,userID string) string{
-	log.Println("message = ",message)
+func getReplyMsg(message, userID string) string {
+	log.Println("message = ", message)
 	MegRune := []rune(strings.TrimSpace(message))
-	i := strings.Index(message , "喵")
+	i := strings.Index(message, "喵")
+	var replyMsg string
 	if i > -1 {
-		return getActionMsg(string(MegRune[i+1:]),userID)
+		replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
 	} else {
-		return ""
+		replyMsg = ""
 	}
+	return replyMsg
 }
 
-func getActionMsg(msgTxt,userID string) string{
+func getActionMsg(msgTxt, userID s tring) string {
 	if strings.Index(msgTxt, "help") > -1 || msgTxt == "" {
 		return getHelp()
-	} else if strings.Index(msgTxt, "所有人") > -1  {
+	} else if strings.Index(msgTxt, "所有人") > -1 {
 		return tagUser(userID)
 	}
 	return ""
 }
 
-func tagUser(userID string) string{
-	return "@"+userID
+func tagUser(userID string) string {
+	return "@" + userID
 }
 
-func getHelp() string{
-	helpMsg :=`請輸入'喵 指令'
+func getHelp() string {
+	helpMsg := `請輸入'喵 指令'
 	目前指令：
 		所有人	標記所有人(Ex: 喵 所有人`
 	return helpMsg
 }
 
-func getUserProfile(token string) string{
+func getUserProfile(token string) string {
 	client := &http.Client{}
 	url := "https://api.line.me/v2/profile"
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("Authorization", "Bearer {" + token + "}")
+	req.Header.Set("Authorization", "Bearer {"+token+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
 	return string(s)
@@ -182,14 +184,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-							replyMsg := GetReplyMsg(message.Text, event.Source.UserID) + "SendMsg="+message.Text + "userProfile=" + getUserProfile(event.ReplyToken) + "ReplyToken=" + event.ReplyToken
-				if replyMsg == ""{
+				replyMsg := getReplyMsg(message.Text, event.Source.UserID) + "SendMsg=" + message.Text + "userProfile=" + getUserProfile(event.ReplyToken) + "ReplyToken=" + event.ReplyToken
+				if replyMsg == "" {
 					log.Println("NO Action")
-				} else{
+				} else {
 					if _, err = bot.ReplyMessage(
-					event.ReplyToken,
-					//linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10)),
-					linebot.NewTextMessage(replyMsg),
+						event.ReplyToken,
+						//linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10)),
+						linebot.NewTextMessage(replyMsg),
 					).Do(); err != nil {
 						log.Print(err)
 					}
