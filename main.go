@@ -87,7 +87,7 @@ func getUserInfo() string {
 
 	// err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
 
-	err = conn.QueryRow(context.Background(), "select GroupID, UserID, UserName from public.GroupProfile").Scan(&GroupID, &UserID, &UserName)
+	err = conn.QueryRow(context.Background(), "select GroupID, UserID, UserName from public.\"GroupProfile\"").Scan(&GroupID, &UserID, &UserName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		os.Exit(1)
