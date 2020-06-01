@@ -36,8 +36,6 @@ var bot *linebot.Client
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	//connectDB()
-
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	//key := os.Getenv("GoogleKey")
@@ -75,7 +73,7 @@ func main() {
 	//log.Println(*oneRestaurant)
 }
 
-func connectDB() {
+func getUserInfo() string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -83,15 +81,34 @@ func connectDB() {
 	}
 	defer conn.Close(context.Background())
 
-	var name string
-	var weight int64
-	err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
+	var GroupID string
+	var UserID string
+	var UserName string
+
+	// err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
+
+	err = conn.QueryRow(context.Background(), "select GroupID, UserID, UserName from GroupProfile").Scan(&GroupID, &UserID, &UserName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Println(name, weight)
+	fmt.Println(GroupID, UserID, UserName)
+	return GroupID + UserID + UserName
+}
+
+func insertUserProfile(GroupID, UserID, UserName string) {
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+
+	conn.QueryRow(context.Background(), "INSERT INTO GroupProfile VALUES($1,$2,$3)", GroupID, UserID, UserName)
+
+
+	fmt.Println(GroupID, UserID, UserName)
 }
 
 func getRestaurantTest() *restaurant {
@@ -133,11 +150,13 @@ func getReplyMsg(message, userID string) string {
 	return replyMsg
 }
 
-func getActionMsg(msgTxt, userID s tring) string {
+func getActionMsg(msgTxt, userID string) string {
 	if strings.Index(msgTxt, "help") > -1 || msgTxt == "" {
 		return getHelp()
 	} else if strings.Index(msgTxt, "所有人") > -1 {
 		return tagUser(userID)
+	} else if strings.Index(msgTxt, "測試查詢") > -1 {
+		return getUserInfo()
 	}
 	return ""
 }
@@ -149,7 +168,7 @@ func tagUser(userID string) string {
 func getHelp() string {
 	helpMsg := `請輸入'喵 指令'
 	目前指令：
-		所有人	標記所有人(Ex: 喵 所有人`
+		所有人	標記所有人(Ex: 喵 所有人)`
 	return helpMsg
 }
 
