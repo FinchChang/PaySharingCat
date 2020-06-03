@@ -160,14 +160,15 @@ func getActionMsg(msgTxt, userID string) string {
 		return tagUser(userID)
 	} else if strings.Index(msgTxt, "測試查詢") > -1 {
 		return getUserInfo()
-	} else if strings.Index(msgTxt, "上車") > -1 {
-
+	} else if strings.Index(msgTxt, "測試標記") > -1 {
+		return tagUser(userID)
 	}
 	return ""
 }
 
 func tagUser(userID string) string {
-	return "@" + userID
+	JSONuserProfile := getUserProfile(userID)
+	return "@" + gjson.Get(JSONuserProfile, "displayName")
 }
 
 func getHelp() string {
@@ -207,7 +208,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-								replyMsg := getReplyMsg(message.Text, event.Source.UserID) + "SendMsg=" + message.Text + "userProfile=" + getUserProfile(event.Source.UserID) + "ReplyToken=" + event.ReplyToken
+				replyMsg := getReplyMsg(message.Text, event.Source.UserID) + "SendMsg=" + message.Text + "userProfile=" + getUserProfile(event.Source.UserID) + "ReplyToken=" + event.ReplyToken
 				if replyMsg == "" {
 					log.Println("NO Action")
 				} else {
