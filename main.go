@@ -208,7 +208,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-				replyMsg := getReplyMsg(message.Text, event.Source.UserID) + "SendMsg=" + message.Text + "userProfile=" + getUserProfile(event.Source.UserID) + "ReplyToken=" + event.ReplyToken
+				replyMsg := "功能回覆：\n" + getReplyMsg(message.Text, event.Source.UserID)
+				replyMsg += "\n使用者訊息：\n" + message.Text
+				replyMsg += "\nUserPorilfe\n" + getUserProfile(event.Source.UserID)
 				if replyMsg == "" {
 					log.Println("NO Action")
 				} else {
