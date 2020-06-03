@@ -137,7 +137,6 @@ func getMapDate() []byte {
 }
 
 func getReplyMsg(message, userID string) string {
-	log.Println("message = ", message)
 	MegRune := []rune(strings.TrimSpace(message))
 	i := strings.Index(message, "喵")
 	var replyMsg string
@@ -168,7 +167,7 @@ func getActionMsg(msgTxt, userID string) string {
 
 func tagUser(userID string) string {
 	JSONuserProfile := getUserProfile(userID)
-	return "@" + gjson.Get(JSONuserProfile, "displayName").String()
+	return "\'@\'" + gjson.Get(JSONuserProfile, "displayName").String()
 }
 
 func getHelp() string {
@@ -273,8 +272,8 @@ func getOneRestaurant(mapData string) *restaurant {
 			Longitude := gjson.Get(nowJSON, "geometry.location.lng")
 			address := gjson.Get(nowJSON, "vicinity")
 			//geometry := gjson.Get(nowJson ,"geometry")
-			log.Println("name=", name)
-			log.Println("Latitude =", Latitude, ", Longitude =", Longitude)
+			// log.Println("name=", name)
+			// log.Println("Latitude =", Latitude, ", Longitude =", Longitude)
 			Lat, err := strconv.ParseFloat(Latitude.String(), 8)
 			Lon, err := strconv.ParseFloat(Longitude.String(), 8)
 			if err != nil {
