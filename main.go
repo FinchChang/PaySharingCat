@@ -36,7 +36,6 @@ const profileUrl string = "https://api.line.me/v2/bot/profile/"
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	token := os.Getenv("ChannelAccessToken")
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	//key := os.Getenv("GoogleKey")
@@ -150,6 +149,10 @@ func getReplyMsg(message, userID string) string {
 	return replyMsg
 }
 
+func setRecordUser(){
+
+}
+
 func getActionMsg(msgTxt, userID string) string {
 	if strings.Index(msgTxt, "help") > -1 || msgTxt == "" {
 		return getHelp()
@@ -157,6 +160,8 @@ func getActionMsg(msgTxt, userID string) string {
 		return tagUser(userID)
 	} else if strings.Index(msgTxt, "測試查詢") > -1 {
 		return getUserInfo()
+	} else if strings.Index(msgTxt, "上車") > -1 {
+
 	}
 	return ""
 }
@@ -172,11 +177,10 @@ func getHelp() string {
 	return helpMsg
 }
 
-func getUserProfile(token string) string {
+func getUserProfile(userID string) string {
 	client := &http.Client{}
-	url := "https://api.line.me/v2/profile"
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("Authorization", "Bearer {"+token+"}")
+	req, _ := http.NewRequest("GET", profileUrl + userID, nil)
+	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
 	return string(s)
