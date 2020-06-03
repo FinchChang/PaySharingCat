@@ -32,6 +32,8 @@ import (
 )
 
 var bot *linebot.Client
+const profileUrl string = "https://api.line.me/v2/bot/profile/"
+const token string = os.Getenv("ChannelAccessToken")
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -44,7 +46,7 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
-	/*
+	/*	test to get map data
 			/*
 			   mapData := getMapDate()
 			   fmt.Println("--------------------------------")
