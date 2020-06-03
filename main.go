@@ -33,11 +33,10 @@ import (
 
 var bot *linebot.Client
 const profileUrl string = "https://api.line.me/v2/bot/profile/"
-const token string = os.Getenv("ChannelAccessToken")
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
+	token := os.Getenv("ChannelAccessToken")
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	//key := os.Getenv("GoogleKey")
