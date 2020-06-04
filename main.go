@@ -166,7 +166,7 @@ func getActionMsg(msgTxt, userID string) string {
 }
 
 func tagUser(userID string) string {
-	JSONuserProfile := getUserProfile(userID)
+	//JSONuserProfile := getUserProfile(userID)
 	return `<@` + userID +  `>`
 }
 
