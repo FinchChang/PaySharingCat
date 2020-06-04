@@ -167,7 +167,7 @@ func getActionMsg(msgTxt, userID string) string {
 
 func tagUser(userID string) string {
 	JSONuserProfile := getUserProfile(userID)
-	return `<@` + gjson.Get(JSONuserProfile, "displayName").String() +  `>`
+	return `<@` + userID +  `>`
 }
 
 func getHelp() string {
