@@ -35,7 +35,16 @@ var bot *linebot.Client
 
 const profileUrl string = "https://api.line.me/v2/bot/profile/"
 
+func test() {
+	inpit := "喵 help"
+	MegRune := []rune(strings.TrimSpace(inpit))
+	i := strings.Index(inpit, "喵")
+	fmt.Println(strings.Index(string(MegRune[i+1:]), "help"))
+}
 func main() {
+
+	test()
+
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
@@ -157,13 +166,13 @@ func setRecordUser() {
 }
 
 func getActionMsg(msgTxt, userID string) string {
-	if strings.Index(msgTxt, "help") == 0 || msgTxt == "" {
+	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
 		return getHelp()
-	} else if strings.Index(msgTxt, "所有人") == 0 {
+	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(userID)
-	} else if strings.Index(msgTxt, "測試查詢") == 0 {
+	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		return getUserInfo()
-	} else if strings.Index(msgTxt, "測試標記") == 0 {
+	} else if strings.Index(msgTxt, "測試標記") == 1 {
 		return tagUser(userID)
 	}
 	return ""
