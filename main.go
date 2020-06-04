@@ -32,8 +32,8 @@ import (
 )
 
 var bot *linebot.Client
-const profileUrl string = "https://api.line.me/v2/bot/profile/"
 
+const profileUrl string = "https://api.line.me/v2/bot/profile/"
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -152,18 +152,18 @@ func getReplyMsg(message, userID string) string {
 	return replyMsg
 }
 
-func setRecordUser(){
+func setRecordUser() {
 
 }
 
 func getActionMsg(msgTxt, userID string) string {
-	if strings.Index(msgTxt, "help") > -1 || msgTxt == "" {
+	if strings.Index(msgTxt, "help") == 0 || msgTxt == "" {
 		return getHelp()
-	} else if strings.Index(msgTxt, "所有人") > -1 {
+	} else if strings.Index(msgTxt, "所有人") == 0 {
 		return tagUser(userID)
-	} else if strings.Index(msgTxt, "測試查詢") > -1 {
+	} else if strings.Index(msgTxt, "測試查詢") == 0 {
 		return getUserInfo()
-	} else if strings.Index(msgTxt, "測試標記") > -1 {
+	} else if strings.Index(msgTxt, "測試標記") == 0 {
 		return tagUser(userID)
 	}
 	return ""
@@ -173,7 +173,7 @@ func tagUser(userID string) string {
 	//JSONuserProfile := getUserProfile(userID)
 	//return `<@[^>]+>` + gjson.Get(JSONuserProfile, "displayName").String()
 	//return `<@` + gjson.Get(JSONuserProfile, "displayName").String() +  `>`
-	return `<@` + userID +  `>`
+	return `<@` + userID + `>`
 }
 
 func getHelp() string {
@@ -185,7 +185,7 @@ func getHelp() string {
 
 func getUserProfile(userID string) string {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", profileUrl + userID, nil)
+	req, _ := http.NewRequest("GET", profileUrl+userID, nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
