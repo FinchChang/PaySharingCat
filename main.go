@@ -143,9 +143,9 @@ func getReplyMsg(message, userID string) string {
 	var replyMsg string
 	if i > -1 {
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
-		replyMsg := "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), userID)
+		replyMsg = "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), userID)
 		replyMsg += "\n---使用者訊息---\n" + message.Text
-		replyMsg += "\n---UserPorilfe---\n" + getUserProfile(event.Source.UserID)
+		replyMsg += "\n---UserPorilfe---\n" + getUserProfile(userID)
 	} else {
 		replyMsg = ""
 	}
