@@ -34,6 +34,7 @@ import (
 var bot *linebot.Client
 const profileUrl string = "https://api.line.me/v2/bot/profile/"
 
+
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	var err error
@@ -141,7 +142,10 @@ func getReplyMsg(message, userID string) string {
 	i := strings.Index(message, "喵")
 	var replyMsg string
 	if i > -1 {
-		replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
+		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
+		replyMsg := "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), userID)
+		replyMsg += "\n---使用者訊息---\n" + message.Text
+		replyMsg += "\n---UserPorilfe---\n" + getUserProfile(event.Source.UserID)
 	} else {
 		replyMsg = ""
 	}
@@ -167,6 +171,8 @@ func getActionMsg(msgTxt, userID string) string {
 
 func tagUser(userID string) string {
 	//JSONuserProfile := getUserProfile(userID)
+	//return `<@[^>]+>` + gjson.Get(JSONuserProfile, "displayName").String()
+	//return `<@` + gjson.Get(JSONuserProfile, "displayName").String() +  `>`
 	return `<@` + userID +  `>`
 }
 
@@ -207,9 +213,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-				replyMsg := "功能回覆：\n" + getReplyMsg(message.Text, event.Source.UserID)
-				replyMsg += "\n使用者訊息：\n" + message.Text
-				replyMsg += "\nUserPorilfe\n" + getUserProfile(event.Source.UserID)
+				replyMsg := getReplyMsg(message.Text, event.Source.UserID)
 				if replyMsg == "" {
 					log.Println("NO Action")
 				} else {
