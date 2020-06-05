@@ -174,6 +174,10 @@ func getActionMsg(msgTxt, userID string) string {
 		return getUserInfo()
 	} else if strings.Index(msgTxt, "測試標記") == 1 {
 		return tagUser(userID)
+	} else if strings.Index(msgTxt, "DBCMD") == 1 {
+		MegRune := []rune(strings.TrimSpace(message))
+		i := strings.Index(message, "DBCMD")
+		return string(MegRune[i+len("DBCMD"):])
 	}
 	return ""
 }
