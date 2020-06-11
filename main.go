@@ -14,6 +14,7 @@ package main
 
 import (
 	"crypto/tls"
+	"time"
 
 	//  "encoding/json"
 	"context"
@@ -107,14 +108,6 @@ func getUserInfo() string {
 	return GroupID + UserID + UserName
 }
 
-func insertUserPro(input *linebot.EventSource) string {
-	log.Println("GroupID=", input.GroupID)
-	log.Println("RoomID=", input.RoomID)
-	log.Println("UserID=", input.UserID)
-	log.Println("Type=", input.Type)
-	return ""
-}
-
 func insertUserProfile(GroupID, UserID, UserName string) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -154,34 +147,43 @@ func getMapDate() []byte {
 	return b
 }
 
-func getReplyMsg(message, userID string) string {
+func getReplyMsg(message string, source *linebot.EventSource) string {
 	MegRune := []rune(strings.TrimSpace(message))
 	i := strings.Index(message, "喵")
 	var replyMsg string
 	if i > -1 {
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
-		replyMsg = "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), userID)
+		replyMsg = "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), source)
 		replyMsg += "\n---使用者訊息---\n" + message
-		replyMsg += "\n---UserPorilfe---\n" + getUserProfile(userID)
+		replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
 		replyMsg = ""
 	}
 	return replyMsg
 }
 
-func setRecordUser() {
+func insertTest(source *linebot.EventSource) string {
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+	UserName := getUserName(source.UserID)
+	conn.QueryRow(context.Background(), `INSERT INTO GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
 
+	return ""
 }
 
-func getActionMsg(msgTxt, userID string) string {
+func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
 		return getHelp()
 	} else if strings.Index(msgTxt, "所有人") == 1 {
-		return tagUser(userID)
+		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		//return insertUserPro()
+		return insertTest(source)
 	} else if strings.Index(msgTxt, "測試標記") == 1 {
-		return tagUser(userID)
+		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
@@ -213,6 +215,11 @@ func getUserProfile(userID string) string {
 	return string(s)
 }
 
+func getUserName(UserID string) string {
+	JSONuserProfile := getUserProfile(UserID)
+	return gjson.Get(JSONuserProfile, "displayName").String()
+}
+
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
 
@@ -234,8 +241,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-				replyMsg := insertUserPro(event.Source)
-				//replyMsg := getReplyMsg(message.Text, event.Source.UserID)
+
+				replyMsg := getReplyMsg(message.Text, event.Source)
 				if replyMsg == "" {
 					log.Println("NO Action")
 				} else {
