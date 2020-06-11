@@ -33,7 +33,7 @@ import (
 
 var bot *linebot.Client
 
-const profileUrl string = "https://api.line.me/v2/bot/profile/"
+const profileURL string = "https://api.line.me/v2/bot/profile/"
 
 func test() {
 	inpit := "喵 help"
@@ -107,6 +107,14 @@ func getUserInfo() string {
 	return GroupID + UserID + UserName
 }
 
+func insertUserPro(input *linebot.EventSource) string {
+	log.Println("GroupID=", input.GroupID)
+	log.Println("RoomID=", input.RoomID)
+	log.Println("UserID=", input.UserID)
+	log.Println("Type=", input.Type)
+	return ""
+}
+
 func insertUserProfile(GroupID, UserID, UserName string) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -170,8 +178,8 @@ func getActionMsg(msgTxt, userID string) string {
 		return getHelp()
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(userID)
-	} else if strings.Index(msgTxt, "測試查詢") == 1 {
-		return getUserInfo()
+	} else if strings.Index(msgTxt, "測試插入") == 1 {
+		//return insertUserPro()
 	} else if strings.Index(msgTxt, "測試標記") == 1 {
 		return tagUser(userID)
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
@@ -198,7 +206,7 @@ func getHelp() string {
 
 func getUserProfile(userID string) string {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", profileUrl+userID, nil)
+	req, _ := http.NewRequest("GET", profileURL+userID, nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
@@ -226,7 +234,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-				replyMsg := getReplyMsg(message.Text, event.Source.UserID)
+				replyMsg := insertUserPro(event.Source)
+				//replyMsg := getReplyMsg(message.Text, event.Source.UserID)
 				if replyMsg == "" {
 					log.Println("NO Action")
 				} else {
