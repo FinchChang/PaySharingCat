@@ -221,6 +221,43 @@ func insertTest(source *linebot.EventSource) string {
 	return ""
 }
 
+func testSQLCmd(SQLCmd string) string{
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		//os.Exit(1)
+		return err.Error()
+	}
+	defer conn.Close(context.Background())
+
+	var sum string
+	// Send the query to the server. The returned rows MUST be closed
+	// before conn can be used again.
+	rows, err := conn.Query(context.Background(), SQLCmd)
+	if err != nil {
+	    return err.Error()
+	}
+	// No errors found - do something with sum
+	defer rows.Close()
+
+	// Iterate through the result set
+	for rows.Next() {
+		var n string
+	    err = rows.Scan(&n)
+	    if err != nil {
+	        return err.Error()
+	    }
+	    sum += n + "\n"
+	}
+
+	// Any errors encountered by rows.Next or rows.Scan will be returned here
+	if rows.Err() != nil {
+	    return err.Error()
+	}
+
+	return sum
+}
+
 func testInsert(source *linebot.EventSource) string{
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -276,7 +313,8 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
-		return string(MegRune[i+len("DBCMD"):])
+		// return string(MegRune[i+len("DBCMD"):])
+		return testSQLCmd(MegRune[i+len("DBCMD"):])
 	}
 	return ""
 }
