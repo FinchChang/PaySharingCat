@@ -106,6 +106,8 @@ func selectTest() string {
 	return GroupID + UserID + UserName
 }
 */
+
+
 func QueryTest() (string, error) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -209,7 +211,8 @@ func insertTest(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
+		// os.Exit(1)
+		return string(err)
 	}
 	defer conn.Close(context.Background())
 	UserName := getUserName(source.UserID)
@@ -218,13 +221,34 @@ func insertTest(source *linebot.EventSource) string {
 	return ""
 }
 
+func testInsert() string{
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		//os.Exit(1)
+		return string(err)
+	}
+	defer conn.Close(context.Background())
+
+
+	var sum string
+	var count int32
+	// Send the query to the server. The returned rows MUST be closed
+	// before conn can be used again.
+	rows, err := conn.Query(context.Background(), `INSERT INTO GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
+	if err != nil {
+	    return string(err)
+	}
+	// No errors found - do something with sum
+}
+
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
 		return getHelp()
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		return insertTest(source)
+		return testInsert()
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		result, err := QueryTest()
 		if err != nil {
@@ -232,7 +256,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 		}else{
 			return result+"測試查詢"
 		}
-		
+
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
