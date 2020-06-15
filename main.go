@@ -106,7 +106,7 @@ func selectTest() string {
 	return GroupID + UserID + UserName
 }
 */
-func QueryTest() (string, err) {
+func QueryTest() (string, error) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -138,7 +138,7 @@ func QueryTest() (string, err) {
 		var UserName string
 	    err = rows.Scan(&GroupID,&UserID,&UserName)
 	    if err != nil {
-	        return err.Err()
+	        return "err",err
 	    }
 	    sum += "idx="+string(count)+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
 	}
