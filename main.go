@@ -220,7 +220,7 @@ func insertTest(source *linebot.EventSource) string {
 	}
 	defer conn.Close(context.Background())
 	UserName := getUserName(source.UserID)
-	conn.QueryRow(context.Background(), `INSERT INTO GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
+	conn.QueryRow(context.Background(), `INSERT INTO public.GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
 
 	return ""
 }
@@ -270,11 +270,12 @@ func testInsert(source *linebot.EventSource) string {
 		return err.Error()
 	}
 	defer conn.Close(context.Background())
-
+	CountNum := `(SELECT COUNT("Num") FROM public."GroupProfile" WHERE "GroupID"='` + source.GroupID + `')`
+	//INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES ('test' , '2', 'v小黑', (SELECT COUNT("Num") FROM public."GroupProfile"
 	var sum string
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
-	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), 1, time.Now())
+	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), CountNum, time.Now())
 	if err != nil {
 		return err.Error()
 	}
