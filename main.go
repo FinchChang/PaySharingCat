@@ -80,7 +80,7 @@ func main() {
 	//oneRestaurant := getRestaurantTest()
 	//log.Println(*oneRestaurant)
 }
-
+/*
 func selectTest() string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -105,7 +105,7 @@ func selectTest() string {
 	fmt.Println(GroupID, UserID, UserName)
 	return GroupID + UserID + UserName
 }
-
+*/
 func QueryTest() string{
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -121,7 +121,7 @@ func QueryTest() string{
 	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`)
 	if err != nil {
-	    return err
+	    return err.Err()
 	}
 	sum = "conn.Query success.\n"
 	// rows.Close is called by rows.Next when all rows are read
@@ -138,9 +138,9 @@ func QueryTest() string{
 		var UserName string
 	    err = rows.Scan(&GroupID,&UserID,&UserName)
 	    if err != nil {
-	        return err
+	        return err.Err()
 	    }
-	    sum += "idx="+count.String()+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
+	    sum += "idx="+string(count)+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
