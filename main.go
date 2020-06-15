@@ -270,7 +270,7 @@ func testInsert(source *linebot.EventSource) string{
 	var sum string
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
-	rows, err := conn.Query(context.Background(), `INSERT INTO GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), 1, time.Now())
+	rows, err := conn.Query(context.Background(), `INSERT INTO "GroupProfile" (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), 1, time.Now())
 	if err != nil {
 	    return err.Error()
 	}
