@@ -212,7 +212,7 @@ func insertTest(source *linebot.EventSource) string {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		// os.Exit(1)
-		return string(err)
+		return err.Error()
 	}
 	defer conn.Close(context.Background())
 	UserName := getUserName(source.UserID)
@@ -221,12 +221,12 @@ func insertTest(source *linebot.EventSource) string {
 	return ""
 }
 
-func testInsert() string{
+func testInsert(source *linebot.EventSource) string{
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		//os.Exit(1)
-		return string(err)
+		return err.Error()
 	}
 	defer conn.Close(context.Background())
 
@@ -240,6 +240,7 @@ func testInsert() string{
 	    return string(err)
 	}
 	// No errors found - do something with sum
+	return "sucess"
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
@@ -248,7 +249,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		return testInsert()
+		return testInsert(source)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		result, err := QueryTest()
 		if err != nil {
