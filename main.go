@@ -248,7 +248,7 @@ func testInsert(source *linebot.EventSource) string{
 	    if err != nil {
 	        return err.Error()
 	    }
-	    sum += n "\n"
+	    sum += n + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
