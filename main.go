@@ -227,9 +227,11 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 		return insertTest(source)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		result, err := QueryTest()
-		
+		if err != nil {
 			return result+"測試查詢"
-		
+		}else{
+			return result+"測試查詢"
+		}
 		
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
