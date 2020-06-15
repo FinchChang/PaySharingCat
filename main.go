@@ -314,7 +314,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
 		// return string(MegRune[i+len("DBCMD"):])
-		return testSQLCmd(MegRune[i+len("DBCMD"):])
+		return testSQLCmd(string(MegRune[i+len("DBCMD"):]))
 	}
 	return ""
 }
