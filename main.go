@@ -145,7 +145,7 @@ func QueryTest() (string, error) {
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-	    return err, nil
+	    return "err",err
 	}
 	return sum , nil
 	// No errors found - do something with sum
@@ -226,7 +226,11 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
 		return insertTest(source)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
-		return QueryTest()+"測試查詢"
+		result, err := QueryTest()
+		
+			return result+"測試查詢"
+		
+		
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
