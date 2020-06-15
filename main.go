@@ -95,10 +95,52 @@ func selectTest() string {
 
 	// err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
 
-	conn.QueryRow(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`).Scan(&GroupID, &UserID, &UserName)
+	err = conn.QueryRow(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`).Scan(&GroupID, &UserID, &UserName)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		//os.Exit(1)
+		return err
+	}
 
 	fmt.Println(GroupID, UserID, UserName)
 	return GroupID + UserID + UserName
+}
+
+func QueryTest() string{
+	var sum String
+	var count int32
+	// Send the query to the server. The returned rows MUST be closed
+	// before conn can be used again.
+	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`)
+	if err != nil {
+	    return err
+	}
+	sum = "conn.Query success.\n"
+	// rows.Close is called by rows.Next when all rows are read
+	// or an error occurs in Next or Scan. So it may optionally be
+	// omitted if nothing in the rows.Next loop can panic. It is
+	// safe to close rows multiple times.
+	defer rows.Close()
+
+	// Iterate through the result set
+	for rows.Next() {
+		count = count + 1
+		var GroupID string
+		var UserID string
+		var UserName string
+	    err = rows.Scan(&GroupID,&UserID,&UserName)
+	    if err != nil {
+	        return err
+	    }
+	    sum += "idx="+count+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
+	}
+
+	// Any errors encountered by rows.Next or rows.Scan will be returned here
+	if rows.Err() != nil {
+	    return err
+	}
+	return sum
+	// No errors found - do something with sum
 }
 
 func insertUserProfile(GroupID, UserID, UserName string) {
@@ -176,7 +218,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
 		return insertTest(source)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
-		return selectTest()
+		return QueryTest()+"測試查詢"
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
