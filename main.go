@@ -238,7 +238,25 @@ func testInsert(source *linebot.EventSource) string{
 	    return err.Error()
 	}
 	// No errors found - do something with sum
-	return string(RawValues())
+	defer rows.Close()
+
+	// Iterate through the result set
+	for rows.Next() {
+		count = count + 1
+		var n string
+	    err = rows.Scan(&n)
+	    if err != nil {
+	        return err.Error()
+	    }
+	    sum += n "\n"
+	}
+
+	// Any errors encountered by rows.Next or rows.Scan will be returned here
+	if rows.Err() != nil {
+	    return err.Error()
+	}
+
+	return sum
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
