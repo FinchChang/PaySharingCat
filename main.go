@@ -80,6 +80,7 @@ func main() {
 	//oneRestaurant := getRestaurantTest()
 	//log.Println(*oneRestaurant)
 }
+
 /*
 func selectTest() string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
@@ -107,7 +108,6 @@ func selectTest() string {
 }
 */
 
-
 func QueryTest() (string, error) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -116,14 +116,13 @@ func QueryTest() (string, error) {
 	}
 	defer conn.Close(context.Background())
 
-
 	var sum string
 	var count int32
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`)
 	if err != nil {
-	    return "err",err
+		return "err", err
 	}
 	sum = "conn.Query success.\n"
 	// rows.Close is called by rows.Next when all rows are read
@@ -138,18 +137,18 @@ func QueryTest() (string, error) {
 		var GroupID string
 		var UserID string
 		var UserName string
-	    err = rows.Scan(&GroupID,&UserID,&UserName)
-	    if err != nil {
-	        return "err",err
-	    }
-	    sum += "idx="+string(count)+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
+		err = rows.Scan(&GroupID, &UserID, &UserName)
+		if err != nil {
+			return "err", err
+		}
+		sum += "idx=" + string(count) + "GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-	    return "err",err
+		return "err", err
 	}
-	return sum , nil
+	return sum, nil
 	// No errors found - do something with sum
 }
 
@@ -207,6 +206,11 @@ func getReplyMsg(message string, source *linebot.EventSource) string {
 	return replyMsg
 }
 
+/*
+--INSERT INTO public."GroupProfile"  ("GroupID", "UserID", "UserName", "Num", "Time") VALUES ('223213212' , '2', 'v小黑',1, '2020/06/16');
+--SELECT * FROM public."GroupProfile";
+--DELETE FROM  public."GroupProfile" WHERE "UserID" = '2';
+*/
 func insertTest(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -221,7 +225,7 @@ func insertTest(source *linebot.EventSource) string {
 	return ""
 }
 
-func testSQLCmd(SQLCmd string) string{
+func testSQLCmd(SQLCmd string) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -235,7 +239,7 @@ func testSQLCmd(SQLCmd string) string{
 	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), SQLCmd)
 	if err != nil {
-	    return err.Error()
+		return err.Error()
 	}
 	// No errors found - do something with sum
 	defer rows.Close()
@@ -243,22 +247,22 @@ func testSQLCmd(SQLCmd string) string{
 	// Iterate through the result set
 	for rows.Next() {
 		var n string
-	    err = rows.Scan(&n)
-	    if err != nil {
-	        return err.Error()
-	    }
-	    sum += n + "\n"
+		err = rows.Scan(&n)
+		if err != nil {
+			return err.Error()
+		}
+		sum += n + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-	    return err.Error()
+		return err.Error()
 	}
 
 	return sum
 }
 
-func testInsert(source *linebot.EventSource) string{
+func testInsert(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -272,7 +276,7 @@ func testInsert(source *linebot.EventSource) string{
 	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), 1, time.Now())
 	if err != nil {
-	    return err.Error()
+		return err.Error()
 	}
 	// No errors found - do something with sum
 	defer rows.Close()
@@ -280,16 +284,16 @@ func testInsert(source *linebot.EventSource) string{
 	// Iterate through the result set
 	for rows.Next() {
 		var n string
-	    err = rows.Scan(&n)
-	    if err != nil {
-	        return err.Error()
-	    }
-	    sum += n + "\n"
+		err = rows.Scan(&n)
+		if err != nil {
+			return err.Error()
+		}
+		sum += n + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-	    return err.Error()
+		return err.Error()
 	}
 
 	return sum
@@ -305,9 +309,9 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		result, err := QueryTest()
 		if err != nil {
-			return result+"測試查詢"
-		}else{
-			return result+"測試查詢"
+			return result + "測試查詢"
+		} else {
+			return result + "測試查詢"
 		}
 
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
