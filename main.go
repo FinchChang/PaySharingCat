@@ -231,8 +231,6 @@ func testInsert(source *linebot.EventSource) string{
 	defer conn.Close(context.Background())
 
 
-	var sum string
-	var count int32
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), `INSERT INTO GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), 1, time.Now())
@@ -240,7 +238,7 @@ func testInsert(source *linebot.EventSource) string{
 	    return err.Error()
 	}
 	// No errors found - do something with sum
-	return "sucess"
+	return string(RawValues())
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
