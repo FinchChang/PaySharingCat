@@ -44,7 +44,7 @@ func test() {
 }
 func main() {
 
-	test()
+	//test()
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	var err error
@@ -60,7 +60,6 @@ func main() {
 			   mapData := getMapDate()
 			   fmt.Println("--------------------------------")
 			   fmt.Println(mapData)
-
 		/*
 			results := gjson.Get(getMapDate(), "results")
 			if results.IsArray() {
@@ -73,9 +72,7 @@ func main() {
 						fmt.Println("name=", name)
 						fmt.Println("geometry=", geometry)
 						fmt.Println("====================")
-
 					}
-
 				}
 			}
 	*/
@@ -84,7 +81,7 @@ func main() {
 	//log.Println(*oneRestaurant)
 }
 
-func getUserInfo() string {
+func selectTest() string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -98,10 +95,11 @@ func getUserInfo() string {
 
 	// err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
 
-	err = conn.QueryRow(context.Background(), "select \"GroupID\", \"UserID\", \"UserName\" from public.\"GroupProfile\"").Scan(&GroupID, &UserID, &UserName)
+	err = conn.QueryRow(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`).Scan(&GroupID, &UserID, &UserName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
+		//os.Exit(1)
+		return err
 	}
 
 	fmt.Println(GroupID, UserID, UserName)
@@ -182,8 +180,8 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
 		return insertTest(source)
-	} else if strings.Index(msgTxt, "測試標記") == 1 {
-		return tagUser(source.UserID)
+	} else if strings.Index(msgTxt, "測試查詢") == 1 {
+		return selectTest()
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
@@ -328,9 +326,7 @@ func getOneRestaurant(mapData string) *restaurant {
 	           fmt.Println("name=",name)
 	           fmt.Println("geometry=",geometry)
 	           fmt.Println("====================")
-
 	       }
-
 	   }
 	*/
 	return &oneRestaurant
