@@ -14,6 +14,7 @@ package main
 
 import (
 	"crypto/tls"
+	"time"
 
 	//  "encoding/json"
 	"context"
@@ -25,6 +26,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
 	"github.com/jackc/pgx/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tidwall/gjson"
@@ -32,11 +34,19 @@ import (
 
 var bot *linebot.Client
 
+const profileURL string = "https://api.line.me/v2/bot/profile/"
+
+func test() {
+	inpit := "喵 help"
+	MegRune := []rune(strings.TrimSpace(inpit))
+	i := strings.Index(inpit, "喵")
+	fmt.Println(strings.Index(string(MegRune[i+1:]), "help"))
+}
 func main() {
+
+	//test()
+
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
-	//connectDB()
-
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	//key := os.Getenv("GoogleKey")
@@ -45,12 +55,11 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
-	/*
+	/*	test to get map data
 			/*
 			   mapData := getMapDate()
 			   fmt.Println("--------------------------------")
 			   fmt.Println(mapData)
-
 		/*
 			results := gjson.Get(getMapDate(), "results")
 			if results.IsArray() {
@@ -63,9 +72,7 @@ func main() {
 						fmt.Println("name=", name)
 						fmt.Println("geometry=", geometry)
 						fmt.Println("====================")
-
 					}
-
 				}
 			}
 	*/
@@ -74,7 +81,7 @@ func main() {
 	//log.Println(*oneRestaurant)
 }
 
-func connectDB() {
+func selectTest() string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -82,15 +89,71 @@ func connectDB() {
 	}
 	defer conn.Close(context.Background())
 
-	var name string
-	var weight int64
-	err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
+	var GroupID string
+	var UserID string
+	var UserName string
+
+	// err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
+
+	err = conn.QueryRow(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`).Scan(&GroupID, &UserID, &UserName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
+		//os.Exit(1)
+		return err
 	}
 
-	fmt.Println(name, weight)
+	fmt.Println(GroupID, UserID, UserName)
+	return GroupID + UserID + UserName
+}
+
+func QueryTest() string{
+	var sum String
+	var count int32
+	// Send the query to the server. The returned rows MUST be closed
+	// before conn can be used again.
+	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`)
+	if err != nil {
+	    return err
+	}
+
+	// rows.Close is called by rows.Next when all rows are read
+	// or an error occurs in Next or Scan. So it may optionally be
+	// omitted if nothing in the rows.Next loop can panic. It is
+	// safe to close rows multiple times.
+	defer rows.Close()
+
+	// Iterate through the result set
+	for rows.Next() {
+		count = count + 1
+		var GroupID string
+		var UserID string
+		var UserName string
+	    err = rows.Scan(&GroupID,&UserID,&UserName)
+	    if err != nil {
+	        return err
+	    }
+	    sum += "idx="+count+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
+	}
+
+	// Any errors encountered by rows.Next or rows.Scan will be returned here
+	if rows.Err() != nil {
+	    return err
+	}
+	return sum
+	// No errors found - do something with sum
+}
+
+func insertUserProfile(GroupID, UserID, UserName string) {
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+
+	conn.QueryRow(context.Background(), "INSERT INTO GroupProfile VALUES($1,$2,$3)", GroupID, UserID, UserName)
+
+	fmt.Println(GroupID, UserID, UserName)
 }
 
 func getRestaurantTest() *restaurant {
@@ -119,36 +182,77 @@ func getMapDate() []byte {
 	return b
 }
 
-func GetReplyMsgTest(message string) string{
-	log.Println("message = ",message)
-	msgTxt := strings.TrimSpace(message)
-	i := strings.Index(msgTxt, "喵")
-	return strings.TrimSpace(msgTxt[i+1:])
-}
-
-func GetReplyMsg(message string) string{
-	log.Println("message = ",message)
+func getReplyMsg(message string, source *linebot.EventSource) string {
 	MegRune := []rune(strings.TrimSpace(message))
-	i := strings.Index(message , "喵")
+	i := strings.Index(message, "喵")
+	var replyMsg string
 	if i > -1 {
-		return getActionMsg(string(MegRune[i+1:]))
+		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
+		replyMsg = "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), source)
+		replyMsg += "\n---使用者訊息---\n" + message
+		replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
-		return ""
+		replyMsg = ""
 	}
+	return replyMsg
 }
 
-func getActionMsg(msgTxt string) string{
-	if strings.Index(msgTxt, "help") > -1 || msgTxt == "" {
+func insertTest(source *linebot.EventSource) string {
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+	UserName := getUserName(source.UserID)
+	conn.QueryRow(context.Background(), `INSERT INTO GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
+
+	return ""
+}
+
+func getActionMsg(msgTxt string, source *linebot.EventSource) string {
+	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
 		return getHelp()
+	} else if strings.Index(msgTxt, "所有人") == 1 {
+		return tagUser(source.UserID)
+	} else if strings.Index(msgTxt, "測試插入") == 1 {
+		return insertTest(source)
+	} else if strings.Index(msgTxt, "測試查詢") == 1 {
+		return QueryTest()
+	} else if strings.Index(msgTxt, "DBCMD") == 1 {
+		MegRune := []rune(strings.TrimSpace(msgTxt))
+		i := strings.Index(msgTxt, "DBCMD")
+		return string(MegRune[i+len("DBCMD"):])
 	}
 	return ""
 }
 
-func getHelp() string{
-	helpMsg :=`請輸入'喵 指令'
+func tagUser(userID string) string {
+	//JSONuserProfile := getUserProfile(userID)
+	//return `<@[^>]+>` + gjson.Get(JSONuserProfile, "displayName").String()
+	//return `<@` + gjson.Get(JSONuserProfile, "displayName").String() +  `>`
+	return `<@` + userID + `>`
+}
+
+func getHelp() string {
+	helpMsg := `請輸入'喵 指令'
 	目前指令：
-		所有人	標記所有人`
+		所有人	標記所有人(Ex: 喵 所有人)`
 	return helpMsg
+}
+
+func getUserProfile(userID string) string {
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", profileURL+userID, nil)
+	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
+	res, _ := client.Do(req)
+	s, _ := ioutil.ReadAll(res.Body)
+	return string(s)
+}
+
+func getUserName(UserID string) string {
+	JSONuserProfile := getUserProfile(UserID)
+	return gjson.Get(JSONuserProfile, "displayName").String()
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -168,18 +272,19 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				//quota, err := bot.GetMessageQuota().Do()
+
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
 
-				replyMsg := GetReplyMsg(message.Text) + GetReplyMsgTest(message.Text)
-				if replyMsg == ""{
+				replyMsg := getReplyMsg(message.Text, event.Source)
+				if replyMsg == "" {
 					log.Println("NO Action")
-				} else{
+				} else {
 					if _, err = bot.ReplyMessage(
-					event.ReplyToken,
-					//linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10)),
-					linebot.NewTextMessage(replyMsg),
+						event.ReplyToken,
+						//linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10)),
+						linebot.NewTextMessage(replyMsg),
 					).Do(); err != nil {
 						log.Print(err)
 					}
@@ -235,8 +340,8 @@ func getOneRestaurant(mapData string) *restaurant {
 			Longitude := gjson.Get(nowJSON, "geometry.location.lng")
 			address := gjson.Get(nowJSON, "vicinity")
 			//geometry := gjson.Get(nowJson ,"geometry")
-			log.Println("name=", name)
-			log.Println("Latitude =", Latitude, ", Longitude =", Longitude)
+			// log.Println("name=", name)
+			// log.Println("Latitude =", Latitude, ", Longitude =", Longitude)
 			Lat, err := strconv.ParseFloat(Latitude.String(), 8)
 			Lon, err := strconv.ParseFloat(Longitude.String(), 8)
 			if err != nil {
@@ -258,9 +363,7 @@ func getOneRestaurant(mapData string) *restaurant {
 	           fmt.Println("name=",name)
 	           fmt.Println("geometry=",geometry)
 	           fmt.Println("====================")
-
 	       }
-
 	   }
 	*/
 	return &oneRestaurant
