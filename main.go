@@ -99,7 +99,7 @@ func selectTest() string {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		//os.Exit(1)
-		return err
+		return err.Err()
 	}
 
 	fmt.Println(GroupID, UserID, UserName)
@@ -107,7 +107,15 @@ func selectTest() string {
 }
 
 func QueryTest() string{
-	var sum String
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+
+
+	var sum string
 	var count int32
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
@@ -132,7 +140,7 @@ func QueryTest() string{
 	    if err != nil {
 	        return err
 	    }
-	    sum += "idx="+count+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
+	    sum += "idx="+count.String()+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
