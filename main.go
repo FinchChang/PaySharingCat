@@ -106,7 +106,7 @@ func selectTest() string {
 	return GroupID + UserID + UserName
 }
 */
-func QueryTest() string{
+func QueryTest() (string, err) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -121,7 +121,7 @@ func QueryTest() string{
 	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`)
 	if err != nil {
-	    return err.Err()
+	    return "err",err
 	}
 	sum = "conn.Query success.\n"
 	// rows.Close is called by rows.Next when all rows are read
@@ -145,9 +145,9 @@ func QueryTest() string{
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-	    return err
+	    return err, nil
 	}
-	return sum
+	return sum , nil
 	// No errors found - do something with sum
 }
 
