@@ -264,6 +264,7 @@ func testSQLCmd(SQLCmd string) string {
 
 func getGroupCount(conn *pgx.Conn, source *linebot.EventSource) int {
 	var count int
+	log.Println("enter get GroupCount")
 	conn.QueryRow(context.Background(), `SELECT COUNT("Num") FROM public."GroupProfile" WHERE "GroupID"=$1`, source.GroupID).Scan(&count)
 	return count
 }
@@ -292,6 +293,7 @@ func testInsert(source *linebot.EventSource) string {
 	for rows.Next() {
 		var n string
 		err = rows.Scan(&n)
+		log.Println("n=", n)
 		if err != nil {
 			return err.Error()
 		}
