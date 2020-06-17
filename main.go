@@ -265,7 +265,7 @@ func testSQLCmd(SQLCmd string) string {
 func getGroupCount(conn *pgx.Conn, source *linebot.EventSource) int {
 	var count int
 	log.Println("enter get GroupCount")
-	conn.QueryRow(context.Background(), `SELECT COUNT("Num") FROM public."GroupProfile" WHERE "GroupID"=$1`, source.GroupID).Scan(&count)
+	conn.QueryRow(context.Background(), `SELECT COUNT("Num") FROM public."GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
 	log.Println("QueryRow end, count=", count)
 	return count
 }
@@ -283,7 +283,8 @@ func testInsert(source *linebot.EventSource) string {
 	var sum string
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
-	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), string(getGroupCount(conn, source)), time.Now())
+	log.Println("time.now=", time.Now())
+	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES('$1','$2','$3',$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), getGroupCount(conn, source), time.Now())
 	if err != nil {
 		return err.Error()
 	}
