@@ -291,7 +291,7 @@ func testInsert(source *linebot.EventSource) string {
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
 	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GroupCount=", getGroupCount(source), "time=", time.Now())
-	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID+`'`, getUserName(source.UserID), getGroupCount(conn, source), time.Now())
+	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID+`'`, getUserName(source.UserID), getGroupCount(source), time.Now())
 	if err != nil {
 		return err.Error()
 	}
