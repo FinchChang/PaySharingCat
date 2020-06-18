@@ -272,7 +272,7 @@ func getGroupCount(source *linebot.EventSource) int {
 	defer conn.Close(context.Background())
 	var count int
 	// log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
-	conn.QueryRow(context.Background(), `SELECT COUNT("Num") FROM public."GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
+	conn.QueryRow(context.Background(), `SELECT COUNT("GID") FROM public."GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
 	// log.Println("QueryRow end, count=", count)
 	return count
 }
@@ -322,7 +322,7 @@ func testInsert(source *linebot.EventSource) error {
 	// the tx commits successfully, this is a no-op
 	defer tx.Rollback(context.Background())
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), getGroupCount(source), time.Now())
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), source.GroupID+string(getGroupCount(source)), time.Now())
 	if err != nil {
 		return err
 	}
