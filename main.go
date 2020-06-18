@@ -301,7 +301,7 @@ func testInsert(source *linebot.EventSource) string {
 	// Iterate through the result set
 	for rows.Next() {
 		var n string
-		err = rows.Scan(&n)
+		err := rows.Scan(&n)
 		log.Println("n=", n)
 		if err != nil {
 			return err.Error()
