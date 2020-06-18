@@ -291,25 +291,25 @@ func testInsert(source *linebot.EventSource) string {
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
 	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GroupCount=", getGroupCount(source), "time=", time.Now())
-	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID+`'`, getUserName(source.UserID), getGroupCount(source), time.Now())
+	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), getGroupCount(source), time.Now())
 	if err != nil {
 		return err.Error()
 	}
 	// No errors found - do something with sum
 	defer rows.Close()
 
-	// Iterate through the result set
-	for rows.Next() {
-		var n string
-		err = rows.Scan(&n)
-		log.Println("n=", n)
-		if err != nil {
-			return err.Error()
-		}
-		sum += n + "\n"
-	}
+	// // Iterate through the result set
+	// for rows.Next() {
+	// 	var n string
+	// 	err = rows.Scan(&n)
+	// 	log.Println("n=", n)
+	// 	if err != nil {
+	// 		return err.Error()
+	// 	}
+	// 	sum += n + "\n"
+	// }
 
-	// Any errors encountered by rows.Next or rows.Scan will be returned here
+	// // Any errors encountered by rows.Next or rows.Scan will be returned here
 	// if rows.Err() != nil {
 	// 	return err.Error()
 	// }
