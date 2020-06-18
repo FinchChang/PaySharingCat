@@ -271,32 +271,32 @@ func getGroupCount(source *linebot.EventSource) int {
 	}
 	defer conn.Close(context.Background())
 	var count int
-	log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
+	// log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
 	conn.QueryRow(context.Background(), `SELECT COUNT("Num") FROM public."GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
-	log.Println("QueryRow end, count=", count)
+	// log.Println("QueryRow end, count=", count)
 	return count
 }
 
-func testInsert(source *linebot.EventSource) string {
+func testInsert(source *linebot.EventSource) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		//os.Exit(1)
-		return err.Error()
-	}
-	defer conn.Close(context.Background())
+	// if err != nil {
+	// 	fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+	// 	//os.Exit(1)
+	// 	return err.Error()
+	// }
+	// defer conn.Close(context.Background())
 
-	//INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES ('test' , '2', 'v小黑', (SELECT COUNT("Num") FROM public."GroupProfile"
-	var sum string
-	// Send the query to the server. The returned rows MUST be closed
-	// before conn can be used again.
+	// //INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES ('test' , '2', 'v小黑', (SELECT COUNT("Num") FROM public."GroupProfile"
+	// var sum string
+	// // Send the query to the server. The returned rows MUST be closed
+	// // before conn can be used again.
 	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GroupCount=", getGroupCount(source), "time=", time.Now())
-	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), getGroupCount(source), time.Now())
-	if err != nil {
-		return err.Error()
-	}
-	// No errors found - do something with sum
-	defer rows.Close()
+	// rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), getGroupCount(source), time.Now())
+	// if err != nil {
+	// 	return err.Error()
+	// }
+	// // No errors found - do something with sum
+	// defer rows.Close()
 
 	// // Iterate through the result set
 	// for rows.Next() {
@@ -314,7 +314,24 @@ func testInsert(source *linebot.EventSource) string {
 	// 	return err.Error()
 	// }
 
-	return sum
+	tx, err := conn.Begin(context.Background())
+	if err != nil {
+		return err
+	}
+	// Rollback is safe to call even if the tx is already closed, so if
+	// the tx commits successfully, this is a no-op
+	defer tx.Rollback(context.Background())
+
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), getGroupCount(source), time.Now())
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit(context.Background())
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
@@ -323,7 +340,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		return testInsert(source)
+		return testInsert(source).Error()
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		result, err := QueryTest()
 		if err != nil {
