@@ -262,7 +262,14 @@ func testSQLCmd(SQLCmd string) string {
 	return sum
 }
 
-func getGroupCount(conn *pgx.Conn, source *linebot.EventSource) int {
+func getGroupCount(source *linebot.EventSource) int {
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+		//return err.Error()
+	}
+	defer conn.Close(context.Background())
 	var count int
 	log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
 	conn.QueryRow(context.Background(), `SELECT COUNT("Num") FROM public."GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
@@ -283,7 +290,7 @@ func testInsert(source *linebot.EventSource) string {
 	var sum string
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
-	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GroupCount=", getGroupCount(conn, source), "time=", time.Now())
+	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GroupCount=", getGroupCount(source), "time=", time.Now())
 	rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID+`'`, getUserName(source.UserID), getGroupCount(conn, source), time.Now())
 	if err != nil {
 		return err.Error()
