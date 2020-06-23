@@ -322,7 +322,7 @@ func testInsert(source *linebot.EventSource) error {
 	// the tx commits successfully, this is a no-op
 	defer tx.Rollback(context.Background())
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), source.GroupID+string(getGroupCount(source)), time.Now())
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), source.GroupID+string(getGroupCount(source)), time.Now().Format("20060102150405"))
 	if err != nil {
 		return err
 	}
