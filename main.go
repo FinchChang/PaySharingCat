@@ -292,7 +292,7 @@ func testInsert(source *linebot.EventSource) error {
 	// var sum string
 	// // Send the query to the server. The returned rows MUST be closed
 	// // before conn can be used again.
-	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GroupCount=", getGroupCount(source), "time=", time.Now().Format("2006-01-02 15:04:05"))
+
 	// rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), getGroupCount(source), time.Now())
 	// if err != nil {
 	// 	return err.Error()
@@ -323,6 +323,8 @@ func testInsert(source *linebot.EventSource) error {
 	// Rollback is safe to call even if the tx is already closed, so if
 	// the tx commits successfully, this is a no-op
 	defer tx.Rollback(context.Background())
+
+	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GID=", source.GroupID+string(getGroupCount(source)), "time=", time.Now().Format("2006-01-02 15:04:05"))
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), source.GroupID+string(getGroupCount(source)), time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
