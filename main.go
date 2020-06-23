@@ -326,7 +326,7 @@ func testInsert(source *linebot.EventSource) error {
 
 	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GID=", source.GroupID+string(getGroupCount(source)), "time=", time.Now().Format("2006-01-02 15:04:05"))
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, `"`+source.GroupID+`"`, `"`+source.UserID+`"`, `"`+getUserName(source.UserID)+`"`, `"`+source.GroupID+string(getGroupCount(source))+`"`, time.Now().Format("2006-01-02 15:04:05"))
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, "source.GroupID", source.UserID, getUserName(source.UserID), "source.GroupID+string(getGroupCount(source))", time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return err
 	}
