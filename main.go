@@ -18,6 +18,7 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tidwall/gjson"
+	"reflect"
 )
 
 var bot *linebot.Client
@@ -215,7 +216,12 @@ func insertTest(source *linebot.EventSource) string {
 	return "InsertGroupID=" + source.GroupID
 }
 
-func testSQLCmd(SQLCmd string) string {
+//scanType:string  > default
+//scanType:int  > 
+func testSQLCmd(SQLCmd string,scanType string) string {
+	if scanType == ""{
+		scanType = string;
+	}
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -236,12 +242,22 @@ func testSQLCmd(SQLCmd string) string {
 
 	// Iterate through the result set
 	for rows.Next() {
-		var n string
-		err = rows.Scan(&n)
-		if err != nil {
-			return err.Error()
+		if scanType == "int"{
+			var n int
+			err = rows.Scan(&n)
+			if err != nil {
+				return err.Error()
+			}
+			sum += n + "\n"
+		} else{
+			var n string
+			err = rows.Scan(&n)
+			if err != nil {
+				return err.Error()
+			}
+			sum += strconv.Itoa(n) + "\n"
 		}
-		sum += n + "\n"
+
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
@@ -321,9 +337,13 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
 		// return string(MegRune[i+len("DBCMD"):])
-		return testSQLCmd(string(MegRune[i+len("DBCMD"):]))
+		return testSQLCmd(string(MegRune[i+len("DBCMD"):]),"")
+	}else if strings.Index(msgTxt, "INTDBCMD") == 1 {
+		MegRune := []rune(strings.TrimSpace(msgTxt))
+		i := strings.Index(msgTxt, "INTDBCMD")
+		return testSQLCmd(string(MegRune[i+len("INTDBCMD"):]),"int")
 	}
-	return ""
+	return "no action after getActionMsg"
 }
 
 func tagUser(userID string) string {
