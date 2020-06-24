@@ -135,7 +135,7 @@ func QueryTest() (string, error) {
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-		return "err", err
+		return string(rows.Err()), err
 	}
 
 	return sum, nil
