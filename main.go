@@ -252,7 +252,7 @@ func testSQLCmd(SQLCmd string) string {
 	return sum
 }
 
-func getGroupCount(source *linebot.EventSource) &int {
+func getGroupCount(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -264,7 +264,7 @@ func getGroupCount(source *linebot.EventSource) &int {
 	// log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
 	conn.QueryRow(context.Background(), `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
 	// log.Println("QueryRow end, count=", count)
-	return count
+	return strconv.Itoa(count)
 }
 
 func testInsert(source *linebot.EventSource) string {
@@ -287,10 +287,10 @@ func testInsert(source *linebot.EventSource) string {
 		nowGroupIP = source.GroupID
 	}
 	GID := ""
-	if *getGroupCount(source) == 0 {
+	if getGroupCount(source) == 0 {
 		GID = nowGroupIP
 	}else{
-		GID = nowGroupIP + strconv.Itoa(*getGroupCount(source))
+		GID = nowGroupIP + getGroupCount(source)
 	}
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
@@ -316,7 +316,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 		result, _ := QueryTest()
 		return "測試查詢:" + result
 	}else if strings.Index(msgTxt, "測試數量") == 1 {
-		return "測試數量:"+strconv.Itoa(*getGroupCount(source)) + "查詢Group:" + source.GroupID
+		return "測試數量:"+getGroupCount(source) + "查詢Group:" + source.GroupID
 	}else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
