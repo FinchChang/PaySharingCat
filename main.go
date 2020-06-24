@@ -316,8 +316,14 @@ func testInsert(source *linebot.EventSource) error {
 	}else{
 		nowGroupIP = source.GroupID
 	}
+	GID := ""
+	if getGroupCount(source) == 0 {
+		GID = nowGroupIP
+	}else{
+		GID = string(getGroupCount(source))
+	}
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), nowGroupIP+string(getGroupCount(source)), time.Now().Format("2006-01-02 15:04:05"))
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return err
 	}
