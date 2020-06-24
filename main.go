@@ -125,12 +125,12 @@ func QueryTest() (string, error) {
 		var UserID string
 		var UserName string
 		var GID string
-		var Time time
+		var InsertTime Time
 		err = rows.Scan(&GroupID, &UserID, &UserName, &GID , &Time)
 		if err != nil {
 			return "err", err
 		}
-		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "Time=" + Time.String() + "\n"
+		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "Time=" + InsertTime.String() + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
