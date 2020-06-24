@@ -252,7 +252,7 @@ func testSQLCmd(SQLCmd string) string {
 	return sum
 }
 
-func getGroupCount(source *linebot.EventSource) int {
+func getGroupCount(source *linebot.EventSource) &int {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -269,40 +269,6 @@ func getGroupCount(source *linebot.EventSource) int {
 
 func testInsert(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	// if err != nil {
-	// 	fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-	// 	//os.Exit(1)
-	// 	return err.Error()
-	// }
-	// defer conn.Close(context.Background())
-
-	// //INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES ('test' , '2', 'v小黑', (SELECT COUNT("Num") FROM public."GroupProfile"
-	// var sum string
-	// // Send the query to the server. The returned rows MUST be closed
-	// // before conn can be used again.
-
-	// rows, err := conn.Query(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "Num", "Time") VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, getUserName(source.UserID), getGroupCount(source), time.Now())
-	// if err != nil {
-	// 	return err.Error()
-	// }
-	// // No errors found - do something with sum
-	// defer rows.Close()
-
-	// // Iterate through the result set
-	// for rows.Next() {
-	// 	var n string
-	// 	err = rows.Scan(&n)
-	// 	log.Println("n=", n)
-	// 	if err != nil {
-	// 		return err.Error()
-	// 	}
-	// 	sum += n + "\n"
-	// }
-
-	// // Any errors encountered by rows.Next or rows.Scan will be returned here
-	// if rows.Err() != nil {
-	// 	return err.Error()
-	// }
 
 	tx, err := conn.Begin(context.Background())
 	if err != nil {
@@ -321,10 +287,10 @@ func testInsert(source *linebot.EventSource) string {
 		nowGroupIP = source.GroupID
 	}
 	GID := ""
-	if getGroupCount(source) == 0 {
+	if *getGroupCount(source) == 0 {
 		GID = nowGroupIP
 	}else{
-		GID = nowGroupIP + strconv.Itoa(getGroupCount(source))
+		GID = nowGroupIP + strconv.Itoa(*getGroupCount(source))
 	}
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
@@ -350,7 +316,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 		result, _ := QueryTest()
 		return "測試查詢:" + result
 	}else if strings.Index(msgTxt, "測試數量") == 1 {
-		return "測試數量:"+strconv.Itoa(getGroupCount(source)) + "查詢Group:" + source.GroupID
+		return "測試數量:"+strconv.Itoa(*getGroupCount(source)) + "查詢Group:" + source.GroupID
 	}else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
