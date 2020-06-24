@@ -1,15 +1,3 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package main
 
 import (
@@ -91,20 +79,16 @@ func selectTest() string {
 		os.Exit(1)
 	}
 	defer conn.Close(context.Background())
-
 	var GroupID string
 	var UserID string
 	var UserName string
-
 	// err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
-
 	err = conn.QueryRow(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`).Scan(&GroupID, &UserID, &UserName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		//os.Exit(1)
 		return err.Err()
 	}
-
 	fmt.Println(GroupID, UserID, UserName)
 	return GroupID + UserID + UserName
 }
@@ -326,7 +310,14 @@ func testInsert(source *linebot.EventSource) error {
 
 	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GID=", source.GroupID+string(getGroupCount(source)), "time=", time.Now().Format("2006-01-02 15:04:05"))
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, "source.GroupID", source.UserID, getUserName(source.UserID), "source.GroupID+string(getGroupCount(source))", time.Now().Format("2006-01-02 15:04:05"))
+	nowGroupIP := ""
+	if source.GroupID == "" {
+		nowGroupIP = "NULL"
+	}else{
+		nowGroupIP = source.GroupID
+	}
+
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), nowGroupIP+string(getGroupCount(source)), time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return err
 	}
