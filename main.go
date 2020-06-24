@@ -17,8 +17,7 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
-	"github.com/tidwall/gjson"
-	"reflect"
+	"github.com/tidwall/gjson"	
 )
 
 var bot *linebot.Client
@@ -220,7 +219,7 @@ func insertTest(source *linebot.EventSource) string {
 //scanType:int  > 
 func testSQLCmd(SQLCmd string,scanType string) string {
 	if scanType == ""{
-		scanType = string;
+		scanType = "string";
 	}
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -248,14 +247,14 @@ func testSQLCmd(SQLCmd string,scanType string) string {
 			if err != nil {
 				return err.Error()
 			}
-			sum += n + "\n"
+			sum += strconv.Itoa(n) + "\n"
 		} else{
 			var n string
 			err = rows.Scan(&n)
 			if err != nil {
 				return err.Error()
 			}
-			sum += strconv.Itoa(n) + "\n"
+			sum += n + "\n"
 		}
 
 	}
