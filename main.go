@@ -130,7 +130,7 @@ func QueryTest() (string, error) {
 		if err != nil {
 			return "err", err
 		}
-		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "Time=" + InsertTime.String() + "\n"
+		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + ",Time=" + InsertTime.String() + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
@@ -267,7 +267,7 @@ func getGroupCount(source *linebot.EventSource) int {
 	return count
 }
 
-func testInsert(source *linebot.EventSource) error {
+func testInsert(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	// if err != nil {
 	// 	fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -306,7 +306,7 @@ func testInsert(source *linebot.EventSource) error {
 
 	tx, err := conn.Begin(context.Background())
 	if err != nil {
-		return err
+		return err.Error()
 	}
 	// Rollback is safe to call even if the tx is already closed, so if
 	// the tx commits successfully, this is a no-op
@@ -334,9 +334,9 @@ func testInsert(source *linebot.EventSource) error {
 
 	err = tx.Commit(context.Background())
 	if err != nil {
-		return err
+		return err.Error()
 	}
-	return err
+	return "InsertGroupID="+nowGroupIP + ",GID="+GID
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
