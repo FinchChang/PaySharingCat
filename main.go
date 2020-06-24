@@ -352,7 +352,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 			return result + "測試查詢"
 		}
 	}else if strings.Index(msgTxt, "測試數量") == 1 {
-		return getGroupCount()
+		return getGroupCount(source)
 	}else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
