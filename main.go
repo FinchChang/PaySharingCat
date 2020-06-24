@@ -315,7 +315,7 @@ func testInsert(source *linebot.EventSource) string {
 
 	err = tx.Commit(context.Background())
 	if err != nil {
-		return err.Error()
+		return err.Error() + ", InsertGroupID="+nowGroupIP + ",GID="+GID
 	}
 	return "InsertGroupID="+nowGroupIP + ",GID="+GID
 }
