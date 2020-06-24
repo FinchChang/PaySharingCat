@@ -125,7 +125,7 @@ func QueryTest() (string, error) {
 		var UserID string
 		var UserName string
 		var GID string
-		var Time Timestamp
+		var Time time
 		err = rows.Scan(&GroupID, &UserID, &UserName, &GID , &Time)
 		if err != nil {
 			return "err", err
@@ -135,7 +135,7 @@ func QueryTest() (string, error) {
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-		return rows.Err(), err
+		return rows.Err().Error(), err
 	}
 
 	return sum, nil
