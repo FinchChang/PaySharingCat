@@ -103,7 +103,7 @@ func QueryTest() (string, error) {
 	defer conn.Close(context.Background())
 
 	var sum string
-	var count int32
+	var count int
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName", "GID" from public."GroupProfile"`)
@@ -129,7 +129,7 @@ func QueryTest() (string, error) {
 		if err != nil {
 			return "err", err
 		}
-		sum += "idx=" + string(count) + ":GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "\n"
+		sum += "idx=" + strconv.Itoa(count) + ":GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
@@ -310,7 +310,7 @@ func testInsert(source *linebot.EventSource) error {
 	// the tx commits successfully, this is a no-op
 	defer tx.Rollback(context.Background())
 
-	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GID=", source.GroupID+string(getGroupCount(source)), "time=", time.Now().Format("2006-01-02 15:04:05"))
+	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GID=", source.GroupID+strconv.Itoa(getGroupCount(source)), "time=", time.Now().Format("2006-01-02 15:04:05"))
 
 	nowGroupIP := ""
 	if source.GroupID == "" {
@@ -322,7 +322,7 @@ func testInsert(source *linebot.EventSource) error {
 	if getGroupCount(source) == 0 {
 		GID = nowGroupIP
 	}else{
-		GID = nowGroupIP + string(getGroupCount(source))
+		GID = nowGroupIP + strconv.Itoa(getGroupCount(source))
 	}
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
@@ -343,16 +343,13 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		return testInsert(source).Error()
+		return "測試插入:"+testInsert(source).Error()
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
-		result, err := QueryTest()
-		if err != nil {
-			return result + "測試查詢"
-		} else {
-			return result + "測試查詢"
-		}
+		result, _ := QueryTest()
+		return "測試查詢:" + result
+
 	}else if strings.Index(msgTxt, "測試數量") == 1 {
-		return string(getGroupCount(source))
+		return "測試數量:"+strconv.Itoa(getGroupCount(source))
 	}else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
