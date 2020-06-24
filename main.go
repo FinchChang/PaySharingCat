@@ -125,8 +125,8 @@ func QueryTest() (string, error) {
 		var UserID string
 		var UserName string
 		var GID string
-		var InsertTime Time
-		err = rows.Scan(&GroupID, &UserID, &UserName, &GID , &Time)
+		var InsertTime time.Time
+		err = rows.Scan(&GroupID, &UserID, &UserName, &GID , &InsertTime)
 		if err != nil {
 			return "err", err
 		}
