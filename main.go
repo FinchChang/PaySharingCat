@@ -106,7 +106,7 @@ func QueryTest() (string, error) {
 	var count int
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
-	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName", "GID" from public."GroupProfile"`)
+	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName", "GID" ,"Time" from public."GroupProfile"`)
 	if err != nil {
 		return "err", err
 	}
@@ -125,17 +125,21 @@ func QueryTest() (string, error) {
 		var UserID string
 		var UserName string
 		var GID string
-		err = rows.Scan(&GroupID, &UserID, &UserName, &GID)
+		var Time string
+		err = rows.Scan(&GroupID, &UserID, &UserName, &GID , &Time)
 		if err != nil {
 			return "err", err
 		}
-		sum += "idx=" + strconv.Itoa(count) + ":GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "\n"
+		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "Time=" + Time + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
 		return "err", err
 	}
+
+	sum += "InsertGroupID=" + GroupID
+
 	return sum, nil
 	// No errors found - do something with sum
 }
@@ -187,7 +191,7 @@ func getReplyMsg(message string, source *linebot.EventSource) string {
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
 		replyMsg = "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), source)
 		replyMsg += "\n---使用者訊息---\n" + message
-		replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
+		//replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
 		replyMsg = ""
 	}
@@ -310,7 +314,7 @@ func testInsert(source *linebot.EventSource) error {
 	// the tx commits successfully, this is a no-op
 	defer tx.Rollback(context.Background())
 
-	log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GID=", source.GroupID+strconv.Itoa(getGroupCount(source)), "time=", time.Now().Format("2006-01-02 15:04:05"))
+	//log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GID=", source.GroupID+strconv.Itoa(getGroupCount(source)), "time=", time.Now().Format("2006-01-02 15:04:05"))
 
 	nowGroupIP := ""
 	if source.GroupID == "" {
@@ -347,7 +351,6 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		result, _ := QueryTest()
 		return "測試查詢:" + result
-
 	}else if strings.Index(msgTxt, "測試數量") == 1 {
 		return "測試數量:"+strconv.Itoa(getGroupCount(source))
 	}else if strings.Index(msgTxt, "DBCMD") == 1 {
