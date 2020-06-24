@@ -106,7 +106,7 @@ func QueryTest() (string, error) {
 	var count int32
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
-	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`)
+	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName", "GID" from public."GroupProfile"`)
 	if err != nil {
 		return "err", err
 	}
@@ -118,16 +118,18 @@ func QueryTest() (string, error) {
 	defer rows.Close()
 
 	// Iterate through the result set
+	count = 0;
 	for rows.Next() {
 		count = count + 1
 		var GroupID string
 		var UserID string
 		var UserName string
-		err = rows.Scan(&GroupID, &UserID, &UserName)
+		var GID string
+		err = rows.Scan(&GroupID, &UserID, &UserName, &GID)
 		if err != nil {
 			return "err", err
 		}
-		sum += "idx=" + string(count) + "GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + "\n"
+		sum += "idx=" + string(count) + ":GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
@@ -320,7 +322,7 @@ func testInsert(source *linebot.EventSource) error {
 	if getGroupCount(source) == 0 {
 		GID = nowGroupIP
 	}else{
-		GID = string(getGroupCount(source))
+		GID = nowGroupIP + string(getGroupCount(source))
 	}
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
