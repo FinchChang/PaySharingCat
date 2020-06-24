@@ -17,7 +17,7 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
-	"github.com/tidwall/gjson"	
+	"github.com/tidwall/gjson"
 )
 
 var bot *linebot.Client
@@ -118,7 +118,7 @@ func QueryTest() (string, error) {
 	defer rows.Close()
 
 	// Iterate through the result set
-	count = 0;
+	count = 0
 	for rows.Next() {
 		count = count + 1
 		var GroupID string
@@ -126,7 +126,7 @@ func QueryTest() (string, error) {
 		var UserName string
 		var GID string
 		var InsertTime time.Time
-		err = rows.Scan(&GroupID, &UserID, &UserName, &GID , &InsertTime)
+		err = rows.Scan(&GroupID, &UserID, &UserName, &GID, &InsertTime)
 		if err != nil {
 			return "err", err
 		}
@@ -216,10 +216,10 @@ func insertTest(source *linebot.EventSource) string {
 }
 
 //scanType:string  > default
-//scanType:int  > 
-func testSQLCmd(SQLCmd string,scanType string) string {
-	if scanType == ""{
-		scanType = "string";
+//scanType:int  >
+func testSQLCmd(SQLCmd string, scanType string) string {
+	if scanType == "" {
+		scanType = "string"
 	}
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -241,14 +241,14 @@ func testSQLCmd(SQLCmd string,scanType string) string {
 
 	// Iterate through the result set
 	for rows.Next() {
-		if scanType == "int"{
+		if scanType == "int" {
 			var n int
 			err = rows.Scan(&n)
 			if err != nil {
 				return err.Error()
 			}
 			sum += strconv.Itoa(n) + "\n"
-		} else{
+		} else {
 			var n string
 			err = rows.Scan(&n)
 			if err != nil {
@@ -278,7 +278,7 @@ func getGroupCount(source *linebot.EventSource) string {
 	var count int
 	// log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
 	conn.QueryRow(context.Background(), `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
-	// log.Println("QueryRow end, count=", count)
+	log.Println("QueryRow end, count=", count)
 	return strconv.Itoa(count)
 }
 
@@ -298,26 +298,26 @@ func testInsert(source *linebot.EventSource) string {
 	nowGroupIP := ""
 	if source.GroupID == "" {
 		nowGroupIP = "NULL"
-	}else{
+	} else {
 		nowGroupIP = source.GroupID
 	}
 	GID := ""
 	if getGroupCount(source) == "0" {
 		GID = nowGroupIP
-	}else{
+	} else {
 		GID = nowGroupIP + getGroupCount(source)
 	}
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
-		return err.Error() + ", InsertGroupID="+nowGroupIP + ",GID="+GID
+		return err.Error() + ", InsertGroupID=" + nowGroupIP + ",GID=" + GID
 	}
 
 	err = tx.Commit(context.Background())
 	if err != nil {
-		return err.Error() + ", InsertGroupID="+nowGroupIP + ",GID="+GID
+		return err.Error() + ", InsertGroupID=" + nowGroupIP + ",GID=" + GID
 	}
-	return "InsertGroupID="+nowGroupIP + ",GID="+GID
+	return "InsertGroupID=" + nowGroupIP + ",GID=" + GID
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
@@ -326,21 +326,21 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		return "測試插入:"+testInsert(source)
+		return "測試插入:" + testInsert(source)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		result, _ := QueryTest()
 		return "測試查詢:" + result
-	}else if strings.Index(msgTxt, "測試數量") == 1 {
-		return "測試數量:"+getGroupCount(source) + "查詢Group:" + source.GroupID
-	}else if strings.Index(msgTxt, "DBCMD") == 1 {
+	} else if strings.Index(msgTxt, "測試數量") == 1 {
+		return "測試數量:" + getGroupCount(source) + "查詢Group:" + source.GroupID
+	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
 		// return string(MegRune[i+len("DBCMD"):])
-		return testSQLCmd(string(MegRune[i+len("DBCMD"):]),"")
-	}else if strings.Index(msgTxt, "INTDBCMD") == 1 {
+		return testSQLCmd(string(MegRune[i+len("DBCMD"):]), "")
+	} else if strings.Index(msgTxt, "INTDBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "INTDBCMD")
-		return testSQLCmd(string(MegRune[i+len("INTDBCMD"):]),"int")
+		return testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int")
 	}
 	return "no action after getActionMsg"
 }
