@@ -329,7 +329,7 @@ func testInsert(source *linebot.EventSource) string {
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
-		return err
+		return err.Error()
 	}
 
 	err = tx.Commit(context.Background())
@@ -345,7 +345,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		return "測試插入:"+testInsert(source).Error()
+		return "測試插入:"+testInsert(source)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		result, _ := QueryTest()
 		return "測試查詢:" + result
