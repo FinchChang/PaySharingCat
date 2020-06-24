@@ -138,8 +138,6 @@ func QueryTest() (string, error) {
 		return "err", err
 	}
 
-	sum += "InsertGroupID=" + GroupID
-
 	return sum, nil
 	// No errors found - do something with sum
 }
@@ -214,7 +212,7 @@ func insertTest(source *linebot.EventSource) string {
 	UserName := getUserName(source.UserID)
 	conn.QueryRow(context.Background(), `INSERT INTO public.GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
 
-	return ""
+	return "InsertGroupID=" + source.GroupID
 }
 
 func testSQLCmd(SQLCmd string) string {
