@@ -34,7 +34,7 @@ func main() {
 
 	//test()
 
-	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
+	//fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	var err error
@@ -125,17 +125,17 @@ func QueryTest() (string, error) {
 		var UserID string
 		var UserName string
 		var GID string
-		var Time string
+		var Time Timestamp
 		err = rows.Scan(&GroupID, &UserID, &UserName, &GID , &Time)
 		if err != nil {
 			return "err", err
 		}
-		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "Time=" + Time + "\n"
+		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + "Time=" + Time.String() + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-		return string(rows.Err()), err
+		return rows.Err(), err
 	}
 
 	return sum, nil
