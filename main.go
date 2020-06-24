@@ -262,7 +262,7 @@ func getGroupCount(source *linebot.EventSource) int {
 	defer conn.Close(context.Background())
 	var count int
 	// log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
-	conn.QueryRow(context.Background(), `SELECT COUNT("GID") FROM public."GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
+	conn.QueryRow(context.Background(), `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
 	// log.Println("QueryRow end, count=", count)
 	return count
 }
