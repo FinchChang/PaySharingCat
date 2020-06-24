@@ -287,7 +287,7 @@ func testInsert(source *linebot.EventSource) string {
 		nowGroupIP = source.GroupID
 	}
 	GID := ""
-	if getGroupCount(source) == 0 {
+	if getGroupCount(source) == "0" {
 		GID = nowGroupIP
 	}else{
 		GID = nowGroupIP + getGroupCount(source)
