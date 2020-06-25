@@ -278,15 +278,33 @@ func getGroupCount(source *linebot.EventSource) string {
 		//return err.Error()
 	}
 	defer conn.Close(context.Background())
-	var count int
-	log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
 	sqlcmd := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"="$1"`
-	err = conn.QueryRow(context.Background(), sqlcmd, source.GroupID).Scan(&count)
+	rows, err := conn.Query(context.Background(), sqlcmd, source.GroupID)
 	if err != nil {
 		return err.Error()
 	}
-	log.Println("QueryRow end, count=", count, "err=", err.Error())
-	return strconv.Itoa(count)
+
+	var sum string
+	for rows.Next() {
+		var n int
+		err = rows.Scan(&n)
+		if err != nil {
+			return err.Error()
+		}
+		sum += strconv.Itoa(n) + "\n"
+	}
+
+	/*
+		var count int
+		log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
+
+		err = conn.QueryRow(context.Background(), sqlcmd, source.GroupID).Scan(&count)
+		if err != nil {
+			return err.Error()
+		}
+		log.Println("QueryRow end, count=", count, "err=", err.Error())
+	*/
+	return sum
 }
 
 func testInsert(source *linebot.EventSource) string {
