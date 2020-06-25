@@ -293,7 +293,7 @@ func getGroupCount(source *linebot.EventSource) string {
 		}
 		sum += strconv.Itoa(n) + "\n"
 	}
-	log.Println("QueryRow end, count=", sum, "err=", err.Error())
+	log.Println("QueryRow end, count=", sum)
 	/*
 		var count int
 		log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
