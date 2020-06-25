@@ -210,9 +210,12 @@ func insertTest(source *linebot.EventSource) string {
 	}
 	defer conn.Close(context.Background())
 	UserName := getUserName(source.UserID)
-	conn.QueryRow(context.Background(), `INSERT INTO public.GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
-
-	return "InsertGroupID=" + source.GroupID
+	row := conn.QueryRow(context.Background(), `INSERT INTO public.GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
+	var n string
+	if row != nil {
+		row.Scan(&n)
+	}
+	return "InsertGroupID=" + source.GroupID + `return code=` + n
 }
 
 //scanType:string  > default
@@ -277,8 +280,8 @@ func getGroupCount(source *linebot.EventSource) string {
 	defer conn.Close(context.Background())
 	var count int
 	log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
-	conn.QueryRow(context.Background(), `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
-	log.Println("QueryRow end, count=", count)
+	err = conn.QueryRow(context.Background(), `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"='$1'`, source.GroupID).Scan(&count)
+	log.Println("QueryRow end, count=", count, "err=", err.Error())
 	return strconv.Itoa(count)
 }
 
