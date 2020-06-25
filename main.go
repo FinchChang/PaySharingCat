@@ -278,7 +278,7 @@ func getGroupCount(source *linebot.EventSource) string {
 		//return err.Error()
 	}
 	defer conn.Close(context.Background())
-	sqlcmd := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"="$1"`
+	sqlcmd := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`
 	rows, err := conn.Query(context.Background(), sqlcmd, source.GroupID)
 	if err != nil {
 		return err.Error()
