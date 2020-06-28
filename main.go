@@ -280,7 +280,7 @@ func getGCount(source *linebot.EventSource) string {
 	defer db.Close()
 
 	var num int
-	row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=?`, `Cbe139f327d382569c3b709847caf4cc1`)
+	row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, `Cbe139f327d382569c3b709847caf4cc1`)
 	err = row.Scan(&num)
 	if err != nil {
 		log.Fatal("row: ", err)
