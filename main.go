@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"database/sql"
 	"time"
 
 	//  "encoding/json"
@@ -270,6 +271,19 @@ func testSQLCmd(SQLCmd string, scanType string) string {
 	return sum
 }
 
+func getGCount(source *linebot.EventSource) string {
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal("Failed to open a DB connection: ", err)
+	}
+	defer db.Close()
+
+	var num int
+	row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=?`, source.GroupID)
+	err = row.Scan(&num)
+	return strconv.Itoa(num)
+}
+
 func getGroupCount(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -356,7 +370,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 		result, _ := QueryTest()
 		return "測試查詢:" + result
 	} else if strings.Index(msgTxt, "測試數量") == 1 {
-		return "測試數量:" + getGroupCount(source) + "查詢Group:" + source.GroupID
+		return "測試數量:" + getGCount(source) + "查詢Group:" + source.GroupID
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
