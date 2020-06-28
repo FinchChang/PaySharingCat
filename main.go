@@ -282,6 +282,7 @@ func getGCount(source *linebot.EventSource) string {
 	var num int
 	row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=?`, source.GroupID)
 	err = row.Scan(&num)
+	log.Println("getGCount, num=", num)
 	return strconv.Itoa(num)
 }
 
