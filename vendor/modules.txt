@@ -18,8 +18,11 @@ github.com/jackc/pgtype
 ## explicit
 github.com/jackc/pgx/v4
 github.com/jackc/pgx/v4/internal/sanitize
-# github.com/lib/pq v1.5.2
+# github.com/lib/pq v1.7.0
 ## explicit
+github.com/lib/pq
+github.com/lib/pq/oid
+github.com/lib/pq/scram
 # github.com/line/line-bot-sdk-go v7.3.0+incompatible
 ## explicit
 github.com/line/line-bot-sdk-go/linebot

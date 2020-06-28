@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v4"
+	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tidwall/gjson"
 )
