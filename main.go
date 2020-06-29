@@ -176,7 +176,7 @@ func insertTest(source *linebot.EventSource) string {
 
 //scanType:string  > default
 //scanType:int  >
-func testSQLCmd(SQLCmd string, scanType string, output *string) error {
+func testSQLCmd(SQLCmd string, scanType string, output string) error {
 	if scanType == "" {
 		scanType = "string"
 	}
@@ -226,7 +226,7 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 	return nil
 }
 
-func getGroupCount(source *linebot.EventSource,output *string) error {
+func getGroupCount(source *linebot.EventSource,output string) error {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
@@ -251,7 +251,7 @@ func getGroupCount(source *linebot.EventSource,output *string) error {
 	return nil
 }
 
-func testInsert(source *linebot.EventSource, output *string) error {
+func testInsert(source *linebot.EventSource, output string) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 
 	tx, err := conn.Begin(context.Background())
@@ -292,7 +292,7 @@ func testInsert(source *linebot.EventSource, output *string) error {
 	return nil
 }
 
-func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) error {
+func getActionMsg(msgTxt string, source *linebot.EventSource, output string) error {
 	var Msg string
 	var err error
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
