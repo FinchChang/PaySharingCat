@@ -271,7 +271,11 @@ func testInsert(source *linebot.EventSource, output string) error {
 		nowGroupIP = source.GroupID
 	}
 	GID := ""
-	GroupCount := getGroupCount(source)
+	GroupCount := ""
+	err = getGroupCount(source,GroupCount)
+	if err != nil {
+		return err
+	}
 	if strings.Compare(GroupCount, "0") == 0 {
 		GID = nowGroupIP
 	} else {
