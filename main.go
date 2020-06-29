@@ -141,10 +141,10 @@ func getReplyMsg(message string, source *linebot.EventSource) string {
 	i := strings.Index(message, "喵")
 	var result string
 	if i > -1 {
-		err := getActionMsg(string(MegRune[i+1:]), source, result)
+		err := getActionMsg(string(MegRune[i+1:]), source, &result)
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
 		result = "---功能回覆---\n" + result
-		result += "\n---使用者訊息---\n" + message.Text
+		result += "\n---使用者訊息---\n" + message
 		//replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
 		result = ""
@@ -300,20 +300,20 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		output = tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		err = testInsert(source,output)
+		err = testInsert(source,&output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
-		err = QueryTest(output)
+		err = QueryTest(&output)
 	} else if strings.Index(msgTxt, "測試數量") == 1 {
-		err = getGroupCount(source,output)
+		err = getGroupCount(source,&output)
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
 		// return string(MegRune[i+len("DBCMD"):])
-		err = testSQLCmd(string(MegRune[i+len("DBCMD"):]), "", output)
+		err = testSQLCmd(string(MegRune[i+len("DBCMD"):]), "", &output)
 	} else if strings.Index(msgTxt, "INTDBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "INTDBCMD")
-		err = testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int", output)
+		err = testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int", &output)
 	} else {
 		output = "no action after getActionMsg"
 	}
