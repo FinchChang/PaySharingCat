@@ -287,7 +287,7 @@ func getGroupCount(source *linebot.EventSource) string {
 			return err.Error()
 		}
 		log.Println(count)
-		num += strconv.Itoa(count) + "\n"
+		result += strconv.Itoa(count) + "\n"
 	}
 	err = rows.Err()
 	if err != nil {
