@@ -142,6 +142,9 @@ func getReplyMsg(message string, source *linebot.EventSource) string {
 	var result string
 	if i > -1 {
 		err := getActionMsg(string(MegRune[i+1:]), source, &result)
+		if err != nil {
+			return err.Error()
+		}
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
 		result = "---功能回覆---\n" + result
 		result += "\n---使用者訊息---\n" + message
@@ -297,7 +300,6 @@ func testInsert(source *linebot.EventSource, output *string) error {
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) error {
-	var Msg string
 	var err error
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
 		*output = getHelp()
