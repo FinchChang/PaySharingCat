@@ -72,30 +72,6 @@ func main() {
 	//oneRestaurant := getRestaurantTest()
 	//log.Println(*oneRestaurant)
 }
-
-/*
-func selectTest() string {
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
-	}
-	defer conn.Close(context.Background())
-	var GroupID string
-	var UserID string
-	var UserName string
-	// err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
-	err = conn.QueryRow(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`).Scan(&GroupID, &UserID, &UserName)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		//os.Exit(1)
-		return err.Err()
-	}
-	fmt.Println(GroupID, UserID, UserName)
-	return GroupID + UserID + UserName
-}
-*/
-
 func QueryTest() (string, error) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -112,7 +88,7 @@ func QueryTest() (string, error) {
 	if err != nil {
 		return "err", err
 	}
-	sum = "conn.Query success.\n"
+	//sum = "conn.Query success.\n"
 	// rows.Close is called by rows.Next when all rows are read
 	// or an error occurs in Next or Scan. So it may optionally be
 	// omitted if nothing in the rows.Next loop can panic. It is
@@ -272,7 +248,7 @@ func testSQLCmd(SQLCmd string, scanType string) string {
 	return sum
 }
 
-func getGCount(source *linebot.EventSource) string {
+func getGroupCount(source *linebot.EventSource) string {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
@@ -283,47 +259,10 @@ func getGCount(source *linebot.EventSource) string {
 	row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, `Cbe139f327d382569c3b709847caf4cc1`)
 	err = row.Scan(&num)
 	if err != nil {
-		log.Fatal("row: ", err)
+		log.Fatal("get row data error: ", err)
 	}
-	log.Println("getGCount, num=", num)
+	log.Println("getGroupCount, num=", num)
 	return strconv.Itoa(num)
-}
-
-func getGroupCount(source *linebot.EventSource) string {
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
-		//return err.Error()
-	}
-	defer conn.Close(context.Background())
-	sqlcmd := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`
-	rows, err := conn.Query(context.Background(), sqlcmd, source.GroupID)
-	if err != nil {
-		return err.Error()
-	}
-
-	var sum string
-	for rows.Next() {
-		var n int
-		err = rows.Scan(&n)
-		if err != nil {
-			return err.Error()
-		}
-		sum += strconv.Itoa(n) + "\n"
-	}
-	log.Println("QueryRow end, count=", sum)
-	/*
-		var count int
-		log.Println("enter get GroupCount,source.GroupID=", source.GroupID)
-
-		err = conn.QueryRow(context.Background(), sqlcmd, source.GroupID).Scan(&count)
-		if err != nil {
-			return err.Error()
-		}
-		log.Println("QueryRow end, count=", count, "err=", err.Error())
-	*/
-	return sum
 }
 
 func testInsert(source *linebot.EventSource) string {
