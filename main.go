@@ -300,9 +300,9 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	var Msg string
 	var err error
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
-		output = getHelp()
+		&output = getHelp()
 	} else if strings.Index(msgTxt, "所有人") == 1 {
-		output = tagUser(source.UserID)
+		&output = tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
 		err = testInsert(source,&output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
