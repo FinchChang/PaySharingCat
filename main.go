@@ -176,7 +176,7 @@ func insertTest(source *linebot.EventSource) string {
 
 //scanType:string  > default
 //scanType:int  >
-func testSQLCmd(SQLCmd string, scanType string, output string) error {
+func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 	if scanType == "" {
 		scanType = "string"
 	}
@@ -222,11 +222,11 @@ func testSQLCmd(SQLCmd string, scanType string, output string) error {
 	if rows.Err() != nil {
 		return err
 	}
-	output = sum
+	*output = sum
 	return nil
 }
 
-func getGroupCount(source *linebot.EventSource,output string) error {
+func getGroupCount(source *linebot.EventSource,output *string) error {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
@@ -247,11 +247,11 @@ func getGroupCount(source *linebot.EventSource,output string) error {
 		return err
 	}
 	log.Println("getGroupCount, num=", num)
-	output = strconv.Itoa(num)
+	*output = strconv.Itoa(num)
 	return nil
 }
 
-func testInsert(source *linebot.EventSource, output string) error {
+func testInsert(source *linebot.EventSource, output *string) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 
 	tx, err := conn.Begin(context.Background())
@@ -292,7 +292,7 @@ func testInsert(source *linebot.EventSource, output string) error {
 		return err
 	}
 
-	output = "InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
+	*output = "InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
 	return nil
 }
 
@@ -304,20 +304,20 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		*output = tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		err = testInsert(source,&output)
+		err = testInsert(source,output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
-		err = QueryTest(&output)
+		err = QueryTest(output)
 	} else if strings.Index(msgTxt, "測試數量") == 1 {
-		err = getGroupCount(source,&output)
+		err = getGroupCount(source,output)
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
 		// return string(MegRune[i+len("DBCMD"):])
-		err = testSQLCmd(string(MegRune[i+len("DBCMD"):]), "", &output)
+		err = testSQLCmd(string(MegRune[i+len("DBCMD"):]), "", output)
 	} else if strings.Index(msgTxt, "INTDBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "INTDBCMD")
-		err = testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int", &output)
+		err = testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int", output)
 	} else {
 		output = "no action after getActionMsg"
 	}
