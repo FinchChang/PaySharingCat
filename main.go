@@ -23,8 +23,20 @@ import (
 )
 
 var bot *linebot.Client
+
 const profileURL string = "https://api.line.me/v2/bot/profile/"
+
+func test() {
+	inpit := "喵 help"
+	MegRune := []rune(strings.TrimSpace(inpit))
+	i := strings.Index(inpit, "喵")
+	fmt.Println(strings.Index(string(MegRune[i+1:]), "help"))
+}
 func main() {
+
+	//test()
+
+	//fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	var err error
@@ -60,22 +72,31 @@ func main() {
 	//oneRestaurant := getRestaurantTest()
 	//log.Println(*oneRestaurant)
 }
-func QueryTest(output *string) error {
+func QueryTest() (string, error) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		return err
+		os.Exit(1)
 	}
 	defer conn.Close(context.Background())
 
+	var sum string
+	var count int
+	// Send the query to the server. The returned rows MUST be closed
+	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName", "GID" ,"Time" from public."GroupProfile"`)
 	if err != nil {
-		return err
+		return "err", err
 	}
-
+	//sum = "conn.Query success.\n"
+	// rows.Close is called by rows.Next when all rows are read
+	// or an error occurs in Next or Scan. So it may optionally be
+	// omitted if nothing in the rows.Next loop can panic. It is
+	// safe to close rows multiple times.
 	defer rows.Close()
 
-	count := 0
+	// Iterate through the result set
+	count = 0
 	for rows.Next() {
 		count = count + 1
 		var GroupID string
@@ -85,16 +106,18 @@ func QueryTest(output *string) error {
 		var InsertTime time.Time
 		err = rows.Scan(&GroupID, &UserID, &UserName, &GID, &InsertTime)
 		if err != nil {
-			return err
+			return "err", err
 		}
-		output += "(" + strconv.Itoa(count) + ")\nGroupID=" + GroupID + "\nUserID=" + UserID + "\nUserName=" + UserName + "\nGID=" + GID + "\nTime=" + InsertTime.String() + "\n"
+		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + ",Time=" + InsertTime.String() + "\n"
 	}
 
+	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-		return err
+		return rows.Err().Error(), err
 	}
 
-	return nil
+	return sum, nil
+	// No errors found - do something with sum
 }
 
 func insertUserProfile(GroupID, UserID, UserName string) {
@@ -139,17 +162,16 @@ func getMapDate() []byte {
 func getReplyMsg(message string, source *linebot.EventSource) string {
 	MegRune := []rune(strings.TrimSpace(message))
 	i := strings.Index(message, "喵")
-	var result string
+	var replyMsg string
 	if i > -1 {
-		err := getActionMsg(string(MegRune[i+1:]), source, &result)
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
-		result = "---功能回覆---\n" + result
-		result += "\n---使用者訊息---\n" + message
+		replyMsg = "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), source)
+		replyMsg += "\n---使用者訊息---\n" + message
 		//replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
-		result = ""
+		replyMsg = ""
 	}
-	return result
+	return replyMsg
 }
 
 /*
@@ -176,7 +198,7 @@ func insertTest(source *linebot.EventSource) string {
 
 //scanType:string  > default
 //scanType:int  >
-func testSQLCmd(SQLCmd string, scanType string, output *string) error {
+func testSQLCmd(SQLCmd string, scanType string) string {
 	if scanType == "" {
 		scanType = "string"
 	}
@@ -184,7 +206,7 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		//os.Exit(1)
-		return err
+		return err.Error()
 	}
 	defer conn.Close(context.Background())
 
@@ -193,7 +215,7 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 	// before conn can be used again.
 	rows, err := conn.Query(context.Background(), SQLCmd)
 	if err != nil {
-		return err
+		return err.Error()
 	}
 	// No errors found - do something with sum
 	defer rows.Close()
@@ -204,14 +226,14 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 			var n int
 			err = rows.Scan(&n)
 			if err != nil {
-				return err
+				return err.Error()
 			}
 			sum += strconv.Itoa(n) + "\n"
 		} else {
 			var n string
 			err = rows.Scan(&n)
 			if err != nil {
-				return err
+				return err.Error()
 			}
 			sum += n + "\n"
 		}
@@ -220,17 +242,31 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-		return err
+		return err.Error()
 	}
-	*output = sum
-	return nil
+
+	return sum
 }
 
-func getGroupCount(source *linebot.EventSource,output *string) error {
+func getGroupCount2(source *linebot.EventSource){
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
-		return err
+	}
+	defer db.Close()
+	sqlSelect  := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`
+	_, err = db.Exec(sqlSelect, source.GroupID)
+	if err != nil {
+	  panic(err)
+	}
+	//log.Println("num=",num)
+}
+
+func getGroupCount(source *linebot.EventSource) string {
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal("Failed to open a DB connection: ", err)
+		return err.Error()
 	}
 	defer db.Close()
 
@@ -239,24 +275,54 @@ func getGroupCount(source *linebot.EventSource,output *string) error {
 	if QueryID == "" {
 		QueryID = "NULL"
 	}
+
+	/*	//success case
+	var result string
+	rows, err := db.Query(sqlSelect, QueryID)
+	if err != nil {
+		log.Fatal("get rows data error: ", err)
+		return err.Error()
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var count int
+		err = rows.Scan(&count)
+		if err != nil {
+			log.Fatal("get rows next error: ", err)
+			return err.Error()
+		}
+		log.Println(count)
+		result += strconv.Itoa(count) + "\n"
+	}
+	err = rows.Err()
+	if err != nil {
+		//get any error encountered during iteration
+		log.Fatal("any rows error encountered during iteration: ", err)
+		return err.Error()
+	}
+	//return result
+	*/
+
+	//row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, `Cbe139f327d382569c3b709847caf4cc1`)
 	var num int
 	err = db.QueryRow(sqlSelect, QueryID).Scan(&num)
 	//err = row.Scan(&num)
 	if err != nil {
 		log.Fatal("get row data error: ", err)
-		return err
+		return err.Error()
 	}
 	log.Println("getGroupCount, num=", num)
-	*output = strconv.Itoa(num)
-	return nil
+
+	return strconv.Itoa(num)
+
 }
 
-func testInsert(source *linebot.EventSource, output *string) error {
+func testInsert(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 
 	tx, err := conn.Begin(context.Background())
 	if err != nil {
-		return err
+		return err.Error()
 	}
 	// Rollback is safe to call even if the tx is already closed, so if
 	// the tx commits successfully, this is a no-op
@@ -271,11 +337,7 @@ func testInsert(source *linebot.EventSource, output *string) error {
 		nowGroupIP = source.GroupID
 	}
 	GID := ""
-	GroupCount := ""
-	err = getGroupCount(source,&GroupCount)
-	if err != nil {
-		return err
-	}
+	GroupCount := getGroupCount(source)
 	if strings.Compare(GroupCount, "0") == 0 {
 		GID = nowGroupIP
 	} else {
@@ -284,50 +346,45 @@ func testInsert(source *linebot.EventSource, output *string) error {
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
-		return err
+		return err.Error() + ", InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
 	}
 
 	err = tx.Commit(context.Background())
 	if err != nil {
-		return err
+		return err.Error() + ", InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
 	}
-
-	*output = "InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
-	return nil
+	return "InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
 }
 
-func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) error {
-	var Msg string
-	var err error
+func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
-		*output = getHelp()
+		return getHelp()
 	} else if strings.Index(msgTxt, "所有人") == 1 {
-		*output = tagUser(source.UserID)
+		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		err = testInsert(source,output)
+		return "測試插入:" + testInsert(source)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
-		err = QueryTest(output)
+		result, _ := QueryTest()
+		return "測試查詢:" + result
 	} else if strings.Index(msgTxt, "測試數量") == 1 {
-		err = getGroupCount(source,output)
+		return "測試數量:" + getGroupCount(source) + "查詢Group:" + source.GroupID
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
 		// return string(MegRune[i+len("DBCMD"):])
-		err = testSQLCmd(string(MegRune[i+len("DBCMD"):]), "", output)
+		return testSQLCmd(string(MegRune[i+len("DBCMD"):]), "")
 	} else if strings.Index(msgTxt, "INTDBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "INTDBCMD")
-		err = testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int", output)
-	} else {
-		*output = "no action after getActionMsg"
+		return testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int")
 	}
-	if err != nil{
-		return err
-	}
-	return nil
+	return "no action after getActionMsg"
 }
 
 func tagUser(userID string) string {
+	//JSONuserProfile := getUserProfile(userID)
+	//return `<@[^>]+>` + gjson.Get(JSONuserProfile, "displayName").String()
+	//return `<@` + gjson.Get(JSONuserProfile, "displayName").String() +  `>`
 	return `<@` + userID + `>`
 }
 
@@ -368,8 +425,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				handleText(message, event.Source)
-				/*
 				//quota, err := bot.GetMessageQuota().Do()
 
 				if err != nil {
@@ -388,7 +443,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						log.Print(err)
 					}
 				}
-				*/
 			case *linebot.LocationMessage:
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
 				log.Println("Restaurant result > ")
@@ -411,28 +465,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleText(message *linebot.TextMessage,source *linebot.EventSource){
-	replyMsg := getReplyMsg(message.Text, source)
-	if replyMsg == "" {
-		log.Println("NO Action")
-	} else {
-		if _, err := bot.ReplyMessage(
-			event.ReplyToken,
-			linebot.NewTextMessage(replyMsg),
-		).Do(); err != nil {
-			log.Print(err)
-		}
-	}
-}
-
 type restaurant struct {
 	name      string
 	Latitude  float64
 	Longitude float64
 	address   string
 }
-
-
 
 func getRestaurant(Latitude, Longitude float64) *restaurant {
 	//var jsonObj map[string]interface{}
