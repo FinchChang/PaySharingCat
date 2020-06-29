@@ -275,7 +275,8 @@ func getGroupCount(source *linebot.EventSource) string {
 	if QueryID == "" {
 		QueryID = "NULL"
 	}
-	//var num int
+
+	/*
 	var result string
 	rows, err := db.Query(sqlSelect, QueryID)
 	if err != nil {
@@ -299,19 +300,20 @@ func getGroupCount(source *linebot.EventSource) string {
 		log.Fatal("any rows error encountered during iteration: ", err)
 		return err.Error()
 	}
+	*/
 
-	/*
 	//row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, `Cbe139f327d382569c3b709847caf4cc1`)
-	//row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1`, source.GroupID)
+	var num int
+	err = db.QueryRow(sqlSelect, QueryID).Scan(&num)
 	//err = row.Scan(&num)
 	if err != nil {
 		log.Fatal("get row data error: ", err)
 		return err.Error()
 	}
 	log.Println("getGroupCount, num=", num)
-	*/
-	//return strconv.Itoa(num)
-	return result
+
+	return strconv.Itoa(num)
+	//return result
 }
 
 func testInsert(source *linebot.EventSource) string {
