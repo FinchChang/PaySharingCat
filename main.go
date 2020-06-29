@@ -87,7 +87,7 @@ func QueryTest(output *string) error {
 		if err != nil {
 			return err
 		}
-		output += "(" + strconv.Itoa(count) + ")\nGroupID=" + GroupID + "\nUserID=" + UserID + "\nUserName=" + UserName + "\nGID=" + GID + "\nTime=" + InsertTime.String() + "\n"
+		*output += "(" + strconv.Itoa(count) + ")\nGroupID=" + GroupID + "\nUserID=" + UserID + "\nUserName=" + UserName + "\nGID=" + GID + "\nTime=" + InsertTime.String() + "\n"
 	}
 
 	if rows.Err() != nil {
@@ -118,7 +118,7 @@ func getRestaurantTest() *restaurant {
 }
 
 func getMapDataTest() string {
-	input := `{"html_attributions":[],"next_page_token":"CqQCHwEAAH5IE5FDWxe87UnGZwQClsJQRntmtMK_rsgW5w8AWaT90q_5ASx4PoRsdZNRU7xx3lp-8Zy7NqwwRUCkL3HQd7HDKqXMu6IXYMX3a9Fhjx9Be0Q-sOP6emq3twhlazTU3pYo3Mg3_tpWQO7Kx0BqtJMd0jb5PMr-hmCxevLxagtscw4h6yz4068j9AXPEcYK2ek4h-wEJDXJQlck5OMyA71El_ispAQUZKu83FbZJXl7trioqujZyBswQFi8DSmFWzzzz8JR0nVqH2LTcEUk-hb9wZiwxxmTZp6y16OjtrbC1md7Vwd2twKbegUyFQrPkyPR12AYsh4k3pIncfPtwKSNB01AJ8EYI5wEHtGVtFoCDp9JQRb7TPYkqtlIXJ9GdBIQekkOU7YT_6Pizn53SE4YaBoUzJuM8zTUqP5C0qZB__jEb033a1g","results":[{"business_status":"OPERATIONAL","geometry":{"location":{"lat":24.961639,"lng":121.226577},"viewport":{"northeast":{"lat":24.9629762802915,"lng":121.2279073302915},"southwest":{"lat":24.9602783197085,"lng":121.2252093697085}}},"icon":"https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png","id":"059fe723f7c1c7984643eb4a23dd912ce6bf0b5c","name":"Yuanshao","opening_hours":{"open_now":false},"photos":[{"height":3024,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/110488068015271633600\">温淑君</a>"],"photo_reference":"CmRaAAAAmD-N78Ud66EFQrD_s_8iKlvTezhj-7YIXzsrfCTQ6ZxX8TBNFyyOJLDElpAHvWCamyMjOh-PnRfzfKSmykQGX66bgnGi6uT21ZRBMFW_45mxHR-giaQ5i0CUVl1frkHbEhCbtUfphSEvNHmoilskYS0EGhSQSzelrbBmOfrTo_8QgE86MnfgYA","width":4032}],"place_id":"ChIJDaPANjciaDQRQc3LojUgGe8","plus_code":{"compound_code":"X66G+MJ Taiwan, Zhongli District, 新街里","global_code":"7QP3X66G+MJ"},"price_level":2,"rating":4.2,"reference":"ChIJDaPANjciaDQRQc3LojUgGe8","scope":"GOOGLE","types":["restaurant","food","point_of_interest","establishment"],"user_ratings_total":938,"vicinity":"2F, No. 245號, Yuanhua Road, Zhongli District"},{"business_status":"OPERATIONAL","geometry":{"location":{"lat":24.9608113,"lng":121.2259249},"viewport":{"northeast":{"lat":24.9621300802915,"lng":121.2273143302915},"southwest":{"lat":24.9594321197085,"lng":121.2246163697085}}},"icon":"https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png","id":"65faec8cd4ccfdea93a83b266d7ee37359b74f04","name":"湄南小鎮泰國菜","opening_hours":{"open_now":false},"photos":[{"height":1365,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/109724900483908027869\">劉志宏</a>"],"photo_reference":"CmRaAAAAnpsfw1ou4kGXAa_o3Gb2_1Feo8DDc1yqjxwqJZDNMaUamxx30WaCZVklGbgg-CRPqoxpE4Buel6urz1cZRBqVj9Xs3NQ5ZvKtOm9KHDHbscIaVxhMxwRJnwgWMOtKb4BEhBtrUQ--92fAp-fAINzaiVBGhSoJGSfK429ihY8arSaotEs4L58xQ","width":2048}],"place_id":"ChIJLXSLGDciaDQRTGz66CqkGi4","plus_code":{"compound_code":"X66G+89 Taiwan, Zhongli District, 新街里","global_code":"7QP3X66G+89"},"price_level":2,"rating":4.2,"reference":"ChIJLXSLGDciaDQRTGz66CqkGi4","scope":"GOOGLE","types":["restaurant","food","point_of_interest","establishment"],"user_ratings_total":674,"vicinity":"No. 306號, Yanping Road, Zhongli District"}],"status":"OK"}`
+	input := `{"html_attributions":[],"next_page_token":"CqQCHwEAAH5IE5FDWxe87UnGZwQClsJQRntmtMK_rsgW5w8AWaT90q_5ASx4PoRsdZNRU7xx3lp-8Zy7NqwwRUCkL3HQd7HDKqXMu6IXYMX3a9Fhjx9Be0Q-sOP6emq3twhlazTU3pYo3Mg3_tpWQO7Kx0BqtJMd0jb5PMr-hmCxevLxagtscw4h6yz4068j9AXPEcYK2ek4h-wEJDXJQlck5OMyA71El_ispAQUZKu83FbZJXl7trioqujZyBswQFi8DSmFWzzzz8JR0nVqH2LTcEUk-hb9wZiwxxmTZp6y16OjtrbC1md7Vwd2twKbegUyFQrPkyPR12AYsh4k3pIncfPtwKSNB01AJ8EYI5wEHtGVtFoCDp9JQRb7TPYkqtlIXJ9GdBIQekkOU7YT_6Pizn53SE4YaBoUzJuM8zTUqP5C0qZB__jEb033a1g","results":[{"business_status":"OPERATIONAL","geometry":{"location":{"lat":24.961639,"lng":121.226577},"viewport":{"northeast":{"lat":24.9629762802915,"lng":121.2279073302915},"southwest":{"lat":24.9602783197085,"lng":121.2252093697085}}},"icon":"https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png","id":"059fe723f7c1c7984643eb4a23dd912ce6bf0b5c","name":"Yuanshao","opening_hours":{"open_now":false},"photos":[{"height":3024,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/110488068015271633600\">ÎÂÊç¾ý</a>"],"photo_reference":"CmRaAAAAmD-N78Ud66EFQrD_s_8iKlvTezhj-7YIXzsrfCTQ6ZxX8TBNFyyOJLDElpAHvWCamyMjOh-PnRfzfKSmykQGX66bgnGi6uT21ZRBMFW_45mxHR-giaQ5i0CUVl1frkHbEhCbtUfphSEvNHmoilskYS0EGhSQSzelrbBmOfrTo_8QgE86MnfgYA","width":4032}],"place_id":"ChIJDaPANjciaDQRQc3LojUgGe8","plus_code":{"compound_code":"X66G+MJ Taiwan, Zhongli District, ÐÂ½ÖÀï","global_code":"7QP3X66G+MJ"},"price_level":2,"rating":4.2,"reference":"ChIJDaPANjciaDQRQc3LojUgGe8","scope":"GOOGLE","types":["restaurant","food","point_of_interest","establishment"],"user_ratings_total":938,"vicinity":"2F, No. 245Ì–, Yuanhua Road, Zhongli District"},{"business_status":"OPERATIONAL","geometry":{"location":{"lat":24.9608113,"lng":121.2259249},"viewport":{"northeast":{"lat":24.9621300802915,"lng":121.2273143302915},"southwest":{"lat":24.9594321197085,"lng":121.2246163697085}}},"icon":"https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png","id":"65faec8cd4ccfdea93a83b266d7ee37359b74f04","name":"äØÄÏÐ¡æ‚Ì©‡ø²Ë","opening_hours":{"open_now":false},"photos":[{"height":1365,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/109724900483908027869\">„¢Ö¾ºê</a>"],"photo_reference":"CmRaAAAAnpsfw1ou4kGXAa_o3Gb2_1Feo8DDc1yqjxwqJZDNMaUamxx30WaCZVklGbgg-CRPqoxpE4Buel6urz1cZRBqVj9Xs3NQ5ZvKtOm9KHDHbscIaVxhMxwRJnwgWMOtKb4BEhBtrUQ--92fAp-fAINzaiVBGhSoJGSfK429ihY8arSaotEs4L58xQ","width":2048}],"place_id":"ChIJLXSLGDciaDQRTGz66CqkGi4","plus_code":{"compound_code":"X66G+89 Taiwan, Zhongli District, ÐÂ½ÖÀï","global_code":"7QP3X66G+89"},"price_level":2,"rating":4.2,"reference":"ChIJLXSLGDciaDQRTGz66CqkGi4","scope":"GOOGLE","types":["restaurant","food","point_of_interest","establishment"],"user_ratings_total":674,"vicinity":"No. 306Ì–, Yanping Road, Zhongli District"}],"status":"OK"}`
 	return input
 }
 
@@ -138,13 +138,13 @@ func getMapDate() []byte {
 
 func getReplyMsg(message string, source *linebot.EventSource) string {
 	MegRune := []rune(strings.TrimSpace(message))
-	i := strings.Index(message, "喵")
+	i := strings.Index(message, "ß÷")
 	var result string
 	if i > -1 {
 		err := getActionMsg(string(MegRune[i+1:]), source, &result)
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
-		result = "---功能回覆---\n" + result
-		result += "\n---使用者訊息---\n" + message
+		result = "---¹¦ÄÜ»Ø¸²---\n" + result
+		result += "\n---Ê¹ÓÃÕßÓÏ¢---\n" + message
 		//replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
 		result = ""
@@ -153,7 +153,7 @@ func getReplyMsg(message string, source *linebot.EventSource) string {
 }
 
 /*
---INSERT INTO public."GroupProfile"  ("GroupID", "UserID", "UserName", "Num", "Time") VALUES ('223213212' , '2', 'v小黑',1, '2020/06/16');
+--INSERT INTO public."GroupProfile"  ("GroupID", "UserID", "UserName", "Num", "Time") VALUES ('223213212' , '2', 'vÐ¡ºÚ',1, '2020/06/16');
 --SELECT * FROM public."GroupProfile";
 --DELETE FROM  public."GroupProfile" WHERE "UserID" = '2';
 */
@@ -301,13 +301,13 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	var err error
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
 		*output = getHelp()
-	} else if strings.Index(msgTxt, "所有人") == 1 {
+	} else if strings.Index(msgTxt, "ËùÓÐÈË") == 1 {
 		*output = tagUser(source.UserID)
-	} else if strings.Index(msgTxt, "測試插入") == 1 {
+	} else if strings.Index(msgTxt, "œyÔ‡²åÈë") == 1 {
 		err = testInsert(source,output)
-	} else if strings.Index(msgTxt, "測試查詢") == 1 {
+	} else if strings.Index(msgTxt, "œyÔ‡²éÔƒ") == 1 {
 		err = QueryTest(output)
-	} else if strings.Index(msgTxt, "測試數量") == 1 {
+	} else if strings.Index(msgTxt, "œyÔ‡”µÁ¿") == 1 {
 		err = getGroupCount(source,output)
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
@@ -332,9 +332,9 @@ func tagUser(userID string) string {
 }
 
 func getHelp() string {
-	helpMsg := `請輸入'喵 指令'
-	目前指令：
-		所有人	標記所有人(Ex: 喵 所有人)`
+	helpMsg := `ÕˆÝ”Èë'ß÷ Ö¸Áî'
+	Ä¿Ç°Ö¸Áî£º
+		ËùÓÐÈË	˜ËÓ›ËùÓÐÈË(Ex: ß÷ ËùÓÐÈË)`
 	return helpMsg
 }
 
