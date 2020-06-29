@@ -248,6 +248,20 @@ func testSQLCmd(SQLCmd string, scanType string) string {
 	return sum
 }
 
+func getGroupCount2(source *linebot.EventSource){
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal("Failed to open a DB connection: ", err)
+	}
+	defer db.Close()
+	sqlSelect  := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`
+	_, err = db.Exec(sqlStatement, source.GroupID)
+	if err != nil {
+	  panic(err)
+	}
+	log.Println("num=",num)
+}
+
 func getGroupCount(source *linebot.EventSource) string {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -257,7 +271,7 @@ func getGroupCount(source *linebot.EventSource) string {
 
 	var num int
 	//row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, `Cbe139f327d382569c3b709847caf4cc1`)
-	row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, source.GroupID)
+	row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1`, source.GroupID)
 	err = row.Scan(&num)
 	if err != nil {
 		log.Fatal("get row data error: ", err)
