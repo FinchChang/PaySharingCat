@@ -23,7 +23,7 @@ import (
 )
 
 var bot *linebot.Client
-
+const profileURL string = "https://api.line.me/v2/bot/profile/"
 func main() {
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -60,7 +60,7 @@ func main() {
 	//oneRestaurant := getRestaurantTest()
 	//log.Println(*oneRestaurant)
 }
-func QueryTest(output string) error {
+func QueryTest(output *string) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -272,7 +272,7 @@ func testInsert(source *linebot.EventSource, output *string) error {
 	}
 	GID := ""
 	GroupCount := ""
-	err = getGroupCount(source,GroupCount)
+	err = getGroupCount(source,&GroupCount)
 	if err != nil {
 		return err
 	}
@@ -319,12 +319,12 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 		i := strings.Index(msgTxt, "INTDBCMD")
 		err = testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int", output)
 	} else {
-		output = "no action after getActionMsg"
+		*output = "no action after getActionMsg"
 	}
 	if err != nil{
 		return err
 	}
-	return nill
+	return nil
 }
 
 func tagUser(userID string) string {
@@ -368,7 +368,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				handleText(message,source)
+				handleText(message, event.Source)
 				/*
 				//quota, err := bot.GetMessageQuota().Do()
 
@@ -412,11 +412,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleText(message *linebot.TextMessage,source *linebot.EventSource){
-	replyMsg := getReplyMsg(message.Text, event.Source)
+	replyMsg := getReplyMsg(message.Text, source)
 	if replyMsg == "" {
 		log.Println("NO Action")
 	} else {
-		if _, err = bot.ReplyMessage(
+		if _, err := bot.ReplyMessage(
 			event.ReplyToken,
 			linebot.NewTextMessage(replyMsg),
 		).Do(); err != nil {
