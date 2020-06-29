@@ -292,7 +292,7 @@ func testInsert(source *linebot.EventSource, output string) error {
 	return nil
 }
 
-func getActionMsg(msgTxt string, source *linebot.EventSource, output string) error {
+func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) error {
 	var Msg string
 	var err error
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
