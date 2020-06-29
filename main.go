@@ -272,8 +272,31 @@ func getGroupCount(source *linebot.EventSource) string {
 
 	sqlSelect := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1`
 	var num int
-	err = db.QueryRow(sqlSelect, source.GroupID).Scan(&num)
+	var result string
+	rows, err := db.Query(sqlSelect, source.GroupID)
+	if err != nil {
+		log.Fatal("get rows data error: ", err)
+		return err.Error()
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var count int
+		err = rows.Scan(&count)
+		if err != nil {
+			log.Fatal("get rows next error: ", err)
+			return err.Error()
+		}
+		log.Println(count)
+		num += strconv.Itoa(count) + "\n"
+	}
+	err = rows.Err()
+	if err != nil {
+		//get any error encountered during iteration
+		log.Fatal("any rows error encountered during iteration: ", err)
+		return err.Error()
+	}
 
+	/*
 	//row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, `Cbe139f327d382569c3b709847caf4cc1`)
 	//row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1`, source.GroupID)
 	//err = row.Scan(&num)
@@ -282,7 +305,9 @@ func getGroupCount(source *linebot.EventSource) string {
 		return err.Error()
 	}
 	log.Println("getGroupCount, num=", num)
-	return strconv.Itoa(num)
+	*/
+	//return strconv.Itoa(num)
+	return result
 }
 
 func testInsert(source *linebot.EventSource) string {
