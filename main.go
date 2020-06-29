@@ -60,7 +60,7 @@ func main() {
 	//oneRestaurant := getRestaurantTest()
 	//log.Println(*oneRestaurant)
 }
-func QueryTest(output *string) error {
+func QueryTest(output string) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
