@@ -266,6 +266,7 @@ func getGroupCount(source *linebot.EventSource) string {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
+		return err.Error()
 	}
 	defer db.Close()
 
@@ -275,6 +276,7 @@ func getGroupCount(source *linebot.EventSource) string {
 	err = row.Scan(&num)
 	if err != nil {
 		log.Fatal("get row data error: ", err)
+		return err.Error()
 	}
 	log.Println("getGroupCount, num=", num)
 	return strconv.Itoa(num)
