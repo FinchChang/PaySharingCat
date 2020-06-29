@@ -276,7 +276,7 @@ func getGroupCount(source *linebot.EventSource) string {
 		QueryID = "NULL"
 	}
 
-	/*
+	/*	//success case
 	var result string
 	rows, err := db.Query(sqlSelect, QueryID)
 	if err != nil {
@@ -300,6 +300,7 @@ func getGroupCount(source *linebot.EventSource) string {
 		log.Fatal("any rows error encountered during iteration: ", err)
 		return err.Error()
 	}
+	//return result
 	*/
 
 	//row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, `Cbe139f327d382569c3b709847caf4cc1`)
@@ -313,7 +314,7 @@ func getGroupCount(source *linebot.EventSource) string {
 	log.Println("getGroupCount, num=", num)
 
 	return strconv.Itoa(num)
-	//return result
+
 }
 
 func testInsert(source *linebot.EventSource) string {
