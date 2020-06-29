@@ -1,19 +1,8 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package main
 
 import (
 	"crypto/tls"
+	"database/sql"
 	"time"
 
 	//  "encoding/json"
@@ -28,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v4"
+	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tidwall/gjson"
 )
@@ -45,6 +35,8 @@ func test() {
 func main() {
 
 	//test()
+
+	//fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	var err error
@@ -80,8 +72,7 @@ func main() {
 	//oneRestaurant := getRestaurantTest()
 	//log.Println(*oneRestaurant)
 }
-
-func selectTest() string {
+func QueryTest() (string, error) {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -89,33 +80,15 @@ func selectTest() string {
 	}
 	defer conn.Close(context.Background())
 
-	var GroupID string
-	var UserID string
-	var UserName string
-
-	// err = conn.QueryRow(context.Background(), "select name, weight from widgets where id=$1", 42).Scan(&name, &weight)
-
-	err = conn.QueryRow(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`).Scan(&GroupID, &UserID, &UserName)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		//os.Exit(1)
-		return err
-	}
-
-	fmt.Println(GroupID, UserID, UserName)
-	return GroupID + UserID + UserName
-}
-
-func QueryTest() string{
-	var sum String
-	var count int32
+	var sum string
+	var count int
 	// Send the query to the server. The returned rows MUST be closed
 	// before conn can be used again.
-	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName" from public."GroupProfile"`)
+	rows, err := conn.Query(context.Background(), `SELECT "GroupID", "UserID", "UserName", "GID" ,"Time" from public."GroupProfile"`)
 	if err != nil {
-	    return err
+		return "err", err
 	}
-
+	//sum = "conn.Query success.\n"
 	// rows.Close is called by rows.Next when all rows are read
 	// or an error occurs in Next or Scan. So it may optionally be
 	// omitted if nothing in the rows.Next loop can panic. It is
@@ -123,23 +96,27 @@ func QueryTest() string{
 	defer rows.Close()
 
 	// Iterate through the result set
+	count = 0
 	for rows.Next() {
 		count = count + 1
 		var GroupID string
 		var UserID string
 		var UserName string
-	    err = rows.Scan(&GroupID,&UserID,&UserName)
-	    if err != nil {
-	        return err
-	    }
-	    sum += "idx="+count+"GroupID=" +  GroupID + ",UserID="+UserID+",UserName="+UserName + "\n"
+		var GID string
+		var InsertTime time.Time
+		err = rows.Scan(&GroupID, &UserID, &UserName, &GID, &InsertTime)
+		if err != nil {
+			return "err", err
+		}
+		sum += "idx=" + strconv.Itoa(count) + ": GroupID=" + GroupID + ",UserID=" + UserID + ",UserName=" + UserName + ",GID=" + GID + ",Time=" + InsertTime.String() + "\n"
 	}
 
 	// Any errors encountered by rows.Next or rows.Scan will be returned here
 	if rows.Err() != nil {
-	    return err
+		return rows.Err().Error(), err
 	}
-	return sum
+
+	return sum, nil
 	// No errors found - do something with sum
 }
 
@@ -190,24 +167,193 @@ func getReplyMsg(message string, source *linebot.EventSource) string {
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
 		replyMsg = "---功能回覆---\n" + getActionMsg(string(MegRune[i+1:]), source)
 		replyMsg += "\n---使用者訊息---\n" + message
-		replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
+		//replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
 		replyMsg = ""
 	}
 	return replyMsg
 }
 
+/*
+--INSERT INTO public."GroupProfile"  ("GroupID", "UserID", "UserName", "Num", "Time") VALUES ('223213212' , '2', 'v小黑',1, '2020/06/16');
+--SELECT * FROM public."GroupProfile";
+--DELETE FROM  public."GroupProfile" WHERE "UserID" = '2';
+*/
 func insertTest(source *linebot.EventSource) string {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
+		// os.Exit(1)
+		return err.Error()
 	}
 	defer conn.Close(context.Background())
 	UserName := getUserName(source.UserID)
-	conn.QueryRow(context.Background(), `INSERT INTO GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
+	row := conn.QueryRow(context.Background(), `INSERT INTO public.GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
+	var n string
+	if row != nil {
+		row.Scan(&n)
+	}
+	return "InsertGroupID=" + source.GroupID + `return code=` + n
+}
 
-	return ""
+//scanType:string  > default
+//scanType:int  >
+func testSQLCmd(SQLCmd string, scanType string) string {
+	if scanType == "" {
+		scanType = "string"
+	}
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		//os.Exit(1)
+		return err.Error()
+	}
+	defer conn.Close(context.Background())
+
+	var sum string
+	// Send the query to the server. The returned rows MUST be closed
+	// before conn can be used again.
+	rows, err := conn.Query(context.Background(), SQLCmd)
+	if err != nil {
+		return err.Error()
+	}
+	// No errors found - do something with sum
+	defer rows.Close()
+
+	// Iterate through the result set
+	for rows.Next() {
+		if scanType == "int" {
+			var n int
+			err = rows.Scan(&n)
+			if err != nil {
+				return err.Error()
+			}
+			sum += strconv.Itoa(n) + "\n"
+		} else {
+			var n string
+			err = rows.Scan(&n)
+			if err != nil {
+				return err.Error()
+			}
+			sum += n + "\n"
+		}
+
+	}
+
+	// Any errors encountered by rows.Next or rows.Scan will be returned here
+	if rows.Err() != nil {
+		return err.Error()
+	}
+
+	return sum
+}
+
+func getGroupCount2(source *linebot.EventSource){
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal("Failed to open a DB connection: ", err)
+	}
+	defer db.Close()
+	sqlSelect  := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`
+	_, err = db.Exec(sqlSelect, source.GroupID)
+	if err != nil {
+	  panic(err)
+	}
+	//log.Println("num=",num)
+}
+
+func getGroupCount(source *linebot.EventSource) string {
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal("Failed to open a DB connection: ", err)
+		return err.Error()
+	}
+	defer db.Close()
+
+	sqlSelect := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1`
+	QueryID := source.GroupID
+	if QueryID == "" {
+		QueryID = "NULL"
+	}
+
+	/*	//success case
+	var result string
+	rows, err := db.Query(sqlSelect, QueryID)
+	if err != nil {
+		log.Fatal("get rows data error: ", err)
+		return err.Error()
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var count int
+		err = rows.Scan(&count)
+		if err != nil {
+			log.Fatal("get rows next error: ", err)
+			return err.Error()
+		}
+		log.Println(count)
+		result += strconv.Itoa(count) + "\n"
+	}
+	err = rows.Err()
+	if err != nil {
+		//get any error encountered during iteration
+		log.Fatal("any rows error encountered during iteration: ", err)
+		return err.Error()
+	}
+	//return result
+	*/
+
+	//row := db.QueryRow(`SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`, `Cbe139f327d382569c3b709847caf4cc1`)
+	var num int
+	err = db.QueryRow(sqlSelect, QueryID).Scan(&num)
+	//err = row.Scan(&num)
+	if err != nil {
+		log.Fatal("get row data error: ", err)
+		return err.Error()
+	}
+	log.Println("getGroupCount, num=", num)
+
+	return strconv.Itoa(num)
+
+}
+
+func testInsert(source *linebot.EventSource) string {
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+
+	tx, err := conn.Begin(context.Background())
+	if err != nil {
+		return err.Error()
+	}
+	// Rollback is safe to call even if the tx is already closed, so if
+	// the tx commits successfully, this is a no-op
+	defer tx.Rollback(context.Background())
+
+	//log.Println("GroupID=", source.GroupID, "UserID=", source.UserID, "UserName=", getUserName(source.UserID), "GID=", source.GroupID+strconv.Itoa(getGroupCount(source)), "time=", time.Now().Format("2006-01-02 15:04:05"))
+
+	nowGroupIP := ""
+	if source.GroupID == "" {
+		nowGroupIP = "NULL"
+	} else {
+		nowGroupIP = source.GroupID
+	}
+	GID := ""
+	GroupCount := getGroupCount(source)
+	if strings.Compare(GroupCount, "0") == 0 {
+		GID = nowGroupIP
+	} else {
+		GID = nowGroupIP + GroupCount
+	}
+
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
+	if err != nil {
+		return err.Error() + ", InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
+	}
+
+	err = tx.Commit(context.Background())
+	if err != nil {
+		return err.Error() + ", InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
+	}
+	return "InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
@@ -216,15 +362,23 @@ func getActionMsg(msgTxt string, source *linebot.EventSource) string {
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		return tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		return insertTest(source)
+		return "測試插入:" + testInsert(source)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
-		return QueryTest()
+		result, _ := QueryTest()
+		return "測試查詢:" + result
+	} else if strings.Index(msgTxt, "測試數量") == 1 {
+		return "測試數量:" + getGroupCount(source) + "查詢Group:" + source.GroupID
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
-		return string(MegRune[i+len("DBCMD"):])
+		// return string(MegRune[i+len("DBCMD"):])
+		return testSQLCmd(string(MegRune[i+len("DBCMD"):]), "")
+	} else if strings.Index(msgTxt, "INTDBCMD") == 1 {
+		MegRune := []rune(strings.TrimSpace(msgTxt))
+		i := strings.Index(msgTxt, "INTDBCMD")
+		return testSQLCmd(string(MegRune[i+len("INTDBCMD"):]), "int")
 	}
-	return ""
+	return "no action after getActionMsg"
 }
 
 func tagUser(userID string) string {
