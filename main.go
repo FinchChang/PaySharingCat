@@ -277,7 +277,7 @@ func getGroupCount(source *linebot.EventSource) string {
 	}
 	//var num int
 	var result string
-	rows, err := db.Query(sqlSelect, source.GroupID)
+	rows, err := db.Query(sqlSelect, QueryID)
 	if err != nil {
 		log.Fatal("get rows data error: ", err)
 		return err.Error()
