@@ -255,11 +255,11 @@ func getGroupCount2(source *linebot.EventSource){
 	}
 	defer db.Close()
 	sqlSelect  := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID"=$1`
-	_, err = db.Exec(sqlStatement, source.GroupID)
+	_, err = db.Exec(sqlSelect, source.GroupID)
 	if err != nil {
 	  panic(err)
 	}
-	log.Println("num=",num)
+	//log.Println("num=",num)
 }
 
 func getGroupCount(source *linebot.EventSource) string {
