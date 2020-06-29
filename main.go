@@ -303,7 +303,7 @@ func testInsert(source *linebot.EventSource) string {
 	}
 	GID := ""
 	GroupCount := getGroupCount(source)
-	if GroupCount == "0" {
+	if strings.Compare(GroupCount, "0") == 0 {
 		GID = nowGroupIP
 	} else {
 		GID = nowGroupIP + GroupCount
