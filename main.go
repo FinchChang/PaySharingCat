@@ -271,7 +271,7 @@ func getGroupCount(source *linebot.EventSource) string {
 	defer db.Close()
 
 	sqlSelect := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1`
-	var num int
+	//var num int
 	var result string
 	rows, err := db.Query(sqlSelect, source.GroupID)
 	if err != nil {
