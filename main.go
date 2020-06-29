@@ -302,22 +302,23 @@ func testInsert(source *linebot.EventSource) string {
 		nowGroupIP = source.GroupID
 	}
 	GID := ""
-	if getGroupCount(source) == "0" {
+	GroupCount := getGroupCount(source)
+	if GroupCount == "0" {
 		GID = nowGroupIP
 	} else {
-		GID = nowGroupIP + getGroupCount(source)
+		GID = nowGroupIP + GroupCount
 	}
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
-		return err.Error() + ", InsertGroupID=" + nowGroupIP + ",GID=" + GID
+		return err.Error() + ", InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
 	}
 
 	err = tx.Commit(context.Background())
 	if err != nil {
-		return err.Error() + ", InsertGroupID=" + nowGroupIP + ",GID=" + GID
+		return err.Error() + ", InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
 	}
-	return "InsertGroupID=" + nowGroupIP + ",GID=" + GID
+	return "InsertGroupID=" + nowGroupIP + "\nGID=" + GID + "\nGroupCount = " + GroupCount
 }
 
 func getActionMsg(msgTxt string, source *linebot.EventSource) string {
