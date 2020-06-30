@@ -374,7 +374,7 @@ func getGroupUserProfile(source *linebot.EventSource) string {
 		log.Println(err)
 		return err.Error()
 	}
-	return res.String()
+	return string(res)
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
