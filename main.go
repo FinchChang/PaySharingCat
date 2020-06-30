@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"time"
 
-        "encoding/json"
+	//  "encoding/json"
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -374,9 +374,8 @@ func getGroupUserProfile(source *linebot.EventSource) string {
 		log.Println(err)
 		return err.Error()
 	}
-	var s string
-	json.Unmarshal(res, &s)
-	return s
+	jsondata, _ := json.Marshal(res)
+	return string(jsondata)
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
