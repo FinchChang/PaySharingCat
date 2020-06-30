@@ -168,7 +168,7 @@ func insertTest(source *linebot.EventSource) string {
 		return err.Error()
 	}
 	defer conn.Close(context.Background())
-	UserName := getUserName(source.UserID)
+	UserName := getUserName(source)
 	row := conn.QueryRow(context.Background(), `INSERT INTO public.GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
 	var n string
 	if row != nil {
@@ -355,7 +355,7 @@ type Profile struct {
 
 func getUserProfile(source *linebot.EventSource) string {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", profileURL+source.userID, nil)
+	req, _ := http.NewRequest("GET", profileURL + source.userID , nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
@@ -375,8 +375,8 @@ func getUserName(source *linebot.EventSource) string {
 }
 
 
-func getGroupMemberProfile(source *linebot.EventSource) error {
-	res, err := bot.GetGroupMemberProfile(source.GroupID,source.userID).Do()
+func getGroupMemberProfile(source *linebot.EventSource) string {
+	res, err := bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
 	if err != nil {
 		log.Println(err)
 		return err.Error()
