@@ -284,8 +284,15 @@ func testInsert(source *linebot.EventSource, output *string) error {
 	} else {
 		GID = nowGroupIP + GroupCount
 	}
+	if source.Type == "group" {
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
+	} else if source.Type == "room" {
+
+	} else if source.Type == "user" {
+
+	}
+
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source), GID, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return err
 	}
@@ -305,6 +312,8 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 		*output = getHelp()
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		*output = tagUser(source.UserID)
+	} else if strings.Index(msgTxt, "測試群組") == 1 {
+		*output = getGroupMemberProfile(source)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
 		err = testInsert(source,output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
@@ -340,18 +349,39 @@ func getHelp() string {
 	return helpMsg
 }
 
-func getUserProfile(userID string) string {
+type Profile struct {
+	UserID, GroupID, PirtureURL,displayName string
+}
+
+func getUserProfile(source *linebot.EventSource) string {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", profileURL+userID, nil)
+	req, _ := http.NewRequest("GET", profileURL+source.userID, nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
 	return string(s)
 }
 
-func getUserName(UserID string) string {
-	JSONuserProfile := getUserProfile(UserID)
+func getUserName(source *linebot.EventSource) string {
+	var JSONuserProfile  string
+	if source.Type == "group" {
+		JSONuserProfile = GetGroupMemberProfile(source)
+	} else if source.Type == "room" {
+
+	} else if source.Type == "user" {
+		JSONuserProfile = getUserProfile(source)
+	}
 	return gjson.Get(JSONuserProfile, "displayName").String()
+}
+
+
+func getGroupMemberProfile(source *linebot.EventSource) error {
+	res, err := bot.GetGroupMemberProfile(source.GroupID,source.userID).Do()
+	if err != nil {
+		log.Println(err)
+		return err.Error()
+	}
+	return res
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
