@@ -284,13 +284,6 @@ func testInsert(source *linebot.EventSource, output *string) error {
 	} else {
 		GID = nowGroupIP + GroupCount
 	}
-	if source.Type == "group" {
-
-	} else if source.Type == "room" {
-
-	} else if source.Type == "user" {
-
-	}
 
 	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source), GID, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
@@ -313,7 +306,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		*output = tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試群組") == 1 {
-		*output = getGroupMemberProfile(source)
+		*output = getGroupUserProfile(source)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
 		err = testInsert(source,output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
@@ -355,7 +348,7 @@ type Profile struct {
 
 func getUserProfile(source *linebot.EventSource) string {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", profileURL + source.userID , nil)
+	req, _ := http.NewRequest("GET", profileURL + source.UserID , nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
@@ -365,7 +358,7 @@ func getUserProfile(source *linebot.EventSource) string {
 func getUserName(source *linebot.EventSource) string {
 	var JSONuserProfile  string
 	if source.Type == "group" {
-		JSONuserProfile = GetGroupMemberProfile(source)
+		JSONuserProfile = getGroupMemberProfile(source)
 	} else if source.Type == "room" {
 
 	} else if source.Type == "user" {
@@ -375,7 +368,7 @@ func getUserName(source *linebot.EventSource) string {
 }
 
 
-func getGroupMemberProfile(source *linebot.EventSource) string {
+func getGroupUserProfile(source *linebot.EventSource) string {
 	res, err := bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
 	if err != nil {
 		log.Println(err)
