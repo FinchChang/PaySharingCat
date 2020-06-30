@@ -358,7 +358,7 @@ func getUserProfile(source *linebot.EventSource) string {
 func getUserName(source *linebot.EventSource) string {
 	var JSONuserProfile  string
 	if source.Type == "group" {
-		JSONuserProfile = getGroupMemberProfile(source)
+		JSONuserProfile = getGroupUserProfile(source)
 	} else if source.Type == "room" {
 
 	} else if source.Type == "user" {
@@ -374,7 +374,7 @@ func getGroupUserProfile(source *linebot.EventSource) string {
 		log.Println(err)
 		return err.Error()
 	}
-	return res
+	return res.String()
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
