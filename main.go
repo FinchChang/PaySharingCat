@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"time"
 
-	//  "encoding/json"
+	"encoding/json"
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -342,9 +342,6 @@ func getHelp() string {
 	return helpMsg
 }
 
-type Profile struct {
-	UserID, GroupID, PirtureURL,displayName string
-}
 
 func getUserProfile(source *linebot.EventSource) string {
 	client := &http.Client{}
