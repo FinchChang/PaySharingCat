@@ -137,8 +137,8 @@ func getMapDate() []byte {
 }
 
 func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
-	MegRune := []rune(strings.TrimSpace(message))
-	i := strings.Index(message, "喵")
+	MegRune := []rune(strings.TrimSpace(message.Text))
+	i := strings.Index(message.Text, "喵")
 	var result string
 	if i > -1 {
 		err := getActionMsg(string(MegRune[i+1:]), source, &result)
@@ -147,7 +147,7 @@ func handleText(message *linebot.TextMessage, source *linebot.EventSource) strin
 		}
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
 		result = "---功能回覆---\n" + result
-		result += "\n---使用者訊息---\n" + message
+		result += "\n---使用者訊息---\n" + message.Text
 		//replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
 		result = ""
