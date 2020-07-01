@@ -1,2 +1,2 @@
 # PaySharingCat
-This is line bot for pat sharing function 
+This is line bot for pay sharing function 
