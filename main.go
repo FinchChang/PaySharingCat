@@ -336,17 +336,17 @@ func getUserProfile(source *linebot.EventSource) string {
 	var usrProfileRes linebot.UserProfileResponse
 	var err error
 	if source.Type == "group" {
-		res, err = bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
+		usrProfileRes, err = bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
 	} else if source.Type == "room" {
-		res, err = bot.GetRoomMemberProfile(source.RoomID, source.UserID).Do()
+		usrProfileRes, err = bot.GetRoomMemberProfile(source.RoomID, source.UserID).Do()
 	} else if source.Type == "user" {
-		res, err = bot.GetProfile(source.UserID).Do();
+		usrProfileRes, err = bot.GetProfile(source.UserID).Do();
 	}
 	if err != nil {
 		log.Println(err)
 		return err.Error()
 	}
-	jsondata, _ := json.Marshal(res)
+	jsondata, _ := json.Marshal(usrProfileRes)
 	return string(jsondata)
 	/*
 	client := &http.Client{}
