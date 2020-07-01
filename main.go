@@ -336,11 +336,11 @@ func getUserProfile(source *linebot.EventSource) string {
 	var usrProfileRes linebot.UserProfileResponse
 	var err error
 	if source.Type == "group" {
-		*usrProfileRes, err = bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
+		&usrProfileRes, err = bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
 	} else if source.Type == "room" {
-		*usrProfileRes, err = bot.GetRoomMemberProfile(source.RoomID, source.UserID).Do()
+		&usrProfileRes, err = bot.GetRoomMemberProfile(source.RoomID, source.UserID).Do()
 	} else if source.Type == "user" {
-		*usrProfileRes, err = bot.GetProfile(source.UserID).Do();
+		&usrProfileRes, err = bot.GetProfile(source.UserID).Do();
 	}
 	if err != nil {
 		log.Println(err)
