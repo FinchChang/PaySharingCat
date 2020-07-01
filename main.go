@@ -333,7 +333,7 @@ func getHelp() string {
 
 
 func getUserProfile(source *linebot.EventSource) string {
-	var usrProfileRes linebot.UserProfileResponse
+	var usrProfileRes *linebot.UserProfileResponse
 	var err error
 	if source.Type == "group" {
 		usrProfileRes, err = bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
