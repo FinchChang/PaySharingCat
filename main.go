@@ -136,7 +136,7 @@ func getMapDate() []byte {
 	return b
 }
 
-func getReplyMsg(message string, source *linebot.EventSource) string {
+func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
 	MegRune := []rune(strings.TrimSpace(message))
 	i := strings.Index(message, "喵")
 	var result string
@@ -394,11 +394,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				replyMsg := handleText(message, event.Source)
 				/*
 				//quota, err := bot.GetMessageQuota().Do()
-
 				if err != nil {
 					log.Println("Quota err:", err)
 				}
-
 				replyMsg := getReplyMsg(message.Text, event.Source)
 				*/
 				if replyMsg == "" {
@@ -434,9 +432,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleText(message *linebot.TextMessage,source *linebot.EventSource) string{
-	return getReplyMsg(message.Text, source)
-}
+/*
+	location and restaurant hangle func 
+*/
 
 type restaurant struct {
 	name      string
