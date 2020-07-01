@@ -24,6 +24,8 @@ import (
 
 var bot *linebot.Client
 const profileURL string = "https://api.line.me/v2/bot/profile/"
+const groupSummaryURL string = "https://api.line.me/v2/bot/group/{groupId}/summary"
+const groupMemberCount string = "https://api.line.me/v2/bot/group/{groupId}/members/count"
 func main() {
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -243,7 +245,34 @@ func getGroupCount(source *linebot.EventSource,output *string) error {
 	return nil
 }
 
-func testInsert(source *linebot.EventSource, output *string) error {
+func IsExistInGroup(source *linebot.EventSource, output *string) error{
+	if source.GroupID == "" {
+		return nil
+	}
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal("Failed to open a DB connection: ", err)
+		return err
+	}
+	defer db.Close()
+
+	sqlSelect := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1 AND "UserID" = $2`
+
+	var num int
+	err = db.QueryRow(sqlSelect, source.GroupID, source.UserID).Scan(&num)
+	//err = row.Scan(&num)
+	if err != nil {
+		log.Fatal("get row data error: ", err)
+		return err
+	}
+	*output = strconv.Itoa(num)
+	return nil
+}
+
+/*
+	insert Group member 
+*/
+func groupMemberRegister(source *linebot.EventSource, output *string) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 
 	tx, err := conn.Begin(context.Background())
@@ -292,12 +321,14 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	var err error
 	if strings.Index(msgTxt, "help") == 1 || msgTxt == "" {
 		*output = getHelp()
-	} else if strings.Index(msgTxt, "所有人") == 1 {
+	} else if strings.Index(msgTxt, "註冊") == 1 {
+		err = groupMemberRegister(source,output)
+	}else if strings.Index(msgTxt, "所有人") == 1 {
 		*output = tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試群組") == 1 {
 		*output = getGroupUserProfile(source)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		err = testInsert(source,output)
+		err = groupMemberRegister(source,output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		err = QueryTest(output)
 	} else if strings.Index(msgTxt, "測試數量") == 1 {
@@ -349,7 +380,7 @@ func getUserProfile(source *linebot.EventSource) string {
 	jsondata, _ := json.Marshal(usrProfileRes)
 	return string(jsondata)
 
-	
+
 
 	/*
 	client := &http.Client{}
@@ -359,6 +390,15 @@ func getUserProfile(source *linebot.EventSource) string {
 	s, _ := ioutil.ReadAll(res.Body)
 	return string(s)
 	*/
+}
+
+func getByURL(inputURL string){
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", inputURL , nil)
+	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
+	res, _ := client.Do(req)
+	s, _ := ioutil.ReadAll(res.Body)
+	return string(s)
 }
 
 func getUserName(source *linebot.EventSource) string {
