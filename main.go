@@ -210,8 +210,7 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 	return nil
 }
 
-func getGroupCount(source *linebot.EventSource,output *string) error {
-
+func getGroupCount(source *linebot.EventSource,output *string) (err error) {
 	sqlSelect := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1`
 	QueryID := source.GroupID
 	if QueryID == "" {
@@ -229,7 +228,7 @@ func getGroupCount(source *linebot.EventSource,output *string) error {
 	return nil
 }
 
-func IsExistInGroup(source *linebot.EventSource, output *string) error{
+func IsExistInGroup(source *linebot.EventSource, output *string) (err error){
 	if source.GroupID == "" {
 		return nil
 	}
@@ -370,7 +369,7 @@ func getUserProfile(source *linebot.EventSource) string {
 	*/
 }
 
-func getByURL(inputURL string){
+func getByURL(inputURL string) string{
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", inputURL , nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
@@ -426,7 +425,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    err := initMySQL()
+    err = initMySQL()
     if err != nil {
         panic(err)
     }
