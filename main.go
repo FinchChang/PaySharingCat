@@ -23,6 +23,8 @@ import (
 )
 
 var bot *linebot.Client
+var db *sql.DB
+
 const profileURL string = "https://api.line.me/v2/bot/profile/"
 const groupSummaryURL string = "https://api.line.me/v2/bot/group/{groupId}/summary"
 const groupMemberCount string = "https://api.line.me/v2/bot/group/{groupId}/members/count"
@@ -113,19 +115,7 @@ func insertUserProfile(GroupID, UserID, UserName string) {
 }
 
 
-func getMapDate() []byte {
-	file, err := os.Open("mapData.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
 
-	b, err := ioutil.ReadAll(file)
-
-	log.Println(b)
-	log.Println("--------------------------------")
-	return b
-}
 
 func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
 	MegRune := []rune(strings.TrimSpace(message.Text))
@@ -221,12 +211,6 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 }
 
 func getGroupCount(source *linebot.EventSource,output *string) error {
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatal("Failed to open a DB connection: ", err)
-		return err
-	}
-	defer db.Close()
 
 	sqlSelect := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1`
 	QueryID := source.GroupID
@@ -249,12 +233,6 @@ func IsExistInGroup(source *linebot.EventSource, output *string) error{
 	if source.GroupID == "" {
 		return nil
 	}
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatal("Failed to open a DB connection: ", err)
-		return err
-	}
-	defer db.Close()
 
 	sqlSelect := `SELECT COUNT("GID") FROM "GroupProfile" WHERE "GroupID" = $1 AND "UserID" = $2`
 
@@ -424,6 +402,18 @@ func getGroupUserProfile(source *linebot.EventSource) string {
 	return string(jsondata)
 }
 
+func initMySQL() (err error) {
+    db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
+    if err != nil {
+        return
+    }
+    err = db.Ping()
+    if err != nil {
+        return
+    }
+    return
+}
+
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
 
@@ -435,6 +425,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+
+    err := initMySQL()
+    if err != nil {
+        panic(err)
+    }
+    defer db.Close()
 
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
@@ -492,6 +488,19 @@ type restaurant struct {
 	address   string
 }
 
+func getMapDate() []byte {
+    file, err := os.Open("mapData.txt")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()
+
+    b, err := ioutil.ReadAll(file)
+
+    log.Println(b)
+    log.Println("--------------------------------")
+    return b
+}
 
 func getRestaurantTest() *restaurant {
 	mapData := getMapDate()
