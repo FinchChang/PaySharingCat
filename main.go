@@ -16,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
 	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -23,7 +24,9 @@ import (
 )
 
 var bot *linebot.Client
+
 const profileURL string = "https://api.line.me/v2/bot/profile/"
+
 func main() {
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -31,10 +34,15 @@ func main() {
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	//key := os.Getenv("GoogleKey")
 	log.Println("Bot:", bot, " err:", err)
-	http.HandleFunc("/callback", callbackHandler)
-	port := os.Getenv("PORT")
-	addr := fmt.Sprintf(":%s", port)
-	http.ListenAndServe(addr, nil)
+
+	r := gin.Default()
+	r.GET("/callback", callbackHandler)
+	r.Run()
+
+	//http.HandleFunc("/callback", callbackHandler)
+	//port := os.Getenv("PORT")
+	//addr := fmt.Sprintf(":%s", port)
+	//http.ListenAndServe(addr, nil)
 	/*	test to get map data
 			/*
 			   mapData := getMapDate()
@@ -229,7 +237,7 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 	return nil
 }
 
-func getGroupCount(source *linebot.EventSource,output *string) error {
+func getGroupCount(source *linebot.EventSource, output *string) error {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
@@ -275,7 +283,7 @@ func testInsert(source *linebot.EventSource, output *string) error {
 	}
 	GID := ""
 	GroupCount := ""
-	err = getGroupCount(source,&GroupCount)
+	err = getGroupCount(source, &GroupCount)
 	if err != nil {
 		return err
 	}
@@ -306,11 +314,11 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		*output = tagUser(source.UserID)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		err = testInsert(source,output)
+		err = testInsert(source, output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		err = QueryTest(output)
 	} else if strings.Index(msgTxt, "測試數量") == 1 {
-		err = getGroupCount(source,output)
+		err = getGroupCount(source, output)
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
@@ -323,7 +331,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	} else {
 		*output = "no action after getActionMsg"
 	}
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	return nil
@@ -372,13 +380,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				replyMsg := handleText(message, event.Source)
 				/*
-				//quota, err := bot.GetMessageQuota().Do()
+					//quota, err := bot.GetMessageQuota().Do()
 
-				if err != nil {
-					log.Println("Quota err:", err)
-				}
+					if err != nil {
+						log.Println("Quota err:", err)
+					}
 
-				replyMsg := getReplyMsg(message.Text, event.Source)
+					replyMsg := getReplyMsg(message.Text, event.Source)
 				*/
 				if replyMsg == "" {
 					log.Println("NO Action")
@@ -403,6 +411,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
+
 					//return err
 					log.Print(err)
 				}
@@ -413,7 +422,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleText(message *linebot.TextMessage,source *linebot.EventSource) string{
+func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
 	return getReplyMsg(message.Text, source)
 }
 
@@ -423,8 +432,6 @@ type restaurant struct {
 	Longitude float64
 	address   string
 }
-
-
 
 func getRestaurant(Latitude, Longitude float64) *restaurant {
 	//var jsonObj map[string]interface{}
