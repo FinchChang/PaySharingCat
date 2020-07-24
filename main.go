@@ -505,10 +505,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/*
 func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
 	return getReplyMsg(message.Text, source)
 }
-
+*/
 /*
 	location and restaurant hangle func
 */
