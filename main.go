@@ -37,7 +37,7 @@ func main() {
 
 	r := gin.Default()
 	r.GET("/callback", callbackHanderGin)
-	r.Run()
+	r.Run(`:` + os.Getenv("PORT"))
 
 	//http.HandleFunc("/callback", callbackHandler)
 	//port := os.Getenv("PORT")
