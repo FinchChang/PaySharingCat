@@ -37,14 +37,15 @@ func main() {
 
 	r := gin.Default()
 	r.GET("/callback", callbackHanderGin)
-	r.Run(`:` + os.Getenv("PORT"))
-
-	//http.HandleFunc("/callback", callbackHandler)
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	fmt.Println("port=", port)
 	fmt.Println("addr=", addr)
-	http.ListenAndServe(addr, nil)
+	r.Run(`:` + os.Getenv("PORT"))
+
+	//http.HandleFunc("/callback", callbackHandler)
+
+	// http.ListenAndServe(addr, nil)
 	/*	test to get map data
 			/*
 			   mapData := getMapDate()
