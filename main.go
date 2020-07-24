@@ -36,7 +36,7 @@ func main() {
 	log.Println("Bot:", bot, " err:", err)
 
 	r := gin.Default()
-	r.GET("/callback", callbackHanderGin)
+	r.POST("/callback", callbackHanderGin)
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	fmt.Println("port=", port)
