@@ -41,7 +41,7 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 	fmt.Println("port=", port)
 	fmt.Println("addr=", addr)
-	r.Run(`:` + os.Getenv("PORT"))
+	r.Run(addr)
 
 	//http.HandleFunc("/callback", callbackHandler)
 
