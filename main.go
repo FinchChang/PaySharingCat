@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"time"
 
-	//  "encoding/json"
+	"encoding/json"
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -147,9 +147,9 @@ func getMapDate() []byte {
 	return b
 }
 
-func getReplyMsg(message string, source *linebot.EventSource) string {
-	MegRune := []rune(strings.TrimSpace(message))
-	i := strings.Index(message, "喵")
+func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
+	MegRune := []rune(strings.TrimSpace(message.Text))
+	i := strings.Index(message.Text, "喵")
 	var result string
 	if i > -1 {
 		err := getActionMsg(string(MegRune[i+1:]), source, &result)
@@ -158,7 +158,7 @@ func getReplyMsg(message string, source *linebot.EventSource) string {
 		}
 		//replyMsg = getActionMsg(string(MegRune[i+1:]), userID)
 		result = "---功能回覆---\n" + result
-		result += "\n---使用者訊息---\n" + message
+		result += "\n---使用者訊息---\n" + message.Text
 		//replyMsg += "\n---UserPorilfe---\n" + getUserProfile(source.UserID)
 	} else {
 		result = ""
@@ -179,7 +179,7 @@ func insertTest(source *linebot.EventSource) string {
 		return err.Error()
 	}
 	defer conn.Close(context.Background())
-	UserName := getUserName(source.UserID)
+	UserName := getUserName(source)
 	row := conn.QueryRow(context.Background(), `INSERT INTO public.GroupProfile (GroupID,UserID,UserName,Num,Time) VALUES($1,$2,$3,$4,$5)`, source.GroupID, source.UserID, UserName, 1, time.Now())
 	var n string
 	if row != nil {
@@ -296,7 +296,7 @@ func testInsert(source *linebot.EventSource, output *string) error {
 		GID = nowGroupIP + GroupCount
 	}
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source.UserID), GID, time.Now().Format("2006-01-02 15:04:05"))
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."GroupProfile" ("GroupID", "UserID", "UserName", "GID", "Time") VALUES($1,$2,$3,$4,$5)`, nowGroupIP, source.UserID, getUserName(source), GID, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return err
 	}
@@ -316,6 +316,8 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 		*output = getHelp()
 	} else if strings.Index(msgTxt, "所有人") == 1 {
 		*output = tagUser(source.UserID)
+	} else if strings.Index(msgTxt, "測試群組") == 1 {
+		*output = getGroupUserProfile(source)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
 		err = testInsert(source, output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
@@ -351,19 +353,28 @@ func getHelp() string {
 	return helpMsg
 }
 
-func getUserProfile(userID string) string {
+
+func getUserProfile(source *linebot.EventSource) string {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", profileURL+userID, nil)
+	req, _ := http.NewRequest("GET", profileURL + source.UserID , nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
 	return string(s)
 }
 
-func getUserName(UserID string) string {
-	JSONuserProfile := getUserProfile(UserID)
+func getUserName(source *linebot.EventSource) string {
+	var JSONuserProfile  string
+	if source.Type == "group" {
+		JSONuserProfile = getGroupUserProfile(source)
+	} else if source.Type == "room" {
+
+	} else if source.Type == "user" {
+		JSONuserProfile = getUserProfile(source)
+	}
 	return gjson.Get(JSONuserProfile, "displayName").String()
 }
+
 
 func callbackHanderGin(c *gin.Context) {
 	events, err := bot.ParseRequest(c.Request)
@@ -423,6 +434,17 @@ func callbackHanderGin(c *gin.Context) {
 
 		}
 	}
+
+
+func getGroupUserProfile(source *linebot.EventSource) string {
+	res, err := bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
+	if err != nil {
+		log.Println(err)
+		return err.Error()
+	}
+	jsondata, _ := json.Marshal(res)
+	return string(jsondata)
+
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -443,6 +465,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				replyMsg := handleText(message, event.Source)
 				/*
+
 					//quota, err := bot.GetMessageQuota().Do()
 
 					if err != nil {
@@ -485,9 +508,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
 func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
 	return getReplyMsg(message.Text, source)
 }
+
+/*
+	location and restaurant hangle func 
+*/
+
 
 type restaurant struct {
 	name      string
