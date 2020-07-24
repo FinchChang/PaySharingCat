@@ -16,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
 	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -23,7 +24,9 @@ import (
 )
 
 var bot *linebot.Client
+
 const profileURL string = "https://api.line.me/v2/bot/profile/"
+
 func main() {
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -31,10 +34,18 @@ func main() {
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	//key := os.Getenv("GoogleKey")
 	log.Println("Bot:", bot, " err:", err)
-	http.HandleFunc("/callback", callbackHandler)
+
+	r := gin.Default()
+	r.POST("/callback", callbackHanderGin)
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
-	http.ListenAndServe(addr, nil)
+	fmt.Println("port=", port)
+	fmt.Println("addr=", addr)
+	r.Run(addr)
+
+	//http.HandleFunc("/callback", callbackHandler)
+
+	// http.ListenAndServe(addr, nil)
 	/*	test to get map data
 			/*
 			   mapData := getMapDate()
@@ -229,7 +240,7 @@ func testSQLCmd(SQLCmd string, scanType string, output *string) error {
 	return nil
 }
 
-func getGroupCount(source *linebot.EventSource,output *string) error {
+func getGroupCount(source *linebot.EventSource, output *string) error {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
@@ -275,7 +286,7 @@ func testInsert(source *linebot.EventSource, output *string) error {
 	}
 	GID := ""
 	GroupCount := ""
-	err = getGroupCount(source,&GroupCount)
+	err = getGroupCount(source, &GroupCount)
 	if err != nil {
 		return err
 	}
@@ -308,11 +319,11 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	} else if strings.Index(msgTxt, "測試群組") == 1 {
 		*output = getGroupUserProfile(source)
 	} else if strings.Index(msgTxt, "測試插入") == 1 {
-		err = testInsert(source,output)
+		err = testInsert(source, output)
 	} else if strings.Index(msgTxt, "測試查詢") == 1 {
 		err = QueryTest(output)
 	} else if strings.Index(msgTxt, "測試數量") == 1 {
-		err = getGroupCount(source,output)
+		err = getGroupCount(source, output)
 	} else if strings.Index(msgTxt, "DBCMD") == 1 {
 		MegRune := []rune(strings.TrimSpace(msgTxt))
 		i := strings.Index(msgTxt, "DBCMD")
@@ -325,7 +336,7 @@ func getActionMsg(msgTxt string, source *linebot.EventSource, output *string) er
 	} else {
 		*output = "no action after getActionMsg"
 	}
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	return nil
@@ -365,24 +376,14 @@ func getUserName(source *linebot.EventSource) string {
 }
 
 
-func getGroupUserProfile(source *linebot.EventSource) string {
-	res, err := bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
-	if err != nil {
-		log.Println(err)
-		return err.Error()
-	}
-	jsondata, _ := json.Marshal(res)
-	return string(jsondata)
-}
-
-func callbackHandler(w http.ResponseWriter, r *http.Request) {
-	events, err := bot.ParseRequest(r)
+func callbackHanderGin(c *gin.Context) {
+	events, err := bot.ParseRequest(c.Request)
 
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
-			w.WriteHeader(400)
+			c.Writer.WriteHeader(400)
 		} else {
-			w.WriteHeader(500)
+			c.Writer.WriteHeader(500)
 		}
 		return
 	}
@@ -393,11 +394,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				replyMsg := handleText(message, event.Source)
 				/*
-				//quota, err := bot.GetMessageQuota().Do()
-				if err != nil {
-					log.Println("Quota err:", err)
-				}
-				replyMsg := getReplyMsg(message.Text, event.Source)
+					//quota, err := bot.GetMessageQuota().Do()
+
+					if err != nil {
+						log.Println("Quota err:", err)
+					}
+
+					replyMsg := getReplyMsg(message.Text, event.Source)
 				*/
 				if replyMsg == "" {
 					log.Println("NO Action")
@@ -422,6 +425,79 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
+
+					//return err
+					log.Print(err)
+				}
+				//return nil
+			}
+
+		}
+	}
+
+
+func getGroupUserProfile(source *linebot.EventSource) string {
+	res, err := bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
+	if err != nil {
+		log.Println(err)
+		return err.Error()
+	}
+	jsondata, _ := json.Marshal(res)
+	return string(jsondata)
+
+}
+
+func callbackHandler(w http.ResponseWriter, r *http.Request) {
+	events, err := bot.ParseRequest(r)
+
+	if err != nil {
+		if err == linebot.ErrInvalidSignature {
+			w.WriteHeader(400)
+		} else {
+			w.WriteHeader(500)
+		}
+		return
+	}
+
+	for _, event := range events {
+		if event.Type == linebot.EventTypeMessage {
+			switch message := event.Message.(type) {
+			case *linebot.TextMessage:
+				replyMsg := handleText(message, event.Source)
+				/*
+
+					//quota, err := bot.GetMessageQuota().Do()
+
+					if err != nil {
+						log.Println("Quota err:", err)
+					}
+
+					replyMsg := getReplyMsg(message.Text, event.Source)
+				*/
+				if replyMsg == "" {
+					log.Println("NO Action")
+				} else {
+					if _, err = bot.ReplyMessage(
+						event.ReplyToken,
+						//linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10)),
+						linebot.NewTextMessage(replyMsg),
+					).Do(); err != nil {
+						log.Print(err)
+					}
+				}
+			case *linebot.LocationMessage:
+				resResult := *getRestaurant(message.Latitude, message.Longitude)
+				log.Println("Restaurant result > ")
+				log.Println(resResult)
+				if _, err := bot.ReplyMessage(
+					event.ReplyToken,
+					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
+					linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
+
+					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+				).Do(); err != nil {
+
 					//return err
 					log.Print(err)
 				}
@@ -432,9 +508,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
+func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
+	return getReplyMsg(message.Text, source)
+}
+
 /*
 	location and restaurant hangle func 
 */
+
 
 type restaurant struct {
 	name      string
@@ -442,8 +524,6 @@ type restaurant struct {
 	Longitude float64
 	address   string
 }
-
-
 
 func getRestaurant(Latitude, Longitude float64) *restaurant {
 	//var jsonObj map[string]interface{}
