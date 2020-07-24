@@ -36,7 +36,7 @@ func main() {
 	log.Println("Bot:", bot, " err:", err)
 
 	r := gin.Default()
-	r.GET("/callback", callbackHandler)
+	r.GET("/callback", callbackHanderGin)
 	r.Run()
 
 	//http.HandleFunc("/callback", callbackHandler)
@@ -360,6 +360,66 @@ func getUserProfile(userID string) string {
 func getUserName(UserID string) string {
 	JSONuserProfile := getUserProfile(UserID)
 	return gjson.Get(JSONuserProfile, "displayName").String()
+}
+
+func callbackHanderGin(c *gin.Context) {
+	events, err := bot.ParseRequest(c.Request)
+
+	if err != nil {
+		if err == linebot.ErrInvalidSignature {
+			c.Writer.WriteHeader(400)
+		} else {
+			c.Writer.WriteHeader(500)
+		}
+		return
+	}
+
+	for _, event := range events {
+		if event.Type == linebot.EventTypeMessage {
+			switch message := event.Message.(type) {
+			case *linebot.TextMessage:
+				replyMsg := handleText(message, event.Source)
+				/*
+					//quota, err := bot.GetMessageQuota().Do()
+
+					if err != nil {
+						log.Println("Quota err:", err)
+					}
+
+					replyMsg := getReplyMsg(message.Text, event.Source)
+				*/
+				if replyMsg == "" {
+					log.Println("NO Action")
+				} else {
+					if _, err = bot.ReplyMessage(
+						event.ReplyToken,
+						//linebot.NewTextMessage(message.ID+":"+message.Text+" OK! remain message:"+strconv.FormatInt(quota.Value, 10)),
+						linebot.NewTextMessage(replyMsg),
+					).Do(); err != nil {
+						log.Print(err)
+					}
+				}
+			case *linebot.LocationMessage:
+				resResult := *getRestaurant(message.Latitude, message.Longitude)
+				log.Println("Restaurant result > ")
+				log.Println(resResult)
+				if _, err := bot.ReplyMessage(
+					event.ReplyToken,
+					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
+					linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
+
+					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+				).Do(); err != nil {
+
+					//return err
+					log.Print(err)
+				}
+				//return nil
+			}
+
+		}
+	}
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
