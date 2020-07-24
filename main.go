@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"time"
 
-	"encoding/json"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -352,11 +352,9 @@ func getHelp() string {
 		所有人	標記所有人(Ex: 喵 所有人)`
 	return helpMsg
 }
-
-
 func getUserProfile(source *linebot.EventSource) string {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", profileURL + source.UserID , nil)
+	req, _ := http.NewRequest("GET", profileURL+source.UserID, nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
@@ -364,7 +362,7 @@ func getUserProfile(source *linebot.EventSource) string {
 }
 
 func getUserName(source *linebot.EventSource) string {
-	var JSONuserProfile  string
+	var JSONuserProfile string
 	if source.Type == "group" {
 		JSONuserProfile = getGroupUserProfile(source)
 	} else if source.Type == "room" {
@@ -374,7 +372,6 @@ func getUserName(source *linebot.EventSource) string {
 	}
 	return gjson.Get(JSONuserProfile, "displayName").String()
 }
-
 
 func callbackHanderGin(c *gin.Context) {
 	events, err := bot.ParseRequest(c.Request)
@@ -434,10 +431,10 @@ func callbackHanderGin(c *gin.Context) {
 
 		}
 	}
-
+}
 
 func getGroupUserProfile(source *linebot.EventSource) string {
-	res, err := bot.GetGroupMemberProfile(source.GroupID,source.UserID).Do()
+	res, err := bot.GetGroupMemberProfile(source.GroupID, source.UserID).Do()
 	if err != nil {
 		log.Println(err)
 		return err.Error()
@@ -508,15 +505,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func handleText(message *linebot.TextMessage, source *linebot.EventSource) string {
 	return getReplyMsg(message.Text, source)
 }
 
 /*
-	location and restaurant hangle func 
+	location and restaurant hangle func
 */
-
 
 type restaurant struct {
 	name      string
