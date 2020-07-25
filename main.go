@@ -419,18 +419,18 @@ func callbackHanderGin(c *gin.Context) {
 				imageURL += "&photoreference=" + resResult.photoReference
 				imageURL += "&key=" + os.Getenv("GoogleKey")
 				template := linebot.NewButtonsTemplate(
-					imageURL, "Test button", "Hello, my button",
-					linebot.NewURIAction("Go to line.me", "https://line.me"),
-					linebot.NewPostbackAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
-					linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
-					linebot.NewMessageAction("Say message", "Rice=米"),
+					imageURL, resResult.name, resResult.name,
+					// linebot.NewURIAction("Go to line.me", "https://line.me"),
+					// linebot.NewPostbackAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
+					// linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+					// linebot.NewMessageAction("Say message", "Rice=米"),
 				)
 				if _, err := bot.ReplyMessage(
 					event.ReplyToken,
 					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
 
-					linebot.NewTemplateMessage("tEST BUTTON", template),
-					linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
+					linebot.NewTemplateMessage(resResult.name, template),
+					linebot.NewLocationMessage(resResult.name, resResult.name, resResult.Latitude, resResult.Longitude),
 					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
