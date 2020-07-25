@@ -555,7 +555,7 @@ func getOneRestaurant(mapData string) *restaurant {
 			Latitude := gjson.Get(nowJSON, "geometry.location.lat")
 			Longitude := gjson.Get(nowJSON, "geometry.location.lng")
 			address := gjson.Get(nowJSON, "vicinity")
-			photoReference := gjson.Get(nowJSON, "photos.photo_reference")
+			photoReference := gjson.Get(nowJSON, "photos[0].photo_reference")
 			log.Println("photoReference=", photoReference)
 			//geometry := gjson.Get(nowJson ,"geometry")
 			// log.Println("name=", name)
