@@ -416,7 +416,7 @@ func callbackHanderGin(c *gin.Context) {
 				log.Println(resResult)
 				imageURL := "https://maps.googleapis.com/maps/api/place/photo?"
 				imageURL += "&maxwidth=400"
-				imageURL += "photoreference=" + resResult.photoReference + "&sensor=false&maxheight=MAX_HEIGHT&maxwidth=MAX_WIDTH&key="
+				imageURL += "&photoreference=" + resResult.photoReference
 				imageURL += "&key=" + os.Getenv("GoogleKey")
 				template := linebot.NewButtonsTemplate(
 					imageURL, "Test button", "Hello, my button",
