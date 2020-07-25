@@ -414,7 +414,9 @@ func callbackHanderGin(c *gin.Context) {
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
 				log.Println("Restaurant result > ")
 				log.Println(resResult)
-				imageURL := "https://maps.googleapis.com/maps/api/place/photo?photoreference=" + resResult.photoReference + "&sensor=false&maxheight=MAX_HEIGHT&maxwidth=MAX_WIDTH&key="
+				imageURL := "https://maps.googleapis.com/maps/api/place/photo?"
+				imageURL += "&maxwidth=400"
+				imageURL += "photoreference=" + resResult.photoReference + "&sensor=false&maxheight=MAX_HEIGHT&maxwidth=MAX_WIDTH&key="
 				imageURL += "&key=" + os.Getenv("GoogleKey")
 				template := linebot.NewButtonsTemplate(
 					imageURL, "Test button", "Hello, my button",
@@ -554,6 +556,7 @@ func getOneRestaurant(mapData string) *restaurant {
 			Longitude := gjson.Get(nowJSON, "geometry.location.lng")
 			address := gjson.Get(nowJSON, "vicinity")
 			photoReference := gjson.Get(nowJSON, "photos.photo_reference")
+			log.Println("photoReference=", photoReference)
 			//geometry := gjson.Get(nowJson ,"geometry")
 			// log.Println("name=", name)
 			// log.Println("Latitude =", Latitude, ", Longitude =", Longitude)
