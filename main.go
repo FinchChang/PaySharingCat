@@ -416,8 +416,22 @@ func callbackHanderGin(c *gin.Context) {
 				log.Println(resResult)
 				if _, err := bot.ReplyMessage(
 					event.ReplyToken,
+					[
+						{
+							type: 'sticker',
+							packageId: '1',
+							stickerId: '1'
+						},
+						{
+							type: 'location',
+							title: resResult.name,
+							address: resResult.address,
+							latitude: resResult.Latitude,
+							longitude: resResult.Longitude
+						}
+					]
 					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
-					linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
+					//linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
 
 					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
