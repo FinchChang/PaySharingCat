@@ -429,7 +429,7 @@ func callbackHanderGin(c *gin.Context) {
 					event.ReplyToken,
 					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
 
-					linebot.NewTemplateMessage(resResult.name, template),
+					linebot.NewTemplateMessage("tEST BUTTON", template),
 					linebot.NewLocationMessage(resResult.name, resResult.name, resResult.Latitude, resResult.Longitude),
 					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
