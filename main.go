@@ -414,7 +414,8 @@ func callbackHanderGin(c *gin.Context) {
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
 				log.Println("Restaurant result > ")
 				log.Println(resResult)
-				imageURL := "https://gutta.lv/en/test-img-2/"
+				imageURL := "https://maps.googleapis.com/maps/api/place/photo?photoreference=" + resResult.photoReference + "&sensor=false&maxheight=MAX_HEIGHT&maxwidth=MAX_WIDTH&key="
+				imageURL += "&key=" + os.Getenv("GoogleKey")
 				template := linebot.NewButtonsTemplate(
 					imageURL, "Test button", "Hello, my button",
 					linebot.NewURIAction("Go to line.me", "https://line.me"),
@@ -524,10 +525,11 @@ func handleText(message *linebot.TextMessage, source *linebot.EventSource) strin
 */
 
 type restaurant struct {
-	name      string
-	Latitude  float64
-	Longitude float64
-	address   string
+	name           string
+	Latitude       float64
+	Longitude      float64
+	address        string
+	photoReference string
 }
 
 func getRestaurant(Latitude, Longitude float64) *restaurant {
@@ -551,6 +553,7 @@ func getOneRestaurant(mapData string) *restaurant {
 			Latitude := gjson.Get(nowJSON, "geometry.location.lat")
 			Longitude := gjson.Get(nowJSON, "geometry.location.lng")
 			address := gjson.Get(nowJSON, "vicinity")
+			photoReference := gjson.Get(nowJSON, "photos.photo_reference")
 			//geometry := gjson.Get(nowJson ,"geometry")
 			// log.Println("name=", name)
 			// log.Println("Latitude =", Latitude, ", Longitude =", Longitude)
@@ -563,6 +566,7 @@ func getOneRestaurant(mapData string) *restaurant {
 			oneRestaurant.Latitude = Lat
 			oneRestaurant.Longitude = Lon
 			oneRestaurant.address = address.String()
+			oneRestaurant.photoReference = photoReference.String()
 		}
 	}
 	/*
