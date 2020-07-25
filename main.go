@@ -420,10 +420,6 @@ func callbackHanderGin(c *gin.Context) {
 				imageURL += "&key=" + os.Getenv("GoogleKey")
 				template := linebot.NewButtonsTemplate(
 					imageURL, resResult.name, resResult.address,
-					linebot.NewURIAction("Go to line.me", "https://line.me"),
-					linebot.NewPostbackAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
-					linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
-					linebot.NewMessageAction("Say message", "Rice=米"),
 				)
 				if _, err := bot.ReplyMessage(
 					event.ReplyToken,
