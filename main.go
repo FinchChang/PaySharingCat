@@ -414,26 +414,20 @@ func callbackHanderGin(c *gin.Context) {
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
 				log.Println("Restaurant result > ")
 				log.Println(resResult)
+				imageURL := "https://gutta.lv/en/test-img-2/"
+				template := linebot.NewButtonsTemplate(
+					imageURL, "Test button", "Hello, my button",
+					linebot.NewURIAction("Go to line.me", "https://line.me"),
+					linebot.NewPostbackAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
+					linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+					linebot.NewMessageAction("Say message", "Rice=米"),
+				)
 				if _, err := bot.ReplyMessage(
 					event.ReplyToken,
-					[
-						{
-							type: 'sticker',
-							packageId: '1',
-							stickerId: '1'
-						},
-						{
-							type: 'location',
-							title: resResult.name,
-							address: resResult.address,
-							latitude: resResult.Latitude,
-							longitude: resResult.Longitude
-						}
-					]
 					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
 					//linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
-
-					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+					linebot.NewTemplateMessage("tEST BUTTON", template),
+					linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
 
