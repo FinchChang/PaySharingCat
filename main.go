@@ -418,15 +418,18 @@ func callbackHanderGin(c *gin.Context) {
 				imageURL += "&maxwidth=400"
 				imageURL += "&photoreference=" + resResult.photoReference
 				imageURL += "&key=" + os.Getenv("GoogleKey")
+				MapURL := "http://maps.google.com/maps?"
+				MapURL += fmt.Sprintf("%f", resResult.Latitude) + "," + fmt.Sprintf("%f", resResult.Longitude)
 				template := linebot.NewButtonsTemplate(
 					imageURL, resResult.name, resResult.address,
+					linebot.NewURIAction("Google Map", MapURL),
 				)
 				if _, err := bot.ReplyMessage(
 					event.ReplyToken,
 					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
 
 					linebot.NewTemplateMessage(resResult.name, template),
-					linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
+					//linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
 					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
