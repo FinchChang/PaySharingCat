@@ -423,6 +423,7 @@ func callbackHanderGin(c *gin.Context) {
 				imageURL += "&key=" + os.Getenv("GoogleKey")
 				MapURL := "http://maps.google.com/maps?"
 				MapURL += fmt.Sprintf("%f", resResult.Latitude) + "," + fmt.Sprintf("%f", resResult.Longitude)
+				log.Println("MapURL=", MapURL)
 				template := linebot.NewButtonsTemplate(
 					imageURL, resResult.name, resResult.address,
 					linebot.NewURIAction("Google Map", MapURL),
