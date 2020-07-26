@@ -412,6 +412,9 @@ func callbackHanderGin(c *gin.Context) {
 				}
 			case *linebot.LocationMessage:
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
+				if resResult.Name == "" {
+					replyMsg = "方圓200公尺內沒任何餐廳"
+				}
 				log.Println("Restaurant result > ")
 				log.Println(resResult)
 				imageURL := "https://maps.googleapis.com/maps/api/place/photo?"
@@ -429,7 +432,7 @@ func callbackHanderGin(c *gin.Context) {
 					//linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
 
 					linebot.NewTemplateMessage(resResult.name, template),
-					//linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
+					linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
 					//linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 					//linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
 				).Do(); err != nil {
