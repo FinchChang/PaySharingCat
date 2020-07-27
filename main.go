@@ -414,7 +414,14 @@ func callbackHanderGin(c *gin.Context) {
                 resResult := *getRestaurant(message.Latitude, message.Longitude)
                 log.Println("Restaurant result > ")
                 log.Println(resResult)
-                if restaurant != nil {
+                if (restaurant{}) == resResult {
+                        if _, err := bot.ReplyMessage(
+                        event.ReplyToken,
+                        linebot.NewTextMessage("抱歉，您附近沒有餐廳。"),
+                    ).Do(); err != nil {
+                        log.Print(err)
+                    }
+                }else{
                     template := linebot.NewButtonsTemplate(
                     getImageURL(resResult.photoReference),
                                 resResult.name,
@@ -433,13 +440,6 @@ func callbackHanderGin(c *gin.Context) {
                     ).Do(); err != nil {
 
                         //return err
-                        log.Print(err)
-                    }
-                }else{
-                    if _, err := bot.ReplyMessage(
-                        event.ReplyToken,
-                        linebot.NewTextMessage("抱歉，您附近沒有餐廳。"),
-                    ).Do(); err != nil {
                         log.Print(err)
                     }
                 }
