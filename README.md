@@ -5,5 +5,5 @@ This is line bot for pay sharing function
 - [x] Find restaurant
 - [x] Include Gin frameware
 - [x] The restaurant reply shows Button style
-- [ ] set restaurant paramaters
+- [ ] set restaurant parameters 
 - [ ] Pay Share calculate
