@@ -441,7 +441,7 @@ func callbackHanderGin(c *gin.Context) {
     }
 }
 
-func getMapURL(Latitude,Longitude string) string{
+func getMapURL(Latitude,Longitude float64) string{
     MapURL := "http://maps.google.com/maps?q="
     MapURL += fmt.Sprintf("%f", Latitude) + "," + fmt.Sprintf("%f", Longitude)
     return MapURL
