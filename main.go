@@ -414,26 +414,36 @@ func callbackHanderGin(c *gin.Context) {
                 resResult := *getRestaurant(message.Latitude, message.Longitude)
                 log.Println("Restaurant result > ")
                 log.Println(resResult)
-                template := linebot.NewButtonsTemplate(
+                if restaurant != nil {
+                    template := linebot.NewButtonsTemplate(
                     getImageURL(resResult.photoReference),
                                 resResult.name,
                                 resResult.address,
                                 linebot.NewURIAction("Google Map",
                                                     getMapURL(resResult.Latitude,resResult.Longitude)),
-                )
-                if _, err := bot.ReplyMessage(
-                    event.ReplyToken,
-                    //linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
+                    )
+                    if _, err := bot.ReplyMessage(
+                        event.ReplyToken,
+                        //linebot.NewTextMessage("Name = "+resResult.name+"Latitude = "+resResult.Latitude+"Longitude = "+resResult.Longitude),
 
-                    linebot.NewTemplateMessage(resResult.name, template),
-                    linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
-                    //linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
-                    //linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
-                ).Do(); err != nil {
+                        linebot.NewTemplateMessage(resResult.name, template),
+                        linebot.NewLocationMessage(resResult.name, resResult.address, resResult.Latitude, resResult.Longitude),
+                        //linebot.NewLocationMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+                        //linebot.NewTextMessage(message.Title, message.Address, message.Latitude, message.Longitude),
+                    ).Do(); err != nil {
 
-                    //return err
-                    log.Print(err)
+                        //return err
+                        log.Print(err)
+                    }
+                }else{
+                    if _, err := bot.ReplyMessage(
+                        event.ReplyToken,
+                        linebot.NewTextMessage("抱歉，您附近沒有餐廳。"),
+                    ).Do(); err != nil {
+                        log.Print(err)
+                    }
                 }
+
                 //return nil
             }
 
