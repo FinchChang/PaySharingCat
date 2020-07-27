@@ -447,10 +447,10 @@ func getMapURL(Latitude,Longitude float64) string{
     return MapURL
 }
 
-func getImageURL(photoReference string) string{
+func getImageURL(photoReference string) string {
     imageURL := "https://maps.googleapis.com/maps/api/place/photo?"
     imageURL += "&maxwidth=400"
-    imageURL += "&photoreference=" + resResult.photoReference
+    imageURL += "&photoreference=" + photoReference
     imageURL += "&key=" + os.Getenv("GoogleKey")
     return imageURL
 }
