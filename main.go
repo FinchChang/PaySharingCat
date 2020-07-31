@@ -460,10 +460,11 @@ func callbackHanderGin(c *gin.Context) {
 				}
 
 				//return nil
-				err = userunit.RecordInsert(c, userRecord)
-				if err != nil {
-					log.Println("RecordInsert err:", err)
-				}
+
+			}
+			err = userunit.RecordInsert(c, userRecord)
+			if err != nil {
+				log.Println("RecordInsert err:", err)
 			}
 
 		}
