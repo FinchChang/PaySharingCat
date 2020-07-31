@@ -398,13 +398,9 @@ func callbackHanderGin(c *gin.Context) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				userRecord.Message = message.Text
-
+				userRecord.MessageType = "TextMessage"
 				replyMsg := handleText(message, event.Source)
 
-				err = userunit.RecordInsert(c, userRecord)
-				if err != nil {
-					log.Println("RecordInsert err:", err)
-				}
 				/*
 				   //quota, err := bot.GetMessageQuota().Do()
 
@@ -426,6 +422,9 @@ func callbackHanderGin(c *gin.Context) {
 					}
 				}
 			case *linebot.LocationMessage:
+				userRecord.MessageType = "LocationMessage"
+				userRecord.Latitude = message.Latitude
+				userRecord.Longitude = message.Longitude
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
 				log.Println("Restaurant result > ")
 				log.Println(resResult)
@@ -460,6 +459,10 @@ func callbackHanderGin(c *gin.Context) {
 				}
 
 				//return nil
+				err = userunit.RecordInsert(c, userRecord)
+				if err != nil {
+					log.Println("RecordInsert err:", err)
+				}
 			}
 
 		}
