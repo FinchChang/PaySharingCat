@@ -122,7 +122,7 @@ func insertUserProfile(GroupID, UserID, UserName string) {
 	fmt.Println(GroupID, UserID, UserName)
 }
 
-func getRestaurantTest() *restaurant {
+func getRestaurantTest() *Restaurant {
 	mapData := getMapDate()
 	oneRestaurant := getOneRestaurant(string(mapData))
 	log.Println("intest", oneRestaurant)
@@ -389,13 +389,17 @@ func callbackHanderGin(c *gin.Context) {
 	}
 	var userRecord userunit.UserRecord
 	userRecord.Time = time.Now()
-
 	for _, event := range events {
-
+		UserProfileJSON := getUserProfile(event.Source)
+		userRecord.UserID = event.Source.UserID
+		userRecord.UserName = gjson.Get(UserProfileJSON, "displayName").String()
 		if event.Type == linebot.EventTypeMessage {
+
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
+				userRecord.Message = message.Text
 				replyMsg := handleText(message, event.Source)
+				userunit.RecordInsert(userRecord)
 				/*
 				   //quota, err := bot.GetMessageQuota().Do()
 
@@ -420,7 +424,7 @@ func callbackHanderGin(c *gin.Context) {
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
 				log.Println("Restaurant result > ")
 				log.Println(resResult)
-				if (restaurant{}) == resResult {
+				if (Restaurant{}) == resResult {
 					if _, err := bot.ReplyMessage(
 						event.ReplyToken,
 						linebot.NewTextMessage("抱歉，您附近沒有餐廳。"),
@@ -552,7 +556,7 @@ func handleText(message *linebot.TextMessage, source *linebot.EventSource) strin
    location and restaurant hangle func
 */
 
-type restaurant struct {
+type Restaurant struct {
 	name           string
 	Latitude       float64
 	Longitude      float64
@@ -560,7 +564,7 @@ type restaurant struct {
 	photoReference string
 }
 
-func getRestaurant(Latitude, Longitude float64) *restaurant {
+func getRestaurant(Latitude, Longitude float64) *Restaurant {
 	//var jsonObj map[string]interface{}
 	//json.Unmarshal(getJSONFromLocation(Latitude, Longitude), &jsonObj)
 	//Todo:https://ithelp.ithome.com.tw/articles/10205062?sc=iThelpR
@@ -569,8 +573,8 @@ func getRestaurant(Latitude, Longitude float64) *restaurant {
 	return oneRestaurant
 }
 
-func getOneRestaurant(mapData string) *restaurant {
-	oneRestaurant := restaurant{}
+func getOneRestaurant(mapData string) *Restaurant {
+	oneRestaurant := Restaurant{}
 	results := gjson.Get(mapData, "results")
 	if results.IsArray() {
 		nowJSON := results.Array()[rand.Intn(len(results.Array()))].String()
