@@ -393,6 +393,7 @@ func callbackHanderGin(c *gin.Context) {
 		UserProfileJSON := getUserProfile(event.Source)
 		userRecord.UserID = event.Source.UserID
 		userRecord.UserName = gjson.Get(UserProfileJSON, "displayName").String()
+		userRecord.PictureURL = gjson.Get(UserProfileJSON, "pictureUrl").String()
 		if event.Type == linebot.EventTypeMessage {
 
 			switch message := event.Message.(type) {
