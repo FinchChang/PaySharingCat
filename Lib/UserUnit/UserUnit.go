@@ -3,6 +3,7 @@ package userunit
 import (
 	"context"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -34,7 +35,7 @@ func getUserProfile(source *linebot.EventSource) string {
 
 func RecordInsert(MsgData UserRecord) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-
+	log.Println("MsgData=", MsgData)
 	tx, err := conn.Begin(context.Background())
 	if err != nil {
 		return err
