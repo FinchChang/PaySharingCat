@@ -398,11 +398,13 @@ func callbackHanderGin(c *gin.Context) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				userRecord.Message = message.Text
-				log.Println("DEBUG 0")
+
 				replyMsg := handleText(message, event.Source)
-				log.Println("DEBUG 1")
-				userunit.RecordInsert(userRecord)
-				log.Println("DEBUG 2")
+
+				err = userunit.RecordInsert(userRecord)
+				if err != nil {
+					log.Println("RecordInsert err:", err)
+				}
 				/*
 				   //quota, err := bot.GetMessageQuota().Do()
 
