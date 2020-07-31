@@ -2,6 +2,7 @@ package userunit
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -47,7 +48,7 @@ func RecordInsert(c *gin.Context, MsgData UserRecord) error {
 	// the tx commits successfully, this is a no-op
 	defer tx.Rollback(context.Background())
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."MsgRecord" ("UserID", "UserPhoto",  "UserName", "Message","MessageType","IPAddress","Latitude, "Longitude","Time") VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`, MsgData.UserID, MsgData.PictureURL, MsgData.UserName, MsgData.Message, MsgData.MessageType, c.ClientIP(), MsgData.Latitude, MsgData.Longitude, time.Now().Format("2006-01-02 15:04:05"))
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."MsgRecord" ("UserID", "UserPhoto",  "UserName", "Message","MessageType","IPAddress","Latitude, "Longitude","Time") VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`, MsgData.UserID, MsgData.PictureURL, MsgData.UserName, MsgData.Message, MsgData.MessageType, c.ClientIP(), fmt.Sprintf("%f", MsgData.Latitude), fmt.Sprintf("%f", MsgData.Longitude), time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return err
 	}
