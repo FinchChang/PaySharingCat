@@ -401,7 +401,7 @@ func callbackHanderGin(c *gin.Context) {
 
 				replyMsg := handleText(message, event.Source)
 
-				err = userunit.RecordInsert(userRecord)
+				err = userunit.RecordInsert(c, userRecord)
 				if err != nil {
 					log.Println("RecordInsert err:", err)
 				}

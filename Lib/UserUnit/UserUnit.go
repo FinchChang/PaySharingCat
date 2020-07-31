@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/linebot"
 
 	"github.com/jackc/pgx/v4"
@@ -33,7 +34,7 @@ func getUserProfile(source *linebot.EventSource) string {
 	return string(s)
 }
 
-func RecordInsert(MsgData UserRecord) error {
+func RecordInsert(c *gin.Context, MsgData UserRecord) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	log.Println("MsgData=", MsgData)
 	tx, err := conn.Begin(context.Background())
@@ -44,7 +45,7 @@ func RecordInsert(MsgData UserRecord) error {
 	// the tx commits successfully, this is a no-op
 	defer tx.Rollback(context.Background())
 
-	_, err = tx.Exec(context.Background(), `INSERT INTO public."MsgRecord" ("UserID", "UserPhoto",  "UserName", "Message","MessageType","IPAddress", "Time") VALUES($1,$2,$3,$4,$5,$6,$7)`, MsgData.UserID, MsgData.PictureURL, MsgData.Message, time.Now().Format("2006-01-02 15:04:05"))
+	_, err = tx.Exec(context.Background(), `INSERT INTO public."MsgRecord" ("UserID", "UserPhoto",  "UserName", "Message","MessageType","IPAddress", "Time") VALUES($1,$2,$3,$4,$5,$6,$7)`, MsgData.UserID, MsgData.PictureURL, MsgData.UserName, MsgData.Message, MsgData.MessageType, c.ClientIP(), time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return err
 	}
