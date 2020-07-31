@@ -5,8 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"paySharingCat/vendor/github.com/line/line-bot-sdk-go/linebot"
 	"time"
+
+	"github.com/line/line-bot-sdk-go/linebot"
 
 	"github.com/jackc/pgx/v4"
 )
