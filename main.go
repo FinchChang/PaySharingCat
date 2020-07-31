@@ -424,8 +424,8 @@ func callbackHanderGin(c *gin.Context) {
 				}
 			case *linebot.LocationMessage:
 				userRecord.MessageType = "LocationMessage"
-				userRecord.Latitude = message.Latitude
-				userRecord.Longitude = message.Longitude
+				userRecord.Latitude = fmt.Sprintf("%f", message.Latitude)
+				userRecord.Longitude = fmt.Sprintf("%f", message.Longitude)
 				resResult := *getRestaurant(message.Latitude, message.Longitude)
 				log.Println("Restaurant result > ")
 				log.Println(resResult)
