@@ -7,7 +7,13 @@ This is line bot for pay sharing function
 - [x] The restaurant reply shows Button style
 - [ ] set restaurant parameters 
 - [ ] Pay Share calculate
-- [ ] Record Group information 
+- [ ] Record Group information
+
+## Quick Start
+
+### Find restaurant 
+1. Add PaySharingCat in Line by ID or QRCode
+2. Send location in line
 
 ## See Also
 * [line-bot-sdk-go](https://github.com/line/line-bot-sdk-go)
