@@ -13,6 +13,7 @@ This is line bot for pay sharing function
 
 ### Find restaurant 
 1. Add PaySharingCat in Line by ID or QRCode
+![image](https://github.com/FinchChang/PaySharingCat/blob/master/922ysche.png)
 2. Send location in line
 
 ## See Also
