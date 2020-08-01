@@ -21,8 +21,8 @@ type UserRecord struct {
 	Message     string
 	MessageType string
 	PictureURL  string
-	Latitude    string
-	Longitude   string
+	Latitude    float64
+	Longitude   float64
 }
 
 const profileURL string = "https://api.line.me/v2/bot/profile/"
