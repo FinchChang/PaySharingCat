@@ -15,7 +15,7 @@ This is line bot for pay sharing function
 1. Add PaySharingCat in Line by ID or QRCode
 
 |QRCode|
-|-------------:|
+|:-------------:|
 |![image](https://github.com/FinchChang/PaySharingCat/blob/master/922ysche.png)|
 
 2. Send location in line
