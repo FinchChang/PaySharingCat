@@ -423,6 +423,8 @@ func callbackHanderGin(c *gin.Context) {
 					}
 				}
 			case *linebot.LocationMessage:
+				//https://developers.line.biz/en/docs/messaging-api/using-line-url-scheme/#available-line-url-schemes
+				//https://line.me/R/nv/location/	Opens the "Location" screen. Users can drop a pin on the map to select the location they want to share.
 				userRecord.MessageType = "LocationMessage"
 				userRecord.Latitude = message.Latitude
 				userRecord.Longitude = message.Longitude
