@@ -644,7 +644,7 @@ func getJSONFromLocation(Latitude, Longitude float64) string {
     radius := "200"
     googleURL := "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="
     googleURL += radius
-    googleURL += "&type=" + "food"
+    googleURL += "&type=" + "restaurant"
     googleURL += "&location=" + fmt.Sprintf("%f", Latitude) + "," + fmt.Sprintf("%f", Longitude)
     googleURL += "&key=" + os.Getenv("GoogleKey")
 
