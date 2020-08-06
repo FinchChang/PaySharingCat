@@ -480,7 +480,7 @@ func getMapURL(Latitude, Longitude float64) string {
     return MapURL
 }
 
-func getMapURLByID(string placeID) string {
+func getMapURLByID(placeID string) string {
     MapURL := "https://www.google.com/maps/place/?q=place_id:"
     MapURL += placeID
     return MapURL
