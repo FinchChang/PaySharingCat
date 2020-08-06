@@ -621,7 +621,7 @@ func getOneRestaurant(mapData string) *Restaurant {
             oneRestaurant.Longitude = Lon
             oneRestaurant.address = address.String()
             oneRestaurant.photoReference = photoReference.String()
-            oneRestaurant.photoReference = placeID.String()
+            oneRestaurant.placeID = placeID.String()
         }
     }
     /*
