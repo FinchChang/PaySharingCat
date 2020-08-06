@@ -488,7 +488,7 @@ func getMapURLByID(placeID string) string {
 
 func getImageURL(photoReference string) string {
     imageURL := "https://maps.googleapis.com/maps/api/place/photo?"
-    imageURL += "&maxwidth=400"
+    imageURL += "&maxwidth=200"
     imageURL += "&photoreference=" + photoReference
     imageURL += "&key=" + os.Getenv("GoogleKey")
     return imageURL
@@ -643,7 +643,8 @@ func getOneRestaurant(mapData string) *Restaurant {
 func getJSONFromLocation(Latitude, Longitude float64) string {
     radius := "200"
     googleURL := "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="
-    googleURL += radius + "&type=restaurant"
+    googleURL += radius
+    googleURL += "&type=" + "food"
     googleURL += "&location=" + fmt.Sprintf("%f", Latitude) + "," + fmt.Sprintf("%f", Longitude)
     googleURL += "&key=" + os.Getenv("GoogleKey")
 
