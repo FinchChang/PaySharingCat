@@ -45,6 +45,7 @@ func GetUserProfile(source *linebot.EventSource) string {
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
+	log.Println(string(s))
 	return string(s)
 }
 
