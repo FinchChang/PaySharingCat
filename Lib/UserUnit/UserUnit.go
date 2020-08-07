@@ -40,6 +40,7 @@ func GetUserProfile(source *linebot.EventSource) string {
 		MemberURL = UserProfileURL
 	}
 	strings.ReplaceAll(MemberURL, "{userId}", source.UserID)
+	log.Println("MemberURL=" + MemberURL)
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", MemberURL, nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
@@ -51,7 +52,7 @@ func GetUserProfile(source *linebot.EventSource) string {
 
 func RecordInsert(c *gin.Context, MsgData UserRecord) error {
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	log.Println("MsgData=", MsgData)
+	//log.Println("MsgData=", MsgData)
 	tx, err := conn.Begin(context.Background())
 	if err != nil {
 		return err
