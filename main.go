@@ -390,7 +390,7 @@ func callbackHanderGin(c *gin.Context) {
     var userRecord userunit.UserRecord
     userRecord.Time = time.Now()
     for _, event := range events {
-        UserProfileJSON := getUserProfile(event.Source)
+        UserProfileJSON := userunit.GetUserProfile(event.Source)
         userRecord.UserID = event.Source.UserID
         userRecord.UserName = gjson.Get(UserProfileJSON, "displayName").String()
         userRecord.PictureURL = gjson.Get(UserProfileJSON, "pictureUrl").String()

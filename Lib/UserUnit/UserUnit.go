@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -25,11 +26,22 @@ type UserRecord struct {
 	Longitude   float64
 }
 
-const profileURL string = "https://api.line.me/v2/bot/profile/"
+const UserProfileURL string = "https://api.line.me/v2/bot/profile/{userId}"
+const GroupProfileURL string = "https://api.line.me/v2/bot/group/{groupId}/member/{userId}"
 
-func getUserProfile(source *linebot.EventSource) string {
+func GetUserProfile(source *linebot.EventSource) string {
+	var MemberURL string
+	if source.Type == "group" {
+		MemberURL = GroupProfileURL
+		strings.ReplaceAll(MemberURL, "{groupId}", source.GroupID)
+	} else if source.Type == "room" {
+
+	} else if source.Type == "user" {
+		MemberURL = UserProfileURL
+	}
+	strings.ReplaceAll(MemberURL, "{userId}", source.UserID)
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", profileURL+source.UserID, nil)
+	req, _ := http.NewRequest("GET", MemberURL, nil)
 	req.Header.Set("Authorization", "Bearer {"+os.Getenv("ChannelAccessToken")+"}")
 	res, _ := client.Do(req)
 	s, _ := ioutil.ReadAll(res.Body)
