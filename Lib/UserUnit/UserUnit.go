@@ -15,9 +15,7 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
-/**
- * useed for record all user messages
- *//
+// UserRecord used for record all user messages
 type UserRecord struct {
 	Time        time.Time
 	UserID      string
@@ -32,10 +30,8 @@ type UserRecord struct {
 const UserProfileURL string = "https://api.line.me/v2/bot/profile/{userId}"
 const GroupProfileURL string = "https://api.line.me/v2/bot/group/{groupId}/member/{userId}"
 
-
-/** Get user profile by URL
- * Can check source type to decide the type is group , room or user only
-*/
+// GetUserProfile is used to get user profile by URL
+// Can check source type to decide the type is group , room or user only
 func GetUserProfile(source *linebot.EventSource) string {
 	var MemberURL string
 
