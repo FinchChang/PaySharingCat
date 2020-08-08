@@ -38,14 +38,14 @@ func GetUserProfile(source *linebot.EventSource) string {
 	if source.Type == "group" {
 		MemberURL = GroupProfileURL
 		log.Println("GroupID=" + source.GroupID)
-		strings.ReplaceAll(MemberURL, "{groupId}", source.GroupID)
+		strings.ReplaceAll(MemberURL, `{groupId}`, source.GroupID)
 	} else if source.Type == "room" {
 
 	} else if source.Type == "user" {
 		MemberURL = UserProfileURL
 	}
 	log.Println("UserID=" + source.UserID)
-	strings.ReplaceAll(MemberURL, "{userId}", source.UserID)
+	strings.ReplaceAll(MemberURL, `{userId}`, source.UserID)
 	log.Println("MemberURL=" + MemberURL)
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", MemberURL, nil)
