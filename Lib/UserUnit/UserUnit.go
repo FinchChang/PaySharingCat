@@ -44,7 +44,8 @@ func GetUserProfile(source *linebot.EventSource) string {
 	} else if source.Type == "user" {
 		MemberURL = UserProfileURL
 	}
-	log.Println("GroupID=" + source.UserID)
+	log.Println("GroupID=" + source.GroupID)
+	log.Println("UserID=" + source.UserID)
 	strings.ReplaceAll(MemberURL, "{userId}", source.UserID)
 	log.Println("MemberURL=" + MemberURL)
 	client := &http.Client{}
