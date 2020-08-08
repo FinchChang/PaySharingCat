@@ -34,7 +34,8 @@ const GroupProfileURL string = "https://api.line.me/v2/bot/group/{groupId}/membe
 // Can check source type to decide the type is group , room or user only
 func GetUserProfile(source *linebot.EventSource) string {
 	var MemberURL string
-	log.Println("source=", source)
+	log.Println("source=", *source)
+	log.Println("source.Type=", source.Type)
 	if source.Type == "group" {
 		MemberURL = GroupProfileURL
 		log.Println("GroupID=" + source.GroupID)
