@@ -27,8 +27,8 @@ type UserRecord struct {
 	Longitude   float64
 }
 
-const UserProfileURL string = "https://api.line.me/v2/bot/profile/{userId}"
-const GroupProfileURL string = "https://api.line.me/v2/bot/group/{groupId}/member/{userId}"
+const UserProfileURL = "https://api.line.me/v2/bot/profile/{userId}"
+const GroupProfileURL = "https://api.line.me/v2/bot/group/{groupId}/member/{userId}"
 
 // GetUserProfile is used to get user profile by URL
 // Can check source type to decide the type is group , room or user only
@@ -46,7 +46,7 @@ func GetUserProfile(source *linebot.EventSource) string {
 		MemberURL = UserProfileURL
 	}
 	log.Println("UserID=" + source.UserID)
-	strings.ReplaceAll(MemberURL, `{userId}`, source.UserID)
+	MemberURL = strings.ReplaceAll(MemberURL, `{userId}`, source.UserID)
 	log.Println("MemberURL=" + MemberURL)
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", MemberURL, nil)
